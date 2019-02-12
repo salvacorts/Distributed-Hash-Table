@@ -1,6 +1,12 @@
-#!/bin/bash
 source ./config.env
-mkdir ./install
+mkdir -p ./install
+
+# install java
+if ! [ -x "$(command -v java)" ]; then
+   wget --no-check-certificate -O jre.rpm http://javadl.sun.com/webapps/download/AutoDL?BundleId=101397
+   sudo rpm -ivh jre.rpm
+   rm jre.rpm
+fi
 
 # Extract prometheus node exporter
 tar -xf ./resources/node_exporter.tar.gz -C ./install --strip-components=1
