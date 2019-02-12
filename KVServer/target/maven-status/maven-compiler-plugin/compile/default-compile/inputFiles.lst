@@ -1,0 +1,17 @@
+/home/salvacorts/Dev/IdeaProjects/cpen431_2019_a3_91291682/src/main/java/ca/NetSysLab/ProtocolBuffers/KeyValueRequest.java
+/home/salvacorts/Dev/IdeaProjects/cpen431_2019_a3_91291682/src/main/java/ca/NetSysLab/ProtocolBuffers/KeyValueResponse.java
+/home/salvacorts/Dev/IdeaProjects/cpen431_2019_a3_91291682/src/main/java/com/s91291682/CPEN431/A3/client/exceptions/DifferentChecksumException.java
+/home/salvacorts/Dev/IdeaProjects/cpen431_2019_a3_91291682/src/main/java/com/s91291682/CPEN431/A3/server/Server.java
+/home/salvacorts/Dev/IdeaProjects/cpen431_2019_a3_91291682/src/main/java/com/s91291682/CPEN431/A3/server/RequestProcessor.java
+/home/salvacorts/Dev/IdeaProjects/cpen431_2019_a3_91291682/src/main/java/com/s91291682/CPEN431/A3/server/exceptions/ShutdownCommandException.java
+/home/salvacorts/Dev/IdeaProjects/cpen431_2019_a3_91291682/src/main/java/com/s91291682/CPEN431/A3/client/exceptions/DifferentUUIDException.java
+/home/salvacorts/Dev/IdeaProjects/cpen431_2019_a3_91291682/src/main/java/ca/NetSysLab/ProtocolBuffers/Message.java
+/home/salvacorts/Dev/IdeaProjects/cpen431_2019_a3_91291682/src/main/java/com/s91291682/CPEN431/A3/server/CacheManager.java
+/home/salvacorts/Dev/IdeaProjects/cpen431_2019_a3_91291682/src/main/java/com/s91291682/CPEN431/A3/client/Client.java
+/home/salvacorts/Dev/IdeaProjects/cpen431_2019_a3_91291682/src/main/java/com/s91291682/CPEN431/A3/client/Main.java
+/home/salvacorts/Dev/IdeaProjects/cpen431_2019_a3_91291682/src/main/java/com/s91291682/CPEN431/A3/server/Worker.java
+/home/salvacorts/Dev/IdeaProjects/cpen431_2019_a3_91291682/src/main/java/com/s91291682/CPEN431/A3/utils/ByteOrder.java
+/home/salvacorts/Dev/IdeaProjects/cpen431_2019_a3_91291682/src/main/java/com/s91291682/CPEN431/A3/utils/StringUtils.java
+/home/salvacorts/Dev/IdeaProjects/cpen431_2019_a3_91291682/src/main/java/com/s91291682/CPEN431/A3/client/exceptions/UnsupportedCommandException.java
+/home/salvacorts/Dev/IdeaProjects/cpen431_2019_a3_91291682/src/main/java/com/s91291682/CPEN431/A3/server/KVMapValue.java
+/home/salvacorts/Dev/IdeaProjects/cpen431_2019_a3_91291682/src/main/java/com/s91291682/CPEN431/A3/server/Main.java
