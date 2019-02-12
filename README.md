@@ -43,8 +43,8 @@ Statistics about the performance and status of our KVStore application is export
 
 This Java client updates CPU/memory usage of the KVStore process every five seconds, and updates the number of keys upon every successful put/delete/clear request
 
-We use a single script, nodes/node_setup/setup.sh to run an instance of node_exporter and KVstore
+We use a single script, nodes/node_setup/setup.sh to configure and run an instance of node_exporter and KVstore. It also creates a cron that executes both services when the node boots.
 
-## Other Implementations
-
+#### Setting up a new node:
+Run `bash setup.sh`
 
