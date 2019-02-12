@@ -1,10 +1,10 @@
 # CPEN 431 Assignment 5 
 
-# Group ID
+## Group ID
 
 9A
 
-# Group Members
+## Group Members
 
 Michael Moore - 30400345
 
@@ -12,14 +12,14 @@ Matthew Chernoff -
 
 Salvador Corts - 91291682
 
-# 3rd Party Technologies Used
+## 3rd Party Technologies Used
 
 Grafana
 
 Prometheus
 
-# Design Choices
+## Design Choices
 
-# Other Implementations
+## Other Implementations
 
 
