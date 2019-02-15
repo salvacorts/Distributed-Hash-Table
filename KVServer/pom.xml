@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion>
 
-<groupId>com.s91291682.CPEN431.A3</groupId>
-<artifactId>CPEN431_A3</artifactId>
+<groupId>com.9A.CPEN431.A3</groupId>
+<artifactId>CPEN431_A5</artifactId>
 <version>1.0</version>
 
 <dependencies>
@@ -141,7 +141,7 @@
             <configuration>
                 <archive>
                     <manifest>
-                        <mainClass>com.s91291682.CPEN431.A3.server.Main</mainClass>
+                        <mainClass>com.s91291682.CPEN431.A6.server.Main</mainClass>
                     </manifest>
                 </archive>
                 <descriptorRefs>
@@ -167,7 +167,7 @@
                     <configuration>
                         <archive>
                             <manifest>
-                                <mainClass>com.s91291682.CPEN431.A3.client.Main</mainClass>
+                                <mainClass>com.s91291682.CPEN431.A6.client.Main</mainClass>
                             </manifest>
                         </archive>
                         <descriptorRefs>
@@ -185,7 +185,7 @@
                     <configuration>
                         <archive>
                             <manifest>
-                                <mainClass>com.s91291682.CPEN431.A3.server.Main</mainClass>
+                                <mainClass>com.s91291682.CPEN431.A6.server.Main</mainClass>
                             </manifest>
                         </archive>
                         <descriptorRefs>
