@@ -25,6 +25,7 @@
     <orderEntry type="library" name="Maven: io.prometheus:simpleclient:0.6.0" level="project" />
     <orderEntry type="library" name="Maven: io.prometheus:simpleclient_httpserver:0.6.0" level="project" />
     <orderEntry type="library" name="Maven: io.prometheus:simpleclient_common:0.6.0" level="project" />
+    <orderEntry type="library" name="Maven: io.prometheus:simpleclient_hotspot:0.6.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.protobuf:protobuf-java:2.6.1" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:18.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.13-beta-1" level="project" />

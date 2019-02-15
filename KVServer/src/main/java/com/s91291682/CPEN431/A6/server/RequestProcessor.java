@@ -6,6 +6,7 @@ import io.prometheus.client.Gauge;
 
 import com.google.protobuf.ByteString;
 import com.s91291682.CPEN431.A6.server.exceptions.*;
+import com.s91291682.CPEN431.A6.server.metrics.MetricsServer;
 
 import java.lang.management.ManagementFactory;
 import java.util.Collections;
@@ -18,6 +19,7 @@ class RequestProcessor {
     private static RequestProcessor ourInstance = new RequestProcessor();
 
     private ConcurrentHashMap<ByteString, KVMapValue> kvMap = new ConcurrentHashMap<ByteString, KVMapValue>();  // Key value map with mutex
+    private MetricsServer metrics = MetricsServer.getInstance();
 
     /**
      * Process a PUT request updating the kvMap
@@ -36,14 +38,16 @@ class RequestProcessor {
 
         // Check if there is enough space to store this data, leaving at least space for another biggest request
         long storeSize = request.getKey().size() + request.getValue().size();
+        long totalFree = Runtime.getRuntime().maxMemory() - (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
 
-        if ((Runtime.getRuntime().freeMemory() - storeSize) <  7864320) throw new OutOfSpaceException();
+        // Set 5MB free
+        if ((totalFree - storeSize) <  5242880) throw new OutOfSpaceException();
 
         KVMapValue value = new KVMapValue(request.getValue(), request.getVersion());
 
         kvMap.put(request.getKey(), value);
-        
-        Main.totalKeys.inc();
+
+        metrics.keysStored.inc();
 
         return KeyValueResponse.KVResponse.newBuilder()
                 .setErrCode(0)
@@ -89,7 +93,7 @@ class RequestProcessor {
 
         kvMap.remove(request.getKey());
 
-        Main.totalKeys.dec();
+        metrics.keysStored.dec();
 
         return KeyValueResponse.KVResponse.newBuilder()
                 .setErrCode(0)
@@ -102,7 +106,7 @@ class RequestProcessor {
      */
     private KeyValueResponse.KVResponse DoWipeout() {
         kvMap.clear();
-        Main.totalKeys.set(0);
+        metrics.keysStored.set(0);
 
         return KeyValueResponse.KVResponse.newBuilder()
                 .setErrCode(0)

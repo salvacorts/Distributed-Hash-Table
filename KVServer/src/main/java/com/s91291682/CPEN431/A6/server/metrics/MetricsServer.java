@@ -1,35 +1,45 @@
-package com.s91291682.CPEN431.A6.server;
+package com.s91291682.CPEN431.A6.server.metrics;
 
-import java.io.File;
+
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
+
 import com.sun.management.OperatingSystemMXBean;
 
 import io.prometheus.client.Gauge;
 
-public class MetricsThread implements Runnable{
+public class MetricsServer implements Runnable {
+
+    private static MetricsServer ourInstance = new MetricsServer();
+
     private Thread t;
     private boolean stopflag = false;
 
-    final Gauge cpuUsage = Gauge.build()
+    private final Gauge cpuUsage = Gauge.build()
             .name("cpu").help("cpu usage").register();
-    final Gauge memUsage = Gauge.build()
+
+    private final Gauge memUsage = Gauge.build()
             .name("mem").help("memory usage").register();
 
+    private OperatingSystemMXBean op;
+    private MemoryMXBean memBean;
 
-    OperatingSystemMXBean op;
-    MemoryMXBean memBean;
+    public final Gauge keysStored = Gauge.build()
+            .name("keys").help("keys stored").register();
 
-
-    MetricsThread(){
-        op = (OperatingSystemMXBean)ManagementFactory.getOperatingSystemMXBean();
+    private MetricsServer(){
+        op = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         memBean = ManagementFactory.getMemoryMXBean();
+        keysStored.set(0);
+    }
+
+    public static MetricsServer getInstance() {
+        return ourInstance;
     }
 
     public void run() {
 
         memUsage.set(memBean.getHeapMemoryUsage().getUsed());
-
         cpuUsage.set(100*op.getProcessCpuLoad());
 
         try {
@@ -37,15 +47,14 @@ public class MetricsThread implements Runnable{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        if(!stopflag) {
-            this.run();
-        }
+
+        if(!stopflag) this.run();
     }
 
     public void start() {
         stopflag = false;
 
-        if(t == null) {
+        if (t == null) {
             t = new Thread(this);
             t.start();
         }

@@ -1,5 +1,4 @@
 /home/salvacorts/Dev/IdeaProjects/cpen431_2019_a5_9a/KVServer/src/main/java/com/s91291682/CPEN431/A6/server/WorkerThreadFactory.java
-/home/salvacorts/Dev/IdeaProjects/cpen431_2019_a5_9a/KVServer/src/main/java/com/s91291682/CPEN431/A6/server/MetricsThread.java
 /home/salvacorts/Dev/IdeaProjects/cpen431_2019_a5_9a/KVServer/src/main/java/com/s91291682/CPEN431/A6/server/KVMapValue.java
 /home/salvacorts/Dev/IdeaProjects/cpen431_2019_a5_9a/KVServer/src/main/java/com/s91291682/CPEN431/A6/server/exceptions/MissingParameterException.java
 /home/salvacorts/Dev/IdeaProjects/cpen431_2019_a5_9a/KVServer/src/main/java/com/s91291682/CPEN431/A6/client/exceptions/DifferentUUIDException.java
@@ -10,6 +9,7 @@
 /home/salvacorts/Dev/IdeaProjects/cpen431_2019_a5_9a/KVServer/src/main/java/com/s91291682/CPEN431/A6/server/exceptions/KeyTooLargeException.java
 /home/salvacorts/Dev/IdeaProjects/cpen431_2019_a5_9a/KVServer/src/main/java/com/s91291682/CPEN431/A6/client/exceptions/UnsupportedCommandException.java
 /home/salvacorts/Dev/IdeaProjects/cpen431_2019_a5_9a/KVServer/src/main/java/com/s91291682/CPEN431/A6/server/exceptions/OutOfSpaceException.java
+/home/salvacorts/Dev/IdeaProjects/cpen431_2019_a5_9a/KVServer/src/main/java/com/s91291682/CPEN431/A6/server/metrics/MetricsServer.java
 /home/salvacorts/Dev/IdeaProjects/cpen431_2019_a5_9a/KVServer/src/main/java/ca/NetSysLab/ProtocolBuffers/KeyValueRequest.java
 /home/salvacorts/Dev/IdeaProjects/cpen431_2019_a5_9a/KVServer/src/main/java/com/s91291682/CPEN431/A6/server/RequestProcessor.java
 /home/salvacorts/Dev/IdeaProjects/cpen431_2019_a5_9a/KVServer/src/main/java/com/s91291682/CPEN431/A6/client/exceptions/DifferentChecksumException.java

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="7" failures="0" name="com.s91291682.CPEN431.A6.server.ServerTest" time="0.123" errors="0" skipped="0">
+<testsuite tests="7" failures="0" name="com.s91291682.CPEN431.A6.server.ServerTest" time="0.146" errors="0" skipped="0">
   <properties>
     <property name="idea.version" value="2018.3.2"/>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
@@ -21,7 +21,7 @@
     <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment"/>
     <property name="java.endorsed.dirs" value="/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.201.b09-2.fc29.x86_64/jre/lib/endorsed"/>
     <property name="os.arch" value="amd64"/>
-    <property name="visualvm.id" value="10791767218450"/>
+    <property name="visualvm.id" value="15625873533409"/>
     <property name="java.io.tmpdir" value="/tmp"/>
     <property name="line.separator" value="
 "/>
@@ -61,11 +61,11 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="com.s91291682.CPEN431.A6.server.ServerTest" name="testGet" time="0.098"/>
-  <testcase classname="com.s91291682.CPEN431.A6.server.ServerTest" name="testPut" time="0.001"/>
+  <testcase classname="com.s91291682.CPEN431.A6.server.ServerTest" name="testGet" time="0.119"/>
+  <testcase classname="com.s91291682.CPEN431.A6.server.ServerTest" name="testPut" time="0.002"/>
   <testcase classname="com.s91291682.CPEN431.A6.server.ServerTest" name="testGetMembershipCount" time="0.001"/>
-  <testcase classname="com.s91291682.CPEN431.A6.server.ServerTest" name="testWipeout" time="0.005"/>
-  <testcase classname="com.s91291682.CPEN431.A6.server.ServerTest" name="testGetPid" time="0.014"/>
+  <testcase classname="com.s91291682.CPEN431.A6.server.ServerTest" name="testWipeout" time="0.006"/>
+  <testcase classname="com.s91291682.CPEN431.A6.server.ServerTest" name="testGetPid" time="0.012"/>
   <testcase classname="com.s91291682.CPEN431.A6.server.ServerTest" name="testIsAlive" time="0.001"/>
-  <testcase classname="com.s91291682.CPEN431.A6.server.ServerTest" name="testRemove" time="0.003"/>
+  <testcase classname="com.s91291682.CPEN431.A6.server.ServerTest" name="testRemove" time="0.005"/>
 </testsuite>
