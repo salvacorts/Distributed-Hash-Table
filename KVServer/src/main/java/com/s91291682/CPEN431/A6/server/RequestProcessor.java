@@ -10,6 +10,7 @@ import com.google.protobuf.ByteString;
 import com.s91291682.CPEN431.A6.server.exceptions.*;
 import com.s91291682.CPEN431.A6.server.metrics.MetricsServer;
 
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.net.DatagramPacket;
 import java.util.Collections;
@@ -169,7 +170,7 @@ class RequestProcessor {
     }
 
     KeyValueResponse.KVResponse ProcessRequest(KeyValueRequest.KVRequest request, ByteString messageId)
-    		throws ShutdownCommandException {
+    		throws ShutdownCommandException, IOException {
         KeyValueResponse.KVResponse response;
 
         try {

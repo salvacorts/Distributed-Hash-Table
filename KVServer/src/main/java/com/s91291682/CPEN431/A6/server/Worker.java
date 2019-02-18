@@ -12,8 +12,10 @@ import com.s91291682.CPEN431.A6.server.exceptions.ShutdownCommandException;
 import com.s91291682.CPEN431.A6.utils.ByteOrder;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.SocketException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -37,6 +39,10 @@ class Worker implements Runnable {
 
     private static KeyValueRequest.KVRequest UnpackRequest(Message.Msg msg) throws com.google.protobuf.InvalidProtocolBufferException {
         return KeyValueRequest.KVRequest.parseFrom(msg.getPayload());
+    }
+    
+    private static KeyValueResponse.KVResponse UnpackResponse(Message.Msg msg) throws com.google.protobuf.InvalidProtocolBufferException {
+        return KeyValueResponse.KVResponse.parseFrom(msg.getPayload());
     }
 
     /**
@@ -83,8 +89,9 @@ class Worker implements Runnable {
      * Routes a request to the correct node
      * @param request the request to reroute
      * @return The result of the routed request/error response if no correct node can be found
+     * @throws IOException 
      */
-    static KVResponse Reroute(KeyValueRequest.KVRequest request, ByteString messageId){
+    static KVResponse Reroute(KeyValueRequest.KVRequest request, ByteString messageId) throws IOException{
     	ByteString key = request.getKey();
     	int hash = key.hashCode()%256;
     	
@@ -94,9 +101,19 @@ class Worker implements Runnable {
 
                 // Serialize message
                 byte[] sendData = send_msg.toByteArray();
+                byte[] receiveData = new byte[65507];
+                DatagramPacket rec_packet = new DatagramPacket(receiveData, receiveData.length);
     			DatagramPacket send_packet = new DatagramPacket(sendData, sendData.length, 
     					Server.serverNodes[i].getAddress(), Server.serverNodes[i].getPort());
-    			break;
+
+    	        DatagramSocket socket = new DatagramSocket();
+    	        socket.send(send_packet);
+    	        
+    	        socket.receive(rec_packet);
+                Message.Msg rec_msg = UnpackMessage(rec_packet);
+                KVResponse res = UnpackResponse(rec_msg);
+                socket.close();
+                return res;
     		}
     	}
     	return KVResponse.newBuilder()
