@@ -5,6 +5,8 @@ import com.s91291682.CPEN431.A6.server.exceptions.*;
 import ca.NetSysLab.ProtocolBuffers.KeyValueRequest;
 import ca.NetSysLab.ProtocolBuffers.KeyValueResponse;
 import ca.NetSysLab.ProtocolBuffers.Message;
+import ca.NetSysLab.ProtocolBuffers.KeyValueResponse.KVResponse;
+
 import com.google.protobuf.ByteString;
 import com.s91291682.CPEN431.A6.server.exceptions.ShutdownCommandException;
 import com.s91291682.CPEN431.A6.utils.ByteOrder;
@@ -55,6 +57,51 @@ class Worker implements Runnable {
                 .setPayload(response.toByteString())
                 .setCheckSum(checksum)
                 .build();
+    }
+    
+    /**
+     * Pack a message calculating checksum
+     * @param response payload
+     * @param uuid message ID
+     * @return the message to be sent with checksum
+     */
+    private static Message.Msg PackMessage(KeyValueRequest.KVRequest request, ByteString uuid) {
+        CRC32 crc32 = new CRC32();
+        byte[] concat = ByteOrder.concatArray(uuid.toByteArray(), request.toByteArray());
+        crc32.update(concat);
+
+        long checksum = crc32.getValue();
+
+        return Message.Msg.newBuilder()
+                .setMessageID(uuid)
+                .setPayload(request.toByteString())
+                .setCheckSum(checksum)
+                .build();
+    }
+    
+    /**
+     * Routes a request to the correct node
+     * @param request the request to reroute
+     * @return The result of the routed request/error response if no correct node can be found
+     */
+    static KVResponse Reroute(KeyValueRequest.KVRequest request, ByteString messageId){
+    	ByteString key = request.getKey();
+    	int hash = key.hashCode()%256;
+    	
+    	for(int i = 0; i < Server.serverNodes.length; i++) {
+    		if(Server.serverNodes[i].inSpace(hash)) {
+                Message.Msg send_msg = PackMessage(request, messageId);
+
+                // Serialize message
+                byte[] sendData = send_msg.toByteArray();
+    			DatagramPacket send_packet = new DatagramPacket(sendData, sendData.length, 
+    					Server.serverNodes[i].getAddress(), Server.serverNodes[i].getPort());
+    			break;
+    		}
+    	}
+    	return KVResponse.newBuilder()
+    			.setErrCode(4)
+    			.build();
     }
 
     private static boolean CorrectChecksum(Message.Msg msg) {
@@ -124,7 +171,7 @@ class Worker implements Runnable {
                     response = cachedResponse;
                 } else {
                     KeyValueRequest.KVRequest request = UnpackRequest(rec_msg);
-                    response = requestProcessor.ProcessRequest(request);
+                    response = requestProcessor.ProcessRequest(request, rec_msg.getMessageID());
                     this.cache.Put(rec_msg.getMessageID(), response);
                 }
             } catch (ShutdownCommandException e) {

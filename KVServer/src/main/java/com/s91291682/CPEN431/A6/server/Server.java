@@ -5,6 +5,8 @@ package com.s91291682.CPEN431.A6.server;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -18,12 +20,15 @@ public class Server {
     private int availableCores;
     private ExecutorService threadPool;
     private WorkerThreadFactory threadFactory;
+    
+    static ServerNode selfNode;
+    static ServerNode[] serverNodes;
 
     static void UpdateProcessTime(long time) {
         avgProcessTime = (avgProcessTime + time) / 2;
     }
 
-    public Server(int port) throws java.net.SocketException {
+    public Server(int port, ServerNode[] otherNodes) throws java.net.SocketException, UnknownHostException {
         this.listeningSocket = new DatagramSocket(port);
         this.availableCores = Runtime.getRuntime().availableProcessors();
 
@@ -31,6 +36,14 @@ public class Server {
 
         this.threadFactory = new WorkerThreadFactory(coresPool);
         this.threadPool = Executors.newFixedThreadPool(coresPool, threadFactory);
+        this.serverNodes = otherNodes;
+        InetAddress local = InetAddress.getLocalHost();
+        for(int i = 0; i < serverNodes.length; i++) {
+        	if(local == serverNodes[i].getAddress()) {
+        		selfNode = serverNodes[i];
+        		break;
+        	}
+        }
     }
 
     public void StartServing() {

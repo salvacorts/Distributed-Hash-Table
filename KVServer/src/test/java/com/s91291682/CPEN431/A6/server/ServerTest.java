@@ -19,7 +19,7 @@ public class ServerTest {
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    Server server = new Server(2019);
+                    Server server = new Server(2019, new ServerNode[0]);
                     server.StartServing();
                 } catch (Exception e) {
                     // System.err.println(e.toString());

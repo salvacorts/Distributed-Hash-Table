@@ -2,6 +2,8 @@ package com.s91291682.CPEN431.A6.server;
 
 import ca.NetSysLab.ProtocolBuffers.KeyValueRequest;
 import ca.NetSysLab.ProtocolBuffers.KeyValueResponse;
+import ca.NetSysLab.ProtocolBuffers.Message;
+import ca.NetSysLab.ProtocolBuffers.KeyValueResponse.KVResponse;
 import io.prometheus.client.Gauge;
 
 import com.google.protobuf.ByteString;
@@ -9,6 +11,7 @@ import com.s91291682.CPEN431.A6.server.exceptions.*;
 import com.s91291682.CPEN431.A6.server.metrics.MetricsServer;
 
 import java.lang.management.ManagementFactory;
+import java.net.DatagramPacket;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,6 +24,18 @@ class RequestProcessor {
     private ConcurrentHashMap<ByteString, KVMapValue> kvMap = new ConcurrentHashMap<ByteString, KVMapValue>();  // Key value map with mutex
     private MetricsServer metrics = MetricsServer.getInstance();
 
+    /**
+     * Indicates if the request's key places it in the current node
+     * @param request the given request
+     * @return whether the request's key is in this node's keyspace
+     * @throws MissingParameterException
+     */
+    private static boolean CorrectNode(KeyValueRequest.KVRequest request) throws MissingParameterException {
+    	if(!request.hasKey()) throw new MissingParameterException();
+    	int hash = request.getKey().hashCode()%256;
+    	return Server.selfNode.inSpace(hash);
+    }
+    
     /**
      * Process a PUT request updating the kvMap
      * @param request request to process
@@ -153,23 +168,38 @@ class RequestProcessor {
         return ourInstance;
     }
 
-    KeyValueResponse.KVResponse ProcessRequest(KeyValueRequest.KVRequest request) throws ShutdownCommandException {
+    KeyValueResponse.KVResponse ProcessRequest(KeyValueRequest.KVRequest request, ByteString messageId)
+    		throws ShutdownCommandException {
         KeyValueResponse.KVResponse response;
-
 
         try {
             switch (request.getCommand()) {
                 case 1:
                     // System.out.println("PUT received");
-                    response = DoPut(request);
+                	if(CorrectNode(request)) {
+                        response = DoPut(request);
+                	}
+                	else {
+                		response = Worker.Reroute(request, messageId);
+                	}
                     break;
                 case 2:
                     // System.out.println("Get received");
-                    response = DoGet(request);
+                	if(CorrectNode(request)) {
+                		response = DoGet(request);
+                	}
+                	else{
+                		response = Worker.Reroute(request, messageId);
+                	}
                     break;
                 case 3:
                     // System.out.println("Remove received");
-                    response = DoDelete(request);
+                	if(CorrectNode(request)) {
+                        response = DoDelete(request);
+                	}
+                	else {
+                		response = Worker.Reroute(request, messageId);
+                	}
                     break;
                 case 4:
                     // System.out.println("Shutdown received");
