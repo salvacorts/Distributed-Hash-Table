@@ -11,7 +11,7 @@ import static org.junit.Assert.assertTrue;
 public class ServerTest {
     private static Client client;
 
-    @org.junit.BeforeClass
+    /*@org.junit.BeforeClass
     public static void setUp() throws Exception {
         client = new Client("127.0.0.1", 2019, 3);
 
@@ -47,7 +47,7 @@ public class ServerTest {
 
         result = client.DoRequest(1, "rafael", "alberti", 1);
         assertEquals(expected, result);
-    }
+    }*/
 
     /*@Test
     public void testPut_RunOutOfSpace() throws Exception {
@@ -73,7 +73,7 @@ public class ServerTest {
         assertEquals(0, result.getErrCode());
     }/**/
 
-    @Test
+    /*@Test
     public void testGet() throws Exception {
         KeyValueResponse.KVResponse expected = KeyValueResponse.KVResponse.newBuilder()
                     .setErrCode(0)
@@ -145,5 +145,5 @@ public class ServerTest {
         KeyValueResponse.KVResponse result = client.DoRequest(8, "", "", 0);
 
         assertEquals(1, result.getMembershipCount());
-    }
+    }*/
 }

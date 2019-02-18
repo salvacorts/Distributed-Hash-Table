@@ -39,10 +39,13 @@ public class Server {
         this.serverNodes = otherNodes;
         InetAddress local = InetAddress.getLocalHost();
         for(int i = 0; i < serverNodes.length; i++) {
-        	if(local == serverNodes[i].getAddress()) {
+        	if(local.equals(serverNodes[i].getAddress())) {
         		selfNode = serverNodes[i];
         		break;
         	}
+        }
+        if(selfNode == null) {
+        	throw new IllegalArgumentException("Current server not present in nodes-list");
         }
     }
 

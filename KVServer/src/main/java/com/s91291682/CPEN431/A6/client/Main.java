@@ -1,12 +1,14 @@
 package com.s91291682.CPEN431.A6.client;
 
+import ca.NetSysLab.ProtocolBuffers.KeyValueResponse.KVResponse;
+
 public class Main {
 
     public static void main(String[] args) {
 
         if (args.length != 6) {
-            // System.err.println("Error: Missing parameters!");
-            // System.err.println("java -jar A2.jar <server address> <server port> <command_id> <key> <value> <version>");
+            System.err.println("Error: Missing parameters!");
+            System.err.println("java -jar A2.jar <server address> <server port> <command_id> <key> <value> <version>");
             return;
         }
 
@@ -15,10 +17,11 @@ public class Main {
         try {
             // System.out.println("Sending ID: " + args[2]);
 
-            client.DoRequest(Integer.parseInt(args[2]), args[3], args[4], Integer.parseInt(args[5]));
+            KVResponse response = client.DoRequest(Integer.parseInt(args[2]), args[3], args[4], Integer.parseInt(args[5]));
+            System.out.println(response.getErrCode());
 
         } catch (Exception e) {
-            // System.err.println(e.toString());
+            System.err.println(e.toString());
         }
 
     }
