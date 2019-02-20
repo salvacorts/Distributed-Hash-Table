@@ -11,15 +11,17 @@ import static org.junit.Assert.assertTrue;
 public class ServerTest {
     private static Client client;
 
-    /*@org.junit.BeforeClass
+    @org.junit.BeforeClass
     public static void setUp() throws Exception {
-        client = new Client("127.0.0.1", 2019, 3);
+        client = new Client("128.189.199.19", 10145, 3);
 
         // Launch server in a new thread
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    Server server = new Server(2019, new ServerNode[0]);
+                    Server server = new Server(10145, new ServerNode[]{
+                    	new ServerNode("128.189.199.19", 10145, 0, 255)
+                    });
                     server.StartServing();
                 } catch (Exception e) {
                     // System.err.println(e.toString());
@@ -47,7 +49,7 @@ public class ServerTest {
 
         result = client.DoRequest(1, "rafael", "alberti", 1);
         assertEquals(expected, result);
-    }*/
+    }
 
     /*@Test
     public void testPut_RunOutOfSpace() throws Exception {
@@ -73,7 +75,7 @@ public class ServerTest {
         assertEquals(0, result.getErrCode());
     }/**/
 
-    /*@Test
+    @Test
     public void testGet() throws Exception {
         KeyValueResponse.KVResponse expected = KeyValueResponse.KVResponse.newBuilder()
                     .setErrCode(0)
@@ -145,5 +147,5 @@ public class ServerTest {
         KeyValueResponse.KVResponse result = client.DoRequest(8, "", "", 0);
 
         assertEquals(1, result.getMembershipCount());
-    }*/
+    }
 }
