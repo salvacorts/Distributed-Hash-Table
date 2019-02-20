@@ -8,19 +8,24 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.net.InetAddress;
+import java.util.Random;
+
 public class ServerTest {
     private static Client client;
 
     @org.junit.BeforeClass
     public static void setUp() throws Exception {
-        client = new Client("128.189.199.19", 10145, 3);
+    	String localhost = InetAddress.getLocalHost().toString();
+    	final String addr = localhost.substring(localhost.lastIndexOf('/')+1);
+        client = new Client(addr, 10145, 3);
 
         // Launch server in a new thread
         new Thread(new Runnable() {
             public void run() {
                 try {
                     Server server = new Server(10145, new ServerNode[]{
-                    	new ServerNode("128.189.199.19", 10145, 0, 255)
+                    	new ServerNode(addr, 10145, 0, 255)
                     });
                     server.StartServing();
                 } catch (Exception e) {
@@ -48,6 +53,20 @@ public class ServerTest {
         assertEquals(expected, result);
 
         result = client.DoRequest(1, "rafael", "alberti", 1);
+        assertEquals(expected, result);
+    }
+    
+    @Test
+    public void testPutVersion() throws Exception {
+        KeyValueResponse.KVResponse expected = KeyValueResponse.KVResponse.newBuilder()
+                                                    .setErrCode(0)
+                                                .build();
+      
+
+        KeyValueResponse.KVResponse result = client.DoRequest(1, "foo", "bar", 1);
+        assertEquals(expected, result);
+        
+        result = client.DoRequest(1, "foo", "abcdefghijklmnopqrstuvwxyz012345", 2);
         assertEquals(expected, result);
     }
 
@@ -88,6 +107,24 @@ public class ServerTest {
         KeyValueResponse.KVResponse result = client.DoRequest(2, "foo", "", 0);
 
         assertEquals(expected, result);
+    }
+    
+    @Test
+    public void testGetVersion() throws Exception {
+    	
+        
+        KeyValueResponse.KVResponse expected = KeyValueResponse.KVResponse.newBuilder()
+                .setErrCode(0)
+                .setValue(ByteString.copyFromUtf8("abcdefghijklmnopqrstuvwxyz012345"))
+                .setVersion(2)
+            .build();
+        
+
+    	testPutVersion();
+    	
+    	KeyValueResponse.KVResponse result = client.DoRequest(2, "foo", "", 0);
+    	
+    	assertEquals(expected, result);
     }
 
     @Test
