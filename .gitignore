@@ -2,3 +2,4 @@ node/install/*
 server/install/*
 *.iml
 .idea/*
+KVServer/target/*

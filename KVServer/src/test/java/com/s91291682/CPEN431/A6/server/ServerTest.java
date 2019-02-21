@@ -1,8 +1,12 @@
 package com.s91291682.CPEN431.A6.server;
 
 import ca.NetSysLab.ProtocolBuffers.KeyValueResponse;
+
+import com.g9A.CPEN431.A6.client.Client;
+import com.g9A.CPEN431.A6.server.Server;
+import com.g9A.CPEN431.A6.server.ServerNode;
 import com.google.protobuf.ByteString;
-import com.s91291682.CPEN431.A6.client.Client;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
