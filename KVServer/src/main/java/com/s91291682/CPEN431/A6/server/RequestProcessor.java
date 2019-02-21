@@ -50,7 +50,8 @@ class RequestProcessor {
 
         if (request.getKey().size() > 32) throw new KeyTooLargeException();
 
-        if (request.getValue().size() > 10000) throw new ValueTooLargeException();
+        if (request.getValue().size() > 10000)
+        	throw new ValueTooLargeException();
 
         // Check if there is enough space to store this data, leaving at least space for another biggest request
         long storeSize = request.getKey().size() + request.getValue().size();

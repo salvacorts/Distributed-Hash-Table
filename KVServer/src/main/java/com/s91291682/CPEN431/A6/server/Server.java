@@ -39,7 +39,8 @@ public class Server {
         this.serverNodes = otherNodes;
         InetAddress local = InetAddress.getLocalHost();
         for(int i = 0; i < serverNodes.length; i++) {
-        	if(local.equals(serverNodes[i].getAddress())) {
+        	if(local.equals(serverNodes[i].getAddress()) 
+        			|| serverNodes[i].getAddress().getHostAddress().equals("127.0.0.1")) {
         		selfNode = serverNodes[i];
         		break;
         	}

@@ -8,7 +8,7 @@ public class Main {
 
         if (args.length != 6) {
             System.err.println("Error: Missing parameters!");
-            System.err.println("java -jar A2.jar <server address> <server port> <command_id> <key> <value> <version>");
+            System.err.println("java -jar client.jar <server address> <server port> <command_id> <key> <value> <version>");
             return;
         }
 
@@ -19,6 +19,7 @@ public class Main {
 
             KVResponse response = client.DoRequest(Integer.parseInt(args[2]), args[3], args[4], Integer.parseInt(args[5]));
             System.out.println(response.getErrCode());
+            System.out.println(response.getValue().toStringUtf8());
 
         } catch (Exception e) {
             System.err.println(e.toString());

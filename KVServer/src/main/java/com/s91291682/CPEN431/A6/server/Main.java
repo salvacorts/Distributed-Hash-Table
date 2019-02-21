@@ -64,5 +64,6 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        metrics.stop();
     }
 }
