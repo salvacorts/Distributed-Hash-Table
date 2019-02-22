@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -24,6 +25,7 @@ import java.util.zip.CRC32;
 class Worker implements Runnable {
     // Set to manage processes being processed at a time
     private static Set<ByteString> processing_messages = Collections.synchronizedSet(new HashSet<ByteString>());
+    private static DatagramSocket staticSocket = null;
 
     private DatagramSocket socket;
     private DatagramPacket packet;
@@ -66,56 +68,50 @@ class Worker implements Runnable {
     
     /**
      * Pack a message calculating checksum
-     * @param request payload
+     * @param payload payload
      * @param uuid message ID
      * @return the message to be sent with checksum
      */
-    private static Message.Msg PackMessage(KeyValueRequest.KVRequest request, ByteString uuid) {
+    private static Message.Msg PackMessage(ByteString payload, ByteString uuid, InetAddress address, int port) {
         CRC32 crc32 = new CRC32();
-        byte[] concat = ByteOrder.concatArray(uuid.toByteArray(), request.toByteArray());
+        byte[] concat = ByteOrder.concatArray(uuid.toByteArray(), payload.toByteArray());
         crc32.update(concat);
 
         long checksum = crc32.getValue();
+        ByteString addressBytes = ByteString.copyFrom(address.getAddress());
 
         return Message.Msg.newBuilder()
                 .setMessageID(uuid)
-                .setPayload(request.toByteString())
+                .setPayload(payload)
                 .setCheckSum(checksum)
+                .setClient(
+                        Message.ClientInfo.newBuilder()
+                            .setAddress(addressBytes)
+                            .setPort(port)
+                            .build()
+                )
                 .build();
     }
     
     /**
      * Routes a request to the correct node
      * @param request the request to reroute
-     * @return The result of the routed request/error response if no correct node can be found
-     * @throws IOException 
+     * @param hash hash of the key
+     * @throws IOException
      */
-    KVResponse Reroute(KeyValueRequest.KVRequest request, ByteString messageId) throws IOException{
-    	ByteString key = request.getKey();
-    	int hash = key.hashCode()%256;
-    	
-    	for (int i = 0; i < Server.serverNodes.length; i++) {
-    		if (Server.serverNodes[i].inSpace(hash)) {
-                Message.Msg send_msg = PackMessage(request, messageId);
+    private void Reroute(Message.Msg request, int hash) throws IOException{
+    	for (ServerNode node : Server.serverNodes) {
+    	    if (node.inSpace(hash)) {
+                Message.Msg send_msg = PackMessage(request.getPayload(), request.getMessageID(), packet.getAddress(), packet.getPort());
 
                 // Serialize message
                 byte[] sendData = send_msg.toByteArray();
-                byte[] receiveData = new byte[65507];
-                DatagramPacket rec_packet = new DatagramPacket(receiveData, receiveData.length);
-    			DatagramPacket send_packet = new DatagramPacket(sendData, sendData.length, 
-    					Server.serverNodes[i].getAddress(), Server.serverNodes[i].getPort());
+                DatagramPacket send_packet = new DatagramPacket(sendData, sendData.length, node.getAddress(), node.getPort());
 
-    			// Use socket assigned from worker thread (avoid mem leak)
-    	        socket.send(send_packet);
-    	        socket.receive(rec_packet);
-
-                Message.Msg rec_msg = UnpackMessage(rec_packet);
-
-                return UnpackResponse(rec_msg);
-    		}
-    	}
-
-    	return KVResponse.newBuilder().setErrCode(4).build();
+                // Use socket assigned from worker thread (avoid mem leak)
+                socket.send(send_packet);
+            }
+        }
     }
 
     private static boolean CorrectChecksum(Message.Msg msg) {
@@ -155,6 +151,7 @@ class Worker implements Runnable {
     Worker(DatagramPacket packet, DatagramSocket socket) {
         this.packet = packet;
         this.socket = socket;
+
         this.cache = CacheManager.getInstance();
         this.requestProcessor = RequestProcessor.getInstance();
     }
@@ -166,6 +163,17 @@ class Worker implements Runnable {
             // Unpack message from the packet
             Message.Msg rec_msg = UnpackMessage(packet);
             KeyValueResponse.KVResponse response;
+
+            // If packet has been rerouted by other node, update destination info
+            if (rec_msg.hasClient()) {
+                //System.out.println("Received packet rerouted");
+
+                byte[] addr = rec_msg.getClient().getAddress().toByteArray();
+                int port = rec_msg.getClient().getPort();
+
+                packet.setAddress(InetAddress.getByAddress(addr));
+                packet.setPort(port);
+            }
 
             try {
                 // Check if checksum is correct
@@ -198,6 +206,10 @@ class Worker implements Runnable {
                 response = KeyValueResponse.KVResponse.newBuilder()
                         .setErrCode(2)
                         .build();
+            } catch (WrongNodeException e) {
+                //System.out.println("Rerouting to correct node");
+                Reroute(rec_msg, e.getHash());
+                return; // The other node will answer
             } catch (Exception e) {
                 e.printStackTrace();
                 response = KeyValueResponse.KVResponse.newBuilder()

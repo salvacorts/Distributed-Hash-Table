@@ -44,9 +44,9 @@ public class Main {
 
     public static void main(String[] args) throws IllegalArgumentException, IOException {
     	
-        if (args.length != 2) {
+        if (args.length != 3) {
             System.err.println("Error: Missing parameters!");
-            System.err.println("java -jar A6.jar <server port> <metrics port>");
+            System.err.println("java -jar A6.jar <server port> <metrics port> <nodes list>");
             return;
         }
 

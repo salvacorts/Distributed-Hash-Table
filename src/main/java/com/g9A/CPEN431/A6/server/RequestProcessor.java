@@ -34,7 +34,7 @@ class RequestProcessor {
     private static boolean CorrectNode(KeyValueRequest.KVRequest request) throws MissingParameterException {
     	if (!request.hasKey()) throw new MissingParameterException();
 
-    	int hash = request.getKey().hashCode()%256;
+        int hash = Math.floorMod(request.getKey().hashCode(), 256);
 
     	return Server.selfNode.inSpace(hash);
     }
@@ -51,12 +51,11 @@ class RequestProcessor {
                                                                                                WrongNodeException {
         if (!request.hasKey() || !request.hasValue() || !request.hasVersion()) throw new MissingParameterException();
 
-        if (!CorrectNode(request)) throw new WrongNodeException();
+        if (!CorrectNode(request)) throw new WrongNodeException(Math.floorMod(request.getKey().hashCode(), 256));
 
         if (request.getKey().size() > 32) throw new KeyTooLargeException();
 
-        if (request.getValue().size() > 10000)
-        	throw new ValueTooLargeException();
+        if (request.getValue().size() > 10000) throw new ValueTooLargeException();
 
         // Check if there is enough space to store this data, leaving at least space for another biggest request
         long storeSize = request.getKey().size() + request.getValue().size();
@@ -87,7 +86,7 @@ class RequestProcessor {
                                                                                                WrongNodeException {
         if (!request.hasKey()) throw new MissingParameterException();
 
-        if (!CorrectNode(request)) throw new WrongNodeException();
+        if (!CorrectNode(request)) throw new WrongNodeException(Math.floorMod(request.getKey().hashCode(), 256));
 
         if (request.getKey().size() > 32) throw new KeyTooLargeException();
 
@@ -113,7 +112,7 @@ class RequestProcessor {
                                                                                                   WrongNodeException {
         if (!request.hasKey()) throw new MissingParameterException();
 
-        if (!CorrectNode(request)) throw new WrongNodeException();
+        if (!CorrectNode(request)) throw new WrongNodeException(Math.floorMod(request.getKey().hashCode(), 256));
 
         if (request.getKey().size() > 32) throw new KeyTooLargeException();
 
@@ -182,7 +181,7 @@ class RequestProcessor {
     }
 
     KeyValueResponse.KVResponse ProcessRequest(KeyValueRequest.KVRequest request, ByteString messageId)
-    		throws ShutdownCommandException, IOException {
+    		throws ShutdownCommandException, IOException, WrongNodeException {
         KeyValueResponse.KVResponse response;
 
         try {
@@ -247,8 +246,6 @@ class RequestProcessor {
             System.gc();    // Run garbage collector
 
             return KeyValueResponse.KVResponse.newBuilder().setErrCode(2).build();
-        } catch (WrongNodeException e) {
-            response = Worker.Reroute(request, messageId);
         }
 
         return response;

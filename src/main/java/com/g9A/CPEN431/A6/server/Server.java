@@ -22,7 +22,7 @@ public class Server {
     private ExecutorService threadPool;
     private WorkerThreadFactory threadFactory;
 
-    ServerNode selfNode;
+    static ServerNode selfNode;
     static ArrayList<ServerNode> serverNodes;
 
     static void UpdateProcessTime(long time) {
