@@ -66,7 +66,7 @@ class Worker implements Runnable {
     
     /**
      * Pack a message calculating checksum
-     * @param response payload
+     * @param request payload
      * @param uuid message ID
      * @return the message to be sent with checksum
      */
@@ -90,12 +90,12 @@ class Worker implements Runnable {
      * @return The result of the routed request/error response if no correct node can be found
      * @throws IOException 
      */
-    static KVResponse Reroute(KeyValueRequest.KVRequest request, ByteString messageId) throws IOException{
+    KVResponse Reroute(KeyValueRequest.KVRequest request, ByteString messageId) throws IOException{
     	ByteString key = request.getKey();
     	int hash = key.hashCode()%256;
     	
-    	for(int i = 0; i < Server.serverNodes.length; i++) {
-    		if(Server.serverNodes[i].inSpace(hash)) {
+    	for (int i = 0; i < Server.serverNodes.length; i++) {
+    		if (Server.serverNodes[i].inSpace(hash)) {
                 Message.Msg send_msg = PackMessage(request, messageId);
 
                 // Serialize message
@@ -105,19 +105,17 @@ class Worker implements Runnable {
     			DatagramPacket send_packet = new DatagramPacket(sendData, sendData.length, 
     					Server.serverNodes[i].getAddress(), Server.serverNodes[i].getPort());
 
-    	        DatagramSocket socket = new DatagramSocket();
+    			// Use socket assigned from worker thread (avoid mem leak)
     	        socket.send(send_packet);
-    	        
     	        socket.receive(rec_packet);
+
                 Message.Msg rec_msg = UnpackMessage(rec_packet);
-                KVResponse res = UnpackResponse(rec_msg);
-                socket.close();
-                return res;
+
+                return UnpackResponse(rec_msg);
     		}
     	}
-    	return KVResponse.newBuilder()
-    			.setErrCode(4)
-    			.build();
+
+    	return KVResponse.newBuilder().setErrCode(4).build();
     }
 
     private static boolean CorrectChecksum(Message.Msg msg) {
@@ -136,7 +134,7 @@ class Worker implements Runnable {
      * @param packet packet received
      * @param time waitForTime in milliseconds
      */
-    static void SendOverloadWaitTime(@NotNull DatagramPacket packet, long time) throws java.io.IOException {
+    void SendOverloadWaitTime(@NotNull DatagramPacket packet, long time) throws java.io.IOException {
         ByteString uuid = UnpackMessage(packet).getMessageID();
 
         KeyValueResponse.KVResponse response = KeyValueResponse.KVResponse.newBuilder()
@@ -150,8 +148,7 @@ class Worker implements Runnable {
         byte[] sendData = msg.toByteArray();
         DatagramPacket send_packet = new DatagramPacket(sendData, sendData.length, packet.getAddress(), packet.getPort());
 
-        // Send the message
-        DatagramSocket socket = new DatagramSocket();
+        // Send the message through socket assigned by factory (avoid mem leak w/ finalizer)
         socket.send(send_packet);
     }
 

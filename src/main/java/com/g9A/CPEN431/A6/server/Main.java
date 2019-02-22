@@ -15,6 +15,33 @@ import io.prometheus.client.hotspot.DefaultExports;
 public class Main {
 	private static MetricsServer metrics;
 
+	private static ArrayList<ServerNode> LoadNodesFromFile(String filename) throws IOException {
+		ArrayList<ServerNode> nodes = new ArrayList<ServerNode>();
+
+		FileReader fileReader = new FileReader(filename);
+		BufferedReader bufferedReader = new BufferedReader(fileReader);
+		String line = null;
+
+		while ((line = bufferedReader.readLine()) != null) {
+			String[] args = line.split(" ");
+
+			String address = args[0];
+			int port = Integer.parseInt(args[1]);
+			int hashStart = Integer.parseInt(args[2]);
+			int hashEnd = Integer.parseInt(args[3]);
+
+			try {
+                nodes.add(new ServerNode(address, port, hashStart, hashEnd));
+            } catch (Exception e) {
+			    e.printStackTrace();
+            }
+		}
+
+		bufferedReader.close();
+
+		return nodes;
+	}
+
     public static void main(String[] args) throws IllegalArgumentException, IOException {
     	
         if (args.length != 2) {
@@ -22,35 +49,6 @@ public class Main {
             System.err.println("java -jar A6.jar <server port> <metrics port>");
             return;
         }
-        
-        ServerNode[] nodes;
-		try {
-			FileReader fileReader = 
-	                new FileReader("./nodes-list.txt");
-            
-	        BufferedReader bufferedReader = 
-	                new BufferedReader(fileReader);
-	        String line = null;
-	        int i = 0;
-	        while((line = bufferedReader.readLine()) != null) {
-	        	i++;
-	        }
-	        nodes = new ServerNode[i];
-	        bufferedReader.close();
-	        fileReader = new FileReader("./nodes-list.txt");
-	        bufferedReader = new BufferedReader(fileReader);
-	        i = 0;
-	        while((line = bufferedReader.readLine()) != null) {
-	        	nodes[i] = new ServerNode(line);
-	        	i++;
-	        }
-
-	        bufferedReader.close();   
-		}
-		catch(IOException ex){
-			System.out.println("nodes-list.txt file not found or has invalid format");
-			throw ex;
-		}
 
         // Run prometheus Metrics
         HTTPServer promServer = new HTTPServer(Integer.parseInt(args[1]));
@@ -59,12 +57,20 @@ public class Main {
 		metrics.start();
 
         try {
-        	
-            Server server = new Server(Integer.parseInt(args[0]), nodes);
-            server.StartServing();
-        } catch (Exception e) {
-            e.printStackTrace();
+            ArrayList<ServerNode> nodes = LoadNodesFromFile(args[2]);
+
+            try {
+                Server server = new Server(Integer.parseInt(args[0]), nodes);
+                server.StartServing();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            
+        } catch (IOException ex){
+            System.out.println("nodes-list.txt file not found or has invalid format");
+            throw ex;
         }
+
         metrics.stop();
     }
 }

@@ -7,6 +7,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -20,15 +21,15 @@ public class Server {
     private int availableCores;
     private ExecutorService threadPool;
     private WorkerThreadFactory threadFactory;
-    
-    static ServerNode selfNode;
-    static ServerNode[] serverNodes;
+
+    ServerNode selfNode;
+    static ArrayList<ServerNode> serverNodes;
 
     static void UpdateProcessTime(long time) {
         avgProcessTime = (avgProcessTime + time) / 2;
     }
 
-    public Server(int port, ServerNode[] otherNodes) throws java.net.SocketException, UnknownHostException {
+    public Server(int port, ArrayList<ServerNode> otherNodes) throws java.net.SocketException, UnknownHostException {
         this.listeningSocket = new DatagramSocket(port);
         this.availableCores = Runtime.getRuntime().availableProcessors();
 
@@ -37,15 +38,18 @@ public class Server {
         this.threadFactory = new WorkerThreadFactory(coresPool);
         this.threadPool = Executors.newFixedThreadPool(coresPool, threadFactory);
         this.serverNodes = otherNodes;
+
         InetAddress local = InetAddress.getLocalHost();
-        for(int i = 0; i < serverNodes.length; i++) {
-        	if(local.equals(serverNodes[i].getAddress()) 
-        			|| serverNodes[i].getAddress().getHostAddress().equals("127.0.0.1")) {
-        		selfNode = serverNodes[i];
-        		break;
-        	}
+
+        for (ServerNode node : serverNodes) {
+            if (port == node.getPort() && (local.equals(node.getAddress())
+                                            || node.getAddress().getHostAddress().equals("127.0.0.1"))) {
+                selfNode = node;
+                break;
+            }
         }
-        if(selfNode == null) {
+
+        if (selfNode == null) {
         	throw new IllegalArgumentException("Current server not present in nodes-list");
         }
     }

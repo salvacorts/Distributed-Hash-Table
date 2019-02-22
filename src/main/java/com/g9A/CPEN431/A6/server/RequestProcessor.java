@@ -32,8 +32,10 @@ class RequestProcessor {
      * @throws MissingParameterException
      */
     private static boolean CorrectNode(KeyValueRequest.KVRequest request) throws MissingParameterException {
-    	if(!request.hasKey()) throw new MissingParameterException();
+    	if (!request.hasKey()) throw new MissingParameterException();
+
     	int hash = request.getKey().hashCode()%256;
+
     	return Server.selfNode.inSpace(hash);
     }
     
@@ -45,8 +47,11 @@ class RequestProcessor {
     private KeyValueResponse.KVResponse DoPut(KeyValueRequest.KVRequest request) throws MissingParameterException,
                                                                                                KeyTooLargeException,
                                                                                                ValueTooLargeException,
-                                                                                               OutOfSpaceException {
+                                                                                               OutOfSpaceException,
+                                                                                               WrongNodeException {
         if (!request.hasKey() || !request.hasValue() || !request.hasVersion()) throw new MissingParameterException();
+
+        if (!CorrectNode(request)) throw new WrongNodeException();
 
         if (request.getKey().size() > 32) throw new KeyTooLargeException();
 
@@ -78,8 +83,11 @@ class RequestProcessor {
      */
     private KeyValueResponse.KVResponse DoGet(KeyValueRequest.KVRequest request) throws KeyTooLargeException,
                                                                                                MissingParameterException,
-                                                                                               UnexistingKey {
+                                                                                               UnexistingKey,
+                                                                                               WrongNodeException {
         if (!request.hasKey()) throw new MissingParameterException();
+
+        if (!CorrectNode(request)) throw new WrongNodeException();
 
         if (request.getKey().size() > 32) throw new KeyTooLargeException();
 
@@ -101,8 +109,11 @@ class RequestProcessor {
      */
     private KeyValueResponse.KVResponse DoDelete(KeyValueRequest.KVRequest request) throws KeyTooLargeException,
                                                                                                   MissingParameterException,
-                                                                                                  UnexistingKey {
+                                                                                                  UnexistingKey,
+                                                                                                  WrongNodeException {
         if (!request.hasKey()) throw new MissingParameterException();
+
+        if (!CorrectNode(request)) throw new WrongNodeException();
 
         if (request.getKey().size() > 32) throw new KeyTooLargeException();
 
@@ -178,30 +189,15 @@ class RequestProcessor {
             switch (request.getCommand()) {
                 case 1:
                     // System.out.println("PUT received");
-                	if(CorrectNode(request)) {
-                        response = DoPut(request);
-                	}
-                	else {
-                		response = Worker.Reroute(request, messageId);
-                	}
+                    response = DoPut(request);
                     break;
                 case 2:
                     // System.out.println("Get received");
-                	if(CorrectNode(request)) {
-                		response = DoGet(request);
-                	}
-                	else{
-                		response = Worker.Reroute(request, messageId);
-                	}
+                    response = DoGet(request);
                     break;
                 case 3:
                     // System.out.println("Remove received");
-                	if(CorrectNode(request)) {
-                        response = DoDelete(request);
-                	}
-                	else {
-                		response = Worker.Reroute(request, messageId);
-                	}
+                    response = DoDelete(request);
                     break;
                 case 4:
                     // System.out.println("Shutdown received");
@@ -224,9 +220,7 @@ class RequestProcessor {
                     break;
                 default:
                     // System.err.println("Unrecognized command received");
-                    response = KeyValueResponse.KVResponse.newBuilder()
-                            .setErrCode(5)
-                            .build();
+                    response = KeyValueResponse.KVResponse.newBuilder().setErrCode(5).build();
                     break;
             }
         } catch (KeyTooLargeException e) {
@@ -253,6 +247,8 @@ class RequestProcessor {
             System.gc();    // Run garbage collector
 
             return KeyValueResponse.KVResponse.newBuilder().setErrCode(2).build();
+        } catch (WrongNodeException e) {
+            response = Worker.Reroute(request, messageId);
         }
 
         return response;
