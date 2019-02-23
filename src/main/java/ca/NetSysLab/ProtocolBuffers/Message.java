@@ -813,6 +813,15 @@ public final class Message {
      * <code>required int32 port = 2;</code>
      */
     int getPort();
+
+    /**
+     * <code>required bytes messageID = 3;</code>
+     */
+    boolean hasMessageID();
+    /**
+     * <code>required bytes messageID = 3;</code>
+     */
+    com.google.protobuf.ByteString getMessageID();
   }
   /**
    * Protobuf type {@code ClientInfo}
@@ -874,6 +883,11 @@ public final class Message {
             case 16: {
               bitField0_ |= 0x00000002;
               port_ = input.readInt32();
+              break;
+            }
+            case 26: {
+              bitField0_ |= 0x00000004;
+              messageID_ = input.readBytes();
               break;
             }
           }
@@ -946,9 +960,25 @@ public final class Message {
       return port_;
     }
 
+    public static final int MESSAGEID_FIELD_NUMBER = 3;
+    private com.google.protobuf.ByteString messageID_;
+    /**
+     * <code>required bytes messageID = 3;</code>
+     */
+    public boolean hasMessageID() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>required bytes messageID = 3;</code>
+     */
+    public com.google.protobuf.ByteString getMessageID() {
+      return messageID_;
+    }
+
     private void initFields() {
       address_ = com.google.protobuf.ByteString.EMPTY;
       port_ = 0;
+      messageID_ = com.google.protobuf.ByteString.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -964,6 +994,10 @@ public final class Message {
         memoizedIsInitialized = 0;
         return false;
       }
+      if (!hasMessageID()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -976,6 +1010,9 @@ public final class Message {
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeInt32(2, port_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeBytes(3, messageID_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -993,6 +1030,10 @@ public final class Message {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(2, port_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(3, messageID_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1115,6 +1156,8 @@ public final class Message {
         bitField0_ = (bitField0_ & ~0x00000001);
         port_ = 0;
         bitField0_ = (bitField0_ & ~0x00000002);
+        messageID_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -1151,6 +1194,10 @@ public final class Message {
           to_bitField0_ |= 0x00000002;
         }
         result.port_ = port_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.messageID_ = messageID_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -1173,6 +1220,9 @@ public final class Message {
         if (other.hasPort()) {
           setPort(other.getPort());
         }
+        if (other.hasMessageID()) {
+          setMessageID(other.getMessageID());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -1183,6 +1233,10 @@ public final class Message {
           return false;
         }
         if (!hasPort()) {
+          
+          return false;
+        }
+        if (!hasMessageID()) {
           
           return false;
         }
@@ -1275,6 +1329,41 @@ public final class Message {
         return this;
       }
 
+      private com.google.protobuf.ByteString messageID_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>required bytes messageID = 3;</code>
+       */
+      public boolean hasMessageID() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>required bytes messageID = 3;</code>
+       */
+      public com.google.protobuf.ByteString getMessageID() {
+        return messageID_;
+      }
+      /**
+       * <code>required bytes messageID = 3;</code>
+       */
+      public Builder setMessageID(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        messageID_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required bytes messageID = 3;</code>
+       */
+      public Builder clearMessageID() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        messageID_ = getDefaultInstance().getMessageID();
+        onChanged();
+        return this;
+      }
+
       // @@protoc_insertion_point(builder_scope:ClientInfo)
     }
 
@@ -1307,9 +1396,10 @@ public final class Message {
     java.lang.String[] descriptorData = {
       "\n\rMessage.proto\"X\n\003Msg\022\021\n\tmessageID\030\001 \002(" +
       "\014\022\017\n\007payload\030\002 \002(\014\022\020\n\010checkSum\030\003 \002(\006\022\033\n\006" +
-      "client\030\004 \001(\0132\013.ClientInfo\"+\n\nClientInfo\022" +
-      "\017\n\007address\030\001 \002(\014\022\014\n\004port\030\002 \002(\005B\'\n\034ca.Net" +
-      "SysLab.ProtocolBuffersB\007Message"
+      "client\030\004 \001(\0132\013.ClientInfo\">\n\nClientInfo\022" +
+      "\017\n\007address\030\001 \002(\014\022\014\n\004port\030\002 \002(\005\022\021\n\tmessag" +
+      "eID\030\003 \002(\014B\'\n\034ca.NetSysLab.ProtocolBuffer" +
+      "sB\007Message"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1334,7 +1424,7 @@ public final class Message {
     internal_static_ClientInfo_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_ClientInfo_descriptor,
-        new java.lang.String[] { "Address", "Port", });
+        new java.lang.String[] { "Address", "Port", "MessageID", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -12,4 +12,5 @@ message Msg {
 message ClientInfo {
     required bytes address = 1;
     required int32 port = 2;
+    required bytes messageID = 3;
 }
