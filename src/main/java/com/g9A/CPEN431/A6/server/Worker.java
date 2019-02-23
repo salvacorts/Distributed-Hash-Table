@@ -259,12 +259,12 @@ class Worker implements Runnable {
                 packet.setPort(port);
             }
 
+            // Get the uuid for this message. It may be a forwarded message
+            ByteString uuid = (rec_msg.hasClient()) ? rec_msg.getClient().getMessageID() : rec_msg.getMessageID();
+
             try {
                 // Check if checksum is correct
                 if (!CorrectChecksum(rec_msg)) return;
-
-                // Get the uuid for this message. It may be a forwarded message
-                ByteString uuid = (rec_msg.hasClient()) ? rec_msg.getClient().getMessageID() : rec_msg.getMessageID();
 
                 // If uuid is in processing map, return and let the other thread to finish this work
                 if (processing_messages.contains(uuid)) return;
@@ -273,11 +273,7 @@ class Worker implements Runnable {
                 processing_messages.add(uuid);
 
                 // Check if request is cached. If it is not process the request
-                KeyValueResponse.KVResponse cachedResponse = this.cache.Get(uuid);
-
-                if (cachedResponse != null) {
-                    response = cachedResponse;
-                } else {
+                if ((response = this.cache.Get(uuid))  == null) {
                     KeyValueRequest.KVRequest request = UnpackRequest(rec_msg);
                     response = requestProcessor.ProcessRequest(request, uuid);
                     this.cache.Put(uuid, response);
@@ -313,13 +309,13 @@ class Worker implements Runnable {
             }
 
             // Pack the message with the response
-            Message.Msg response_msg = PackMessage(response, rec_msg.getMessageID());
+            Message.Msg response_msg = PackMessage(response, uuid);
 
             // Send message to destination
             Send(response_msg, packet.getAddress(), packet.getPort());
 
             // Remove this uuid from the being processed set
-            processing_messages.remove(rec_msg.getMessageID());
+            processing_messages.remove(uuid);
 
             // Update process time in server
             long endTime = System.currentTimeMillis();
