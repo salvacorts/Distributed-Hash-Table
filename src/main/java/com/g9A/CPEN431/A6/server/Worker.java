@@ -124,13 +124,13 @@ class Worker implements Runnable {
         for (int i = 0; i <= maxRetires; i++) {
             socket.send(packet);
 
-            packet = new DatagramPacket(buffRecv, buffRecv.length);
+            DatagramPacket recv_packet = new DatagramPacket(buffRecv, buffRecv.length);
             socket.setSoTimeout(timeout);
 
             try {
-                socket.receive(packet);
+                socket.receive(recv_packet);
 
-                Message.Msg rec_msg = UnpackMessage(packet);
+                Message.Msg rec_msg = UnpackMessage(recv_packet);
                 return UnpackResponse(rec_msg);
 
             } catch (SocketTimeoutException e) {
@@ -238,7 +238,7 @@ class Worker implements Runnable {
             if (rec_msg.hasClient()) {
                 //System.out.println("Received packet rerouted");
 
-                // send a confirmation to the other node (may be cached)
+                // Check if the confirmation for the other node is cached
                 response = this.cache.Get(rec_msg.getMessageID());
 
                 if (response == null) {
@@ -247,6 +247,7 @@ class Worker implements Runnable {
                     this.cache.Put(rec_msg.getMessageID(), response);
                 }
 
+                // Send confirmation to the other node
                 Message.Msg response_msg = PackMessage(response, rec_msg.getMessageID());
                 Send(response_msg, packet.getAddress(), packet.getPort());
 
@@ -324,7 +325,7 @@ class Worker implements Runnable {
             long endTime = System.currentTimeMillis();
             Server.UpdateProcessTime(endTime - startTime);
         } catch (Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         }
     }
 }
