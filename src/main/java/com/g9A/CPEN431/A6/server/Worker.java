@@ -162,7 +162,7 @@ class Worker implements Runnable {
                     SendAndReceive(send_packet, 3);
                 } catch (SocketTimeoutException e) {
                     // The correct node seems to be down, answer to the client
-                    // TODO: Handle node failure internally (update alive nodes list?)
+                    // TODO A7: Handle node failure internally (update alive nodes list, and start storing keys if necessary)
                     return KVResponse.newBuilder().setErrCode(1).build();   // Send un-existing key error
                 }
 
@@ -321,7 +321,7 @@ class Worker implements Runnable {
             long endTime = System.currentTimeMillis();
             Server.UpdateProcessTime(endTime - startTime);
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 }
