@@ -1,10 +1,8 @@
-package com.g9A.CPEN431.A6.server;
+package com.g9A.CPEN431.A6.server.kvMap;
 
 import ca.NetSysLab.ProtocolBuffers.KeyValueRequest;
 import ca.NetSysLab.ProtocolBuffers.KeyValueResponse;
-import ca.NetSysLab.ProtocolBuffers.Message;
-import ca.NetSysLab.ProtocolBuffers.KeyValueResponse.KVResponse;
-import io.prometheus.client.Gauge;
+import com.g9A.CPEN431.A6.server.Server;
 
 import com.g9A.CPEN431.A6.server.exceptions.*;
 import com.g9A.CPEN431.A6.server.metrics.MetricsServer;
@@ -12,13 +10,9 @@ import com.google.protobuf.ByteString;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
-import java.net.DatagramPacket;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-class RequestProcessor {
+public class RequestProcessor {
 	
     private static RequestProcessor ourInstance = new RequestProcessor();
 
@@ -62,7 +56,7 @@ class RequestProcessor {
         long totalFree = Runtime.getRuntime().maxMemory() - (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
 
         // Set 5MB free
-        if ((totalFree - storeSize) <  5242880) throw new OutOfSpaceException();
+        if ((totalFree - storeSize) < 5242880) throw new OutOfSpaceException();
 
         KVMapValue value = new KVMapValue(request.getValue(), request.getVersion());
 
@@ -176,11 +170,11 @@ class RequestProcessor {
                 .build();
     }
 
-    static RequestProcessor getInstance() {
+    public static RequestProcessor getInstance() {
         return ourInstance;
     }
 
-    KeyValueResponse.KVResponse ProcessRequest(KeyValueRequest.KVRequest request, ByteString messageId)
+    public KeyValueResponse.KVResponse ProcessRequest(KeyValueRequest.KVRequest request, ByteString messageId)
     		throws ShutdownCommandException, IOException, WrongNodeException {
         KeyValueResponse.KVResponse response;
 
@@ -223,25 +217,25 @@ class RequestProcessor {
                     break;
             }
         } catch (KeyTooLargeException e) {
-            // System.err.println(e.toString());
+            e.printStackTrace();
 
             return KeyValueResponse.KVResponse.newBuilder().setErrCode(6).build();
 
         } catch (ValueTooLargeException e) {
-            // System.err.println(e.toString());
+            e.printStackTrace();
 
             return KeyValueResponse.KVResponse.newBuilder().setErrCode(7).build();
 
         } catch (MissingParameterException e) {
-            // System.err.println(e.toString());
+            e.printStackTrace();
 
             return KeyValueResponse.KVResponse.newBuilder().setErrCode(21).build();
         } catch (UnexistingKey e) {
-            // System.err.println(e.toString());
+            e.printStackTrace();
 
             return KeyValueResponse.KVResponse.newBuilder().setErrCode(1).build();
         } catch (OutOfSpaceException e) {
-            // System.err.println(e.toString());
+            e.printStackTrace();
 
             System.gc();    // Run garbage collector
 

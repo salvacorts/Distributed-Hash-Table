@@ -22,8 +22,8 @@ public class Server {
     private ExecutorService threadPool;
     private WorkerThreadFactory threadFactory;
 
-    static ServerNode selfNode;
-    static ArrayList<ServerNode> serverNodes;
+    public static ServerNode selfNode;
+    public static ArrayList<ServerNode> serverNodes;
 
     static void UpdateProcessTime(long time) {
         avgProcessTime = (avgProcessTime + time) / 2;

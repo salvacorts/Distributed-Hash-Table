@@ -5,7 +5,9 @@ import ca.NetSysLab.ProtocolBuffers.KeyValueResponse;
 import ca.NetSysLab.ProtocolBuffers.Message;
 import ca.NetSysLab.ProtocolBuffers.KeyValueResponse.KVResponse;
 
+import com.g9A.CPEN431.A6.server.cache.CacheManager;
 import com.g9A.CPEN431.A6.server.exceptions.*;
+import com.g9A.CPEN431.A6.server.kvMap.RequestProcessor;
 import com.g9A.CPEN431.A6.utils.ByteOrder;
 import com.google.protobuf.ByteString;
 
@@ -47,9 +49,9 @@ class Worker implements Runnable {
     }
 
     private static Message.Msg UnpackMessage(DatagramPacket packet) throws com.google.protobuf.InvalidProtocolBufferException {
-        byte[] data = Arrays.copyOfRange(packet.getData(), 0, packet.getLength());
-
-        return Message.Msg.parseFrom(data);
+        return Message.Msg.newBuilder()
+                    .mergeFrom(packet.getData(), 0, packet.getLength())
+                    .build();
     }
 
     private static KeyValueRequest.KVRequest UnpackRequest(Message.Msg msg) throws com.google.protobuf.InvalidProtocolBufferException {
@@ -118,7 +120,7 @@ class Worker implements Runnable {
      * @throws IOException when SocketTimeOutException. It means the other node is probably down
      */
     private KVResponse SendAndReceive(DatagramPacket packet, int maxRetires) throws IOException {
-        byte[] buffRecv = new byte[16384];
+        byte[] buffRecv = new byte[65507];  // Max UPD packet size
         int timeout = 100;
 
         for (int i = 0; i <= maxRetires; i++) {
@@ -155,14 +157,14 @@ class Worker implements Runnable {
                 Message.Msg send_msg = PackMessageForward(request, newUuid, packet.getAddress(), packet.getPort());
 
                 // Serialize message
-                byte[] sendData = send_msg.toByteArray();
-                DatagramPacket send_packet = new DatagramPacket(sendData, sendData.length, node.getAddress(), node.getPort());
+                DatagramPacket send_packet = new DatagramPacket(send_msg.toByteArray(), send_msg.getSerializedSize(), node.getAddress(), node.getPort());
 
                 try {
                     SendAndReceive(send_packet, 3);
                 } catch (SocketTimeoutException e) {
                     // The correct node seems to be down, answer to the client
                     // TODO A7: Handle node failure internally (update alive nodes list, and start storing keys if necessary)
+                    System.err.println("Could not contact " + node.getAddress().getHostAddress() + ":" + node.getPort());
                     return KVResponse.newBuilder().setErrCode(1).build();   // Send un-existing key error
                 }
 
@@ -199,20 +201,14 @@ class Worker implements Runnable {
 
         Message.Msg msg = PackMessage(response, uuid);
 
-        // Serialize message
-        byte[] sendData = msg.toByteArray();
-        DatagramPacket send_packet = new DatagramPacket(sendData, sendData.length, packet.getAddress(), packet.getPort());
-
-        // Send the message through socket assigned by factory (avoid mem leak w/ finalizer)
-        socket.send(send_packet);
+        Send(msg, packet.getAddress(), packet.getPort());
     }
 
     private void Send(Message.Msg msg, InetAddress address, int port) throws IOException {
         if (socket == null) socket = new DatagramSocket();
 
         // Serialize message
-        byte[] sendData = msg.toByteArray();
-        DatagramPacket send_packet = new DatagramPacket(sendData, sendData.length, address, port);
+        DatagramPacket send_packet = new DatagramPacket(msg.toByteArray(), msg.getSerializedSize(), address, port);
 
         // Send packet
         socket.send(send_packet);
@@ -291,7 +287,7 @@ class Worker implements Runnable {
                         .setErrCode(2)
                         .build();
             } catch (WrongNodeException e) {
-                //System.out.println("Rerouting to correct node");
+                System.out.println("Rerouting to correct node");
 
                 response = Reroute(rec_msg, e.getHash());
 
@@ -321,7 +317,7 @@ class Worker implements Runnable {
             long endTime = System.currentTimeMillis();
             Server.UpdateProcessTime(endTime - startTime);
         } catch (Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         }
     }
 }

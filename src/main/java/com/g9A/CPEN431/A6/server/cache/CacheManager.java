@@ -1,4 +1,4 @@
-package com.g9A.CPEN431.A6.server;
+package com.g9A.CPEN431.A6.server.cache;
 
 import ca.NetSysLab.ProtocolBuffers.KeyValueResponse;
 import com.google.common.cache.Cache;
@@ -7,12 +7,12 @@ import com.google.protobuf.ByteString;
 
 import java.util.concurrent.TimeUnit;
 
-class CacheManager {
+public class CacheManager {
     private static CacheManager ourInstance = new CacheManager();
 
     private Cache<ByteString, KeyValueResponse.KVResponse> requestCache;
 
-    static CacheManager getInstance() {
+    public static CacheManager getInstance() {
         return ourInstance;
     }
 
@@ -23,7 +23,7 @@ class CacheManager {
                 .build();
     }
 
-    void Put(ByteString uuid, KeyValueResponse.KVResponse response) {
+    public void Put(ByteString uuid, KeyValueResponse.KVResponse response) {
         this.requestCache.put(uuid, response);
     }
 
@@ -32,11 +32,11 @@ class CacheManager {
      * @param uuid message identifier
      * @return cached response or null if it is not cached
      */
-    KeyValueResponse.KVResponse Get(ByteString uuid) {
+    public KeyValueResponse.KVResponse Get(ByteString uuid) {
         return this.requestCache.getIfPresent(uuid);
     }
 
-    long Size() {
+    public long Size() {
         return this.requestCache.size();
     }
 }
