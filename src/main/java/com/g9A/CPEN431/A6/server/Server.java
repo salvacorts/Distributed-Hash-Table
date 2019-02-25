@@ -3,15 +3,15 @@ package com.g9A.CPEN431.A6.server;
 // TODO: CATCH com.google.protobuf.InvalidProtocolBufferException: While parsing a protocol message, the input ended unexpectedly in the middle of a field.  This could mean either than the input has been truncated or that an embedded message misreported its own length. PROPERLY
 // TODO: Calc if PUT will be successful based on heap size and used size.
 
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import io.prometheus.client.Gauge;
+import com.g9A.CPEN431.A6.server.pools.SocketFactory;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+
+import com.g9A.CPEN431.A6.server.pools.SocketPool;
 
 public class Server {
     static boolean KEEP_RECEIVING = true;
@@ -19,9 +19,10 @@ public class Server {
     private static long avgProcessTime = 0;
     private DatagramSocket listeningSocket;        // Server UDP socket to send and receive packets
     private int availableCores;
-    private ExecutorService threadPool;
-    private WorkerThreadFactory threadFactory;
 
+    private ExecutorService threadPool;
+
+    public static SocketPool socketPool = null;
     public static ServerNode selfNode;
     public static ArrayList<ServerNode> serverNodes;
 
@@ -33,10 +34,19 @@ public class Server {
         this.listeningSocket = new DatagramSocket(port);
         this.availableCores = Runtime.getRuntime().availableProcessors();
 
-        int coresPool = (this.availableCores > 1) ? this.availableCores - 1 : 1;
+        int poolSize = (this.availableCores > 1) ? this.availableCores - 1 : 1;
 
-        this.threadFactory = new WorkerThreadFactory(coresPool);
-        this.threadPool = Executors.newFixedThreadPool(coresPool, threadFactory);
+        // Setup threads pool
+        this.threadPool = Executors.newFixedThreadPool(poolSize);
+
+        // Setup sockets pool
+        if (socketPool == null) {
+            GenericObjectPoolConfig config = new GenericObjectPoolConfig();
+            config.setMaxTotal(poolSize);
+            config.setMinIdle(poolSize);
+            this.socketPool = new SocketPool(new SocketFactory(), config);
+        }
+
         this.serverNodes = otherNodes;
 
         InetAddress local = InetAddress.getLocalHost();
@@ -68,7 +78,8 @@ public class Server {
                 listeningSocket.receive(rec_packet);
 
                 // Launch a new worker on the pool
-                this.threadPool.execute(new Worker(rec_packet, threadFactory.GetSocketToUse()));
+                DatagramSocket socket = socketPool.borrowObject();
+                this.threadPool.execute(new Worker(rec_packet, socket));
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -77,7 +88,6 @@ public class Server {
 
         this.listeningSocket.close();
         this.threadPool.shutdown();
-        this.threadFactory.dispose();
     }
 }
 

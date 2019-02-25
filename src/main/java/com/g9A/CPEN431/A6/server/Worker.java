@@ -90,7 +90,7 @@ class Worker implements Runnable {
      * @param port client port
      * @return the message to be sent with checksum
      */
-    private static Message.Msg PackMessageForward(Message.Msg request, ByteString uuid, InetAddress address, int port) {
+    /*private static Message.Msg PackMessageForward(Message.Msg request, ByteString uuid, InetAddress address, int port) {
         CRC32 crc32 = new CRC32();
         byte[] concat = ByteOrder.concatArray(uuid.toByteArray(), request.getPayload().toByteArray());
         crc32.update(concat);
@@ -110,7 +110,7 @@ class Worker implements Runnable {
                             .build()
                 )
                 .build();
-    }
+    }/*
 
     /**
      * Send packet to another node and wait for confirmation
@@ -153,26 +153,23 @@ class Worker implements Runnable {
     private KVResponse Reroute(Message.Msg request, int hash) throws IOException{
     	for (ServerNode node : Server.serverNodes) {
     	    if (node.inSpace(hash)) {
-    	        ByteString newUuid = GetUUID(this.socket);
-                Message.Msg send_msg = PackMessageForward(request, newUuid, packet.getAddress(), packet.getPort());
-
                 // Serialize message
-                DatagramPacket send_packet = new DatagramPacket(send_msg.toByteArray(), send_msg.getSerializedSize(), node.getAddress(), node.getPort());
+                DatagramPacket send_packet = new DatagramPacket(request.toByteArray(), request.getSerializedSize(), node.getAddress(), node.getPort());
 
                 try {
-                    SendAndReceive(send_packet, 3);
+                    // Send packet to correct node and obtain an answer
+                    return SendAndReceive(send_packet, 3);
                 } catch (SocketTimeoutException e) {
                     // The correct node seems to be down, answer to the client
                     // TODO A7: Handle node failure internally (update alive nodes list, and start storing keys if necessary)
                     System.err.println("Could not contact " + node.getAddress().getHostAddress() + ":" + node.getPort());
-                    return KVResponse.newBuilder().setErrCode(1).build();   // Send un-existing key error
                 }
 
                 break;
-            }
+    	    }
         }
 
-    	return null;
+    	return KVResponse.newBuilder().setErrCode(1).build();   // Send un-existing key error;
     }
 
     private static boolean CorrectChecksum(Message.Msg msg) {
@@ -231,7 +228,7 @@ class Worker implements Runnable {
             KeyValueResponse.KVResponse response;
 
             // If packet has been rerouted by other node, update destination info
-            if (rec_msg.hasClient()) {
+            /*if (rec_msg.hasClient()) {
                 //System.out.println("Received packet rerouted");
 
                 // Check if the confirmation for the other node is cached
@@ -253,10 +250,11 @@ class Worker implements Runnable {
 
                 packet.setAddress(InetAddress.getByAddress(addr));
                 packet.setPort(port);
-            }
+            }*/
 
             // Get the uuid for this message. It may be a forwarded message
-            ByteString uuid = (rec_msg.hasClient()) ? rec_msg.getClient().getMessageID() : rec_msg.getMessageID();
+            //ByteString uuid = (rec_msg.hasClient()) ? rec_msg.getClient().getMessageID() : rec_msg.getMessageID();
+            ByteString uuid = rec_msg.getMessageID();
 
             try {
                 // Check if checksum is correct
@@ -291,9 +289,6 @@ class Worker implements Runnable {
 
                 response = Reroute(rec_msg, e.getHash());
 
-                // If there is no response, we had received a confirmation from the other node. We can finish
-                if (response == null) return;
-
                 // Otherwise, send the error to the client catching the response
                 this.cache.Put(rec_msg.getMessageID(), response);
 
@@ -316,6 +311,9 @@ class Worker implements Runnable {
             // Update process time in server
             long endTime = System.currentTimeMillis();
             Server.UpdateProcessTime(endTime - startTime);
+
+            // Return socket to it's pool
+            Server.socketPool.returnObject(socket);
         } catch (Exception e) {
             e.printStackTrace();
         }

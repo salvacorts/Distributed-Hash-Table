@@ -6,11 +6,12 @@ message Msg {
     required bytes payload = 2;
     required fixed64 checkSum = 3;
 
-    optional ClientInfo client = 4;
+//    optional ClientInfo client = 4;
 }
 
+/*
 message ClientInfo {
     required bytes address = 1;
     required int32 port = 2;
     required bytes messageID = 3;
-}
+}*/
