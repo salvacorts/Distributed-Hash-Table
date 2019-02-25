@@ -65,7 +65,7 @@ public class RequestProcessor {
         }
         kvMap.put(request.getKey(), value);
 
-        System.out.println("PUT with key " + request.getKey().hashCode() + ", value " + value.getValue().hashCode());
+        //System.out.println("PUT with key " + request.getKey().hashCode() + ", value " + value.getValue().hashCode());
 
         return KeyValueResponse.KVResponse.newBuilder()
                 .setErrCode(0)
@@ -91,7 +91,7 @@ public class RequestProcessor {
 
         KVMapValue value = kvMap.get(request.getKey());
         
-        System.out.println("GET with key " + request.getKey().hashCode() + ", value " + value.getValue().hashCode());
+        //System.out.println("GET with key " + request.getKey().hashCode() + ", value " + value.getValue().hashCode());
 
         return KeyValueResponse.KVResponse.newBuilder()
                 .setErrCode(0)
@@ -121,7 +121,7 @@ public class RequestProcessor {
 
         metrics.keysStored.dec();
 
-        System.out.println("DELETE with key " + request.getKey().hashCode());
+        //System.out.println("DELETE with key " + request.getKey().hashCode());
 
         return KeyValueResponse.KVResponse.newBuilder()
                 .setErrCode(0)
@@ -203,7 +203,7 @@ public class RequestProcessor {
                     // System.out.println("Shutdown received");
                     throw new ShutdownCommandException();
                 case 5:
-                    System.out.println("Wipeout received");
+                    // System.out.println("Wipeout received");
                     response = DoWipeout();
                     break;
                 case 6:

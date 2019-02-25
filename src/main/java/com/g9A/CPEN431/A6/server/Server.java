@@ -110,6 +110,8 @@ public class Server {
 
         this.listeningSocket.close();
         this.threadPool.shutdown();
+        this.epiQueue.stop();
+        System.out.println("Server stopping");
     }
 }
 

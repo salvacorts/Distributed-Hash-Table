@@ -56,4 +56,8 @@ public class EpidemicQueue implements Runnable{
             t.start();
         }
 	}
+	
+	public void stop() {
+		stopflag = true;
+	}
 }

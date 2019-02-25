@@ -52,9 +52,9 @@ class Worker implements Runnable {
     }
 
     private static Message.Msg UnpackMessage(DatagramPacket packet) throws com.google.protobuf.InvalidProtocolBufferException {
-        return Message.Msg.newBuilder()
-                    .mergeFrom(packet.getData(), 0, packet.getLength())
-                    .build();
+		return Message.Msg.newBuilder()
+			.mergeFrom(packet.getData(), 0, packet.getLength())
+			.build();
     }
 
     private static KeyValueRequest.KVRequest UnpackKVRequest(Message.Msg msg) throws com.google.protobuf.InvalidProtocolBufferException {
@@ -230,9 +230,17 @@ class Worker implements Runnable {
         long startTime = System.currentTimeMillis();
 
         try {
-            // Unpack message from the packet
-            Message.Msg rec_msg = UnpackMessage(packet);
             KeyValueResponse.KVResponse response;
+            Message.Msg rec_msg = null;
+            // Unpack message from the packet
+        	try {
+        		rec_msg = UnpackMessage(packet);
+        	}
+        	catch(com.google.protobuf.InvalidProtocolBufferException e) {
+        		e.printStackTrace();
+                Server.socketPool.returnObject(socket);
+                return;
+        	}
 
             // If packet has been rerouted by other node, update destination info
             /*if (rec_msg.hasClient()) {
@@ -265,10 +273,16 @@ class Worker implements Runnable {
 
             try {
                 // Check if checksum is correct
-                if (!CorrectChecksum(rec_msg)) return;
+                if (!CorrectChecksum(rec_msg)) {
+                    Server.socketPool.returnObject(socket);
+                	return;
+                }
 
                 // If uuid is in processing map, return and let the other thread to finish this work
-                if (processing_messages.contains(uuid)) return;
+                if (processing_messages.contains(uuid)) {
+                    Server.socketPool.returnObject(socket);
+                	return;
+                }
 
                 // Add this message to the messages being processed set
                 processing_messages.add(uuid);
@@ -291,9 +305,11 @@ class Worker implements Runnable {
                 		
                 		Epidemic epi = new Epidemic(DNRequest.toByteString(), uuid, 2);
                 		Server.epiQueue.add(epi);
+                        Server.socketPool.returnObject(socket);
                 		return;
                 	}
                 	else {
+                        Server.socketPool.returnObject(socket);
                 		return;
                 	}
                 }
@@ -340,6 +356,7 @@ class Worker implements Runnable {
             Server.socketPool.returnObject(socket);
         } catch (Exception e) {
             e.printStackTrace();
+            Server.socketPool.returnObject(socket);
         }
     }
 }
