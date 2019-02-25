@@ -14,6 +14,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class ServerTest {
@@ -29,12 +30,13 @@ public class ServerTest {
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    Server server = new Server(10145, new ArrayList<ServerNode>() {{
-                        add(new ServerNode(addr, 10145, 0, 255));
-                    }});
+                	
+                    Server server = new Server(10145, new ArrayList<ServerNode>(Arrays.asList(
+                            new ServerNode(addr, 10145, 0, 255)
+                    )));
                     server.StartServing();
                 } catch (Exception e) {
-                    // System.err.println(e.toString());
+                   System.err.println(e.toString());
                 }
             }
         }).start();

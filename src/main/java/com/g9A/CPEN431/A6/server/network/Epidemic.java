@@ -1,8 +1,6 @@
 package com.g9A.CPEN431.A6.server.network;
 
 import java.io.IOException;
-import java.net.DatagramSocket;
-import java.net.SocketException;
 import java.util.List;
 import java.util.Random;
 import java.util.zip.CRC32;
@@ -16,33 +14,38 @@ import com.google.protobuf.ByteString;
 import ca.NetSysLab.ProtocolBuffers.KeyValueResponse.KVResponse;
 import ca.NetSysLab.ProtocolBuffers.Message;
 
-public class Epidemic implements Runnable {
+public class Epidemic {
 
-    private Thread t;
     private boolean stopflag = false;
     
     ByteString payload;
     int type;
+    ByteString uuid;
     Client client;
     Random rand = new Random();
     
-    private int count = 0;
+    private int iterations;
 
-    public Epidemic(ByteString payload, int type){
+    public Epidemic(ByteString payload, ByteString uuid, int type){
     	client = new Client("",0,0);
+    	this.uuid = uuid;
     	this.payload = payload;
     	this.type = type;
+    	iterations = Server.serverNodes.size();
     }
     
     private void sendRandom() throws IOException {
-    	int r = rand.nextInt(Server.serverNodes.size());
-    	ServerNode node = Server.serverNodes.get(r);
+    	ServerNode node = null;
+    	do {
+	    	int r = rand.nextInt(Server.serverNodes.size());
+	    	node = Server.serverNodes.get(r);
+    	} while(node.equals(Server.selfNode));
+    	
+    	System.out.println("epidemic sending to " + node.getAddress().getHostName() + ":" + node.getPort());
     	client.changeServer(node.getAddress().getHostAddress(), node.getPort());
+    	client.DoInternalRequest(payload, uuid, type);
     	
-    	client.DoInternalRequest(payload, type);
-    	count++;
-    	
-    	if(count < Server.serverNodes.size()) {
+    	if(iterations-- > 0){
     		stopflag = true;
     	}
     }
@@ -65,11 +68,7 @@ public class Epidemic implements Runnable {
 
     public void start() {
         stopflag = false;
-
-        if (t == null) {
-            t = new Thread(this);
-            t.start();
-        }
+        run();
     }
 
     public void stop() {

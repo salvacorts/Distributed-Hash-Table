@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.g9A.CPEN431.A6.server.network.EpidemicQueue;
 import com.g9A.CPEN431.A6.server.pools.SocketFactory;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
@@ -28,6 +29,7 @@ public class Server {
     public static SocketPool socketPool = null;
     public static ServerNode selfNode;
     public static List<ServerNode> serverNodes;
+    public static EpidemicQueue epiQueue = EpidemicQueue.getInstance();
 
     static void UpdateProcessTime(long time) {
         avgProcessTime = (avgProcessTime + time) / 2;
@@ -65,6 +67,7 @@ public class Server {
         if (selfNode == null) {
         	throw new IllegalArgumentException("Current server not present in nodes-list");
         }
+        epiQueue.start();
     }
     
     public static void removeNode(String addr, int port) {

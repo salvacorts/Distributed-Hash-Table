@@ -128,7 +128,7 @@ class Worker implements Runnable {
      */
     private KVResponse SendAndReceive(DatagramPacket packet, int maxRetires) throws IOException {
         byte[] buffRecv = new byte[65507];  // Max UPD packet size
-        int timeout = 100;
+        int timeout = 1000;
 
         for (int i = 0; i <= maxRetires; i++) {
             socket.send(packet);
@@ -288,8 +288,10 @@ class Worker implements Runnable {
                 				.setServer(request.getServer())
                 				.setPort(request.getPort())
                 				.build();
-                		Epidemic epi = new Epidemic(DNRequest.toByteString(), 2);
-                		epi.start();
+                		
+                		Epidemic epi = new Epidemic(DNRequest.toByteString(), uuid, 2);
+                		Server.epiQueue.add(epi);
+                		return;
                 	}
                 	else {
                 		return;
@@ -308,7 +310,6 @@ class Worker implements Runnable {
                         .setErrCode(2)
                         .build();
             } catch (WrongNodeException e) {
-                System.out.println("Rerouting to correct node");
 
                 response = Reroute(rec_msg, e.getHash());
 

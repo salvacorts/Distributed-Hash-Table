@@ -51,6 +51,26 @@ public class Client {
 
         return buffUuid;
     }
+    
+    public ByteString GetUUID() throws SocketException {
+    	DatagramSocket socket = new DatagramSocket();
+        Random randomGen = new Random();
+        byte[] buffUuid = new byte[16];
+
+        byte[] ip = socket.getLocalAddress().getAddress();
+        short port = (short) socket.getLocalPort();
+        short rnd = (short) randomGen.nextInt(Short.MAX_VALUE + 1);
+        long timestamp = System.nanoTime();
+
+        System.arraycopy(ip, 0, buffUuid, 0, ip.length);
+        ByteOrder.short2leb(port, buffUuid, 4);
+        ByteOrder.short2leb(rnd, buffUuid, 6);
+        ByteOrder.long2leb(timestamp, buffUuid, 8);
+        
+        socket.close();
+
+        return ByteString.copyFrom(buffUuid);
+    }
 
     private KeyValueRequest.KVRequest PackRequest(int reqID, String key, String value, int version) throws UnsupportedCommandException {
         KeyValueRequest.KVRequest.Builder request = KeyValueRequest.KVRequest.newBuilder();
@@ -156,12 +176,10 @@ public class Client {
         this.maxRetires = maxRetires;
     }
     
-    public void DoInternalRequest(ByteString payload, int type) throws IOException {
+    public void DoInternalRequest(ByteString payload, ByteString uuidBS, int type) throws IOException {
         DatagramSocket socket = new DatagramSocket();
     	CRC32 crc32 = new CRC32();
 
-        byte[] uuid = GetUUID(socket);
-        ByteString uuidBS = ByteString.copyFrom(uuid, 0, uuid.length);
         byte[] concat = ByteOrder.concatArray(uuidBS.toByteArray(), payload.toByteArray());
         crc32.update(concat);
         long checksum = crc32.getValue();
@@ -184,7 +202,7 @@ public class Client {
         DatagramSocket socket = new DatagramSocket();
         InetAddress address = InetAddress.getByName(this.svrAddr);
         byte[] buffRecv = new byte[16+16384];
-        int timeout = 100;
+        int timeout = 1000;
 
         byte[] uuid = GetUUID(socket);
         KeyValueRequest.KVRequest request = PackRequest(reqID, key, value, version);
@@ -210,7 +228,7 @@ public class Client {
                 return response;
 
             } catch (SocketTimeoutException e) {
-                System.err.println("Cannot connect with " + this.svrAddr + ":" + this.svrPort + "\t(Waited for " + timeout + "ms)");
+                //System.err.println("Cannot connect with " + this.svrAddr + ":" + this.svrPort + "\t(Waited for " + timeout + "ms)");
                 timeout *= 2;
             } catch (DifferentChecksumException e) {
                 i--;

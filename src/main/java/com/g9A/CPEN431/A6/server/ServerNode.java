@@ -43,7 +43,7 @@ public class ServerNode {
 
         ServerNode other = (ServerNode) o;
 
-        return other.getAddress().equals(address) || (other.getPort() == port);
+        return other.getAddress().equals(address) && (other.getPort() == port);
     }
 
     public boolean inSpace(int hashNum) {
