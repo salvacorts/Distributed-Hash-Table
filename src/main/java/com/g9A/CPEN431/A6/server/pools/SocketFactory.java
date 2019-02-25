@@ -17,10 +17,4 @@ public class SocketFactory extends BasePooledObjectFactory<DatagramSocket> {
     public PooledObject<DatagramSocket> wrap(DatagramSocket socket) {
         return new DefaultPooledObject<DatagramSocket>(socket);
     }
-
-    @Override
-    public boolean validateObject(PooledObject<DatagramSocket> socket) {
-        return !socket.getObject().isClosed();
-    }
-
 }

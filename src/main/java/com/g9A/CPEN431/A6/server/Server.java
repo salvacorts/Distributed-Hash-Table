@@ -22,7 +22,7 @@ public class Server {
 
     private ExecutorService threadPool;
 
-    public static SocketPool socketPool = null;
+    public static SocketPool socketPool = new SocketPool(new SocketFactory());;
     public static ServerNode selfNode;
     public static ArrayList<ServerNode> serverNodes;
 
@@ -30,7 +30,7 @@ public class Server {
         avgProcessTime = (avgProcessTime + time) / 2;
     }
 
-    public Server(int port, ArrayList<ServerNode> otherNodes) throws java.net.SocketException, UnknownHostException {
+    public Server(int port, ArrayList<ServerNode> otherNodes) throws Exception {
         this.listeningSocket = new DatagramSocket(port);
         this.availableCores = Runtime.getRuntime().availableProcessors();
 
@@ -40,14 +40,11 @@ public class Server {
         this.threadPool = Executors.newFixedThreadPool(poolSize);
 
         // Setup sockets pool
-        if (socketPool == null) {
-            GenericObjectPoolConfig config = new GenericObjectPoolConfig();
-            config.setMaxTotal(poolSize);
-            config.setMinIdle(poolSize);
-            this.socketPool = new SocketPool(new SocketFactory(), config);
-        }
+        socketPool.setMaxTotal(25);
+        socketPool.setMinIdle(poolSize);
+        socketPool.preparePool();
 
-        this.serverNodes = otherNodes;
+        serverNodes = otherNodes;
 
         InetAddress local = InetAddress.getLocalHost();
 
@@ -88,6 +85,7 @@ public class Server {
 
         this.listeningSocket.close();
         this.threadPool.shutdown();
+        socketPool.close();
     }
 }
 

@@ -256,23 +256,22 @@ class Worker implements Runnable {
             //ByteString uuid = (rec_msg.hasClient()) ? rec_msg.getClient().getMessageID() : rec_msg.getMessageID();
             ByteString uuid = rec_msg.getMessageID();
 
+            // If uuid is in processing map, return and let the other thread to finish this work
+            if (processing_messages.contains(uuid)) return;
+
+            // Add this message to the messages being processed set
+            processing_messages.add(uuid);
+
+            // Check if checksum is correct
+            if (!CorrectChecksum(rec_msg)) return;
+
             try {
-                // Check if checksum is correct
-                if (!CorrectChecksum(rec_msg)) return;
-
-                // If uuid is in processing map, return and let the other thread to finish this work
-                if (processing_messages.contains(uuid)) return;
-
-                // Add this message to the messages being processed set
-                processing_messages.add(uuid);
-
                 // Check if request is cached. If it is not process the request
                 if ((response = this.cache.Get(uuid))  == null) {
                     KeyValueRequest.KVRequest request = UnpackRequest(rec_msg);
                     response = requestProcessor.ProcessRequest(request, uuid);
                     this.cache.Put(uuid, response);
                 }
-
             } catch (ShutdownCommandException e) {
                 Server.KEEP_RECEIVING = false;
                 response = KeyValueResponse.KVResponse.newBuilder()
@@ -285,8 +284,6 @@ class Worker implements Runnable {
                         .setErrCode(2)
                         .build();
             } catch (WrongNodeException e) {
-                System.out.println("Rerouting to correct node");
-
                 response = Reroute(rec_msg, e.getHash());
 
                 // Otherwise, send the error to the client catching the response
@@ -308,14 +305,15 @@ class Worker implements Runnable {
             // Remove this uuid from the being processed set
             processing_messages.remove(uuid);
 
-            // Update process time in server
-            long endTime = System.currentTimeMillis();
-            Server.UpdateProcessTime(endTime - startTime);
-
-            // Return socket to it's pool
-            Server.socketPool.returnObject(socket);
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        // Update process time in server
+        long endTime = System.currentTimeMillis();
+        Server.UpdateProcessTime(endTime - startTime);
+
+        // Return socket to it's pool
+        Server.socketPool.returnObject(socket);
     }
 }
