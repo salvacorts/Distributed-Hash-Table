@@ -176,9 +176,12 @@ public class Client {
         this.maxRetires = maxRetires;
     }
     
-    public void DoInternalRequest(ByteString payload, ByteString uuidBS, int type) throws IOException {
+    public void DoInternalRequest(ByteString payload, int type, int epId) throws IOException {
         DatagramSocket socket = new DatagramSocket();
     	CRC32 crc32 = new CRC32();
+
+        byte[] uuid = GetUUID(socket);
+        ByteString uuidBS = ByteString.copyFrom(uuid, 0, uuid.length);
 
         byte[] concat = ByteOrder.concatArray(uuidBS.toByteArray(), payload.toByteArray());
         crc32.update(concat);
@@ -188,6 +191,7 @@ public class Client {
 			.setCheckSum(checksum)
 			.setPayload(payload)
 			.setMessageID(uuidBS)
+			.setEpID(epId)
 			.setType(type)
 			.build();
 

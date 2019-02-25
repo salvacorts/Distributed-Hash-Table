@@ -313,7 +313,7 @@ class Worker implements Runnable {
                 				.setPort(request.getPort())
                 				.build();
 
-                		Epidemic epi = new Epidemic(DNRequest.toByteString(), uuid, 2);
+                		Epidemic epi = new Epidemic(DNRequest.toByteString(), 2, rec_msg.getEpID());
                 		Server.epiQueue.add(epi);
                         Server.socketPool.returnObject(socket);
                 		return;

@@ -20,17 +20,25 @@ public class Epidemic {
     
     ByteString payload;
     int type;
-    ByteString uuid;
+    int epId;
     Client client;
     Random rand = new Random();
     
     private int iterations;
 
-    public Epidemic(ByteString payload, ByteString uuid, int type){
+    public Epidemic(ByteString payload, int type){
     	client = new Client("",0,3);
-    	this.uuid = uuid;
     	this.payload = payload;
     	this.type = type;
+    	iterations = Server.serverNodes.size();
+    	epId = EpidemicQueue.generateId();
+    }
+    
+    public Epidemic(ByteString payload, int type, int epId){
+    	client = new Client("",0,3);
+    	this.payload = payload;
+    	this.type = type;
+    	this.epId = epId;
     	iterations = Server.serverNodes.size();
     }
     
@@ -47,7 +55,7 @@ public class Epidemic {
     	
     	System.out.println("epidemic sending to " + node.getAddress().getHostName() + ":" + node.getPort());
     	client.changeServer(node.getAddress().getHostAddress(), node.getPort());
-    	client.DoInternalRequest(payload, uuid, type);
+    	client.DoInternalRequest(payload, type, epId);
     	
     	if(iterations-- > 0){
     		stopflag = true;
