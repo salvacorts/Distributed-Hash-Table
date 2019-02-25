@@ -56,14 +56,14 @@ public class FailureCheck implements Runnable {
     	}
     }
     
-    private void removeNode(ServerNode node) throws SocketException {
+    private void removeNode(ServerNode node) {
 		Server.removeNode(node.getAddress().getHostAddress(), node.getPort());
 		InternalRequest.DeadNodeRequest DNRequest = InternalRequest.DeadNodeRequest.newBuilder()
 				.setServer(node.getAddress().getHostName())
 				.setPort(node.getPort())
 				.build();
-		ByteString uuid = client.GetUUID();
-		Epidemic epi = new Epidemic(DNRequest.toByteString(), uuid, 2);
+		
+		Epidemic epi = new Epidemic(DNRequest.toByteString(), 2);
 		Server.epiQueue.add(epi);
     }
 

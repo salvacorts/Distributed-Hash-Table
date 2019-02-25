@@ -3,6 +3,7 @@ package com.g9A.CPEN431.A6.server.network;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import com.g9A.CPEN431.A6.server.ServerNode;
 
@@ -22,9 +23,26 @@ public class EpidemicQueue implements Runnable{
 		return instance;
 	}
 	
+	public static int generateId() {
+		boolean found = false;
+		int id;
+		Random rand = new Random();
+		do {
+			id = rand.nextInt();
+			found = true;
+			for(Epidemic e: queue) {
+				if(e.epId == id) {
+					found = false;
+					break;
+				}
+			}
+		}while(!found);
+		return id;
+	}
+	
 	public void add(Epidemic epi) {
 		for(Epidemic e: queue) {
-			if(e.uuid == epi.uuid) {
+			if(e.epId == epi.epId) {
 				System.out.println("epidemic already in queue");
 				return;
 			}
