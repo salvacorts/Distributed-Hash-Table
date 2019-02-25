@@ -31,13 +31,16 @@ public class FailureCheck implements Runnable {
     
     private void checkRandom() throws SocketException {
     	ServerNode node = null;
+
     	do {
         	int r = rand.nextInt(Server.serverNodes.size());
         	node = Server.serverNodes.get(r);
-        	if(Server.serverNodes.size() < 2){
+
+        	if (Server.serverNodes.size() < 2) {
         		return;
         	}
-    	}while(node.equals(Server.selfNode));
+    	} while(node.equals(Server.selfNode));
+
     	client.changeServer(node.getAddress().getHostAddress(), node.getPort());
     	KVResponse kvr = null;
     	
@@ -45,13 +48,13 @@ public class FailureCheck implements Runnable {
 			kvr = client.DoRequest(6, "", "", 0);
 		} catch (IOException e1) {
 			removeNode(node);
-			System.out.println("Server " + node.getAddress().getHostName() + " offline");
+			System.out.println("Server " + node.getAddress().getHostName() + ":" + node.getPort() + " offline");
 			return;
 		} catch (UnsupportedCommandException e) {
 			e.printStackTrace();
 		}
     	
-    	if(kvr != null && kvr.getErrCode() != 0) {
+    	if (kvr != null && kvr.getErrCode() != 0) {
 			removeNode(node);
     	}
     }
@@ -68,7 +71,7 @@ public class FailureCheck implements Runnable {
     }
 
     public void run() {
-    	if(firstFlag) {
+    	if (firstFlag) {
     		firstFlag = false;
     		try {
 				Thread.sleep(30*1000);
@@ -77,7 +80,7 @@ public class FailureCheck implements Runnable {
 			}
     	}
     	
-    	if(Server.serverNodes.size() > 1) {
+    	if (Server.serverNodes.size() > 1) {
 			try {
 				checkRandom();
 			} catch (SocketException e) {
@@ -91,7 +94,7 @@ public class FailureCheck implements Runnable {
             e.printStackTrace();
         }
 
-        if(!stopflag) this.run();
+        if (!stopflag) this.run();
     }
 
     public void start() {

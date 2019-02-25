@@ -13,6 +13,11 @@ public class KVMapValue {
         this.version = version;
     }
 
+    public KVMapValue(KVMapValue other) {
+        this.value = Arrays.copyOf(other.value, other.value.length);
+        this.version = other.version;
+    }
+
     public byte[] getValue() {
         return value;
     }

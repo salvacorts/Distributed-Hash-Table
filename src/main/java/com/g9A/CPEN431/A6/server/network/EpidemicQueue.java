@@ -7,7 +7,7 @@ import java.util.Random;
 
 import com.g9A.CPEN431.A6.server.ServerNode;
 
-public class EpidemicQueue implements Runnable{
+public class EpidemicQueue implements Runnable {
 	
 	private boolean stopflag = false;
 	private Thread t;

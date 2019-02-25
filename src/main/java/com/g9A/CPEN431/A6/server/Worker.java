@@ -157,10 +157,8 @@ class Worker implements Runnable {
             } catch (SocketTimeoutException e) {
                 System.err.println("Timeout connecting with " + packet.getAddress().getHostName() + ":" + packet.getPort() + "\t(" + timeout + "ms)");
                 timeout *= 2;
-            } catch (DifferentChecksumException e) {
+            } catch (Exception e) { // Can be either Different UUID or incorrect Checksum
                 i--;
-            } catch (DifferentUUIDException ignore) {
-                System.out.println("oooops");
             }
         }
 
@@ -309,7 +307,6 @@ class Worker implements Runnable {
                 		KeyValueRequest.KVRequest request = UnpackKVRequest(rec_msg);
                         response = requestProcessor.ProcessRequest(request, uuid);
                         this.cache.Put(uuid, response);
-                        request = null;
                 	} else if (rec_msg.getType() == 2) {  // Dead node request
                         InternalRequest.DeadNodeRequest request = UnpackDNRequest(rec_msg);
                 		Server.removeNode(request.getServer(), request.getPort());
@@ -321,7 +318,6 @@ class Worker implements Runnable {
                 		Epidemic epi = new Epidemic(DNRequest.toByteString(), 2, rec_msg.getEpID());
                 		Server.epiQueue.add(epi);
                         Server.socketPool.returnObject(socket);
-                        DNRequest = null;
                 		return;
                 	} else {
                         Server.socketPool.returnObject(socket);

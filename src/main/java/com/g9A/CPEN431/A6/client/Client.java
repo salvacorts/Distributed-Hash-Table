@@ -232,12 +232,12 @@ public class Client {
                 return response;
 
             } catch (SocketTimeoutException e) {
-                System.err.println("Cannot connect with " + this.svrAddr + ":" + this.svrPort + "\t(Waited for " + timeout + "ms)");
+                System.err.println("[Client] Cannot connect with " + this.svrAddr + ":" + this.svrPort + "\t(Waited for " + timeout + "ms)");
                 timeout *= 2;
             } catch (DifferentChecksumException e) {
                 i--;
             } catch (DifferentUUIDException e) {
-                continue;
+                i--;
             }
         }
         socket.close();

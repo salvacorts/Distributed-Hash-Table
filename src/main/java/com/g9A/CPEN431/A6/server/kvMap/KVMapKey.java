@@ -11,6 +11,10 @@ public class KVMapKey {
         this.key = key;
     }
 
+    public KVMapKey(KVMapKey other) {
+        this.key = Arrays.copyOf(other.key, other.key.length);
+    }
+
     public byte[] getKey() {
         return key;
     }

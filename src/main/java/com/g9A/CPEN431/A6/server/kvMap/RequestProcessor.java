@@ -140,8 +140,13 @@ public class RequestProcessor {
      * @return a response containing an error (actual error or success)
      */
     private KeyValueResponse.KVResponse DoWipeout() {
+        System.out.println("[-] Wipeout:\n\tBefore:" + kvMap.size());
+
         kvMap.clear();
+        kvMap = new ConcurrentHashMap<KVMapKey, KVMapValue>();
         metrics.keysStored.set(0);
+
+        System.out.println("\tAfter:" + kvMap.size());
 
         return KeyValueResponse.KVResponse.newBuilder()
                 .setErrCode(0)
