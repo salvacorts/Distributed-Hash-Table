@@ -27,27 +27,16 @@ public class EpidemicQueue implements Runnable {
 		boolean found = false;
 		int id;
 		Random rand = new Random();
-		do {
+
+		while (true) {
 			id = rand.nextInt();
-			found = true;
-			for(Epidemic e: queue) {
-				if(e.epId == id) {
-					found = false;
-					break;
-				}
-			}
-		}while(!found);
-		return id;
+
+			if (!queue.contains(id)) return id;
+		}
 	}
 	
 	public void add(Epidemic epi) {
-		for(Epidemic e: queue) {
-			if(e.epId == epi.epId) {
-				System.out.println("epidemic already in queue");
-				return;
-			}
-		}
-		queue.add(epi);
+		if (!queue.contains(epi)) queue.add(epi);
 	}
 	
 	public void run() {

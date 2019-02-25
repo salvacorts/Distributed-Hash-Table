@@ -86,4 +86,13 @@ public class Epidemic {
     public void stop() {
         stopflag = true;
     }
+
+    @Override
+    public boolean equals(Object other) {
+    	if (other instanceof Epidemic) return this.epId == ((Epidemic) other).epId;
+
+    	if (other instanceof Integer) return this.epId == (Integer) other;
+
+    	return false;
+	}
 }

@@ -60,8 +60,10 @@ public class Main {
         metrics = MetricsServer.getInstance();
 		metrics.start();
 
-		//FailureCheck fc = new FailureCheck();
-		//fc.start();
+		FailureCheck fc = new FailureCheck();
+		fc.start();
+
+		// Run epidemic service
 
         try {
             List<ServerNode> nodes = LoadNodesFromFile(args[2]);
