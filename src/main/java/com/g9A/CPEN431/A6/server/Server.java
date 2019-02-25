@@ -18,8 +18,8 @@ import com.g9A.CPEN431.A6.server.pools.SocketPool;
 
 public class Server {
     static boolean KEEP_RECEIVING = true;
+    static long avgProcessTime = 0;
 
-    private static long avgProcessTime = 0;
     private DatagramSocket listeningSocket;        // Server UDP socket to send and receive packets
     private int availableCores;
 

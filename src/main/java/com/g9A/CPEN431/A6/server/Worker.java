@@ -6,6 +6,8 @@ import ca.NetSysLab.ProtocolBuffers.KeyValueResponse;
 import ca.NetSysLab.ProtocolBuffers.Message;
 import ca.NetSysLab.ProtocolBuffers.KeyValueResponse.KVResponse;
 
+import com.g9A.CPEN431.A6.client.exceptions.DifferentChecksumException;
+import com.g9A.CPEN431.A6.client.exceptions.DifferentUUIDException;
 import com.g9A.CPEN431.A6.server.cache.CacheManager;
 import com.g9A.CPEN431.A6.server.exceptions.*;
 import com.g9A.CPEN431.A6.server.kvMap.RequestProcessor;
@@ -65,7 +67,10 @@ class Worker implements Runnable {
     	return InternalRequest.DeadNodeRequest.parseFrom(msg.getPayload());
     }
     
-    private static KeyValueResponse.KVResponse UnpackResponse(Message.Msg msg) throws com.google.protobuf.InvalidProtocolBufferException {
+    private static KeyValueResponse.KVResponse UnpackResponse(Message.Msg msg) throws com.google.protobuf.InvalidProtocolBufferException,
+                                                                                      com.g9A.CPEN431.A6.client.exceptions.DifferentChecksumException {
+        if (!CorrectChecksum(msg)) throw new DifferentChecksumException();
+
         return KeyValueResponse.KVResponse.parseFrom(msg.getPayload());
     }
 
@@ -126,7 +131,7 @@ class Worker implements Runnable {
      * @return response from the other node, usually a error code 0 (success)
      * @throws IOException when SocketTimeOutException. It means the other node is probably down
      */
-    private KVResponse SendAndReceive(DatagramPacket packet, int maxRetires) throws IOException {
+    private KVResponse SendAndReceive(DatagramPacket packet, ByteString uuid, int maxRetires) throws IOException {
         byte[] buffRecv = new byte[65507];  // Max UPD packet size
         int timeout = 1000;
 
@@ -140,11 +145,18 @@ class Worker implements Runnable {
                 socket.receive(recv_packet);
 
                 Message.Msg rec_msg = UnpackMessage(recv_packet);
+
+                if (!rec_msg.getMessageID().equals(uuid)) throw new DifferentUUIDException();
+
                 return UnpackResponse(rec_msg);
 
             } catch (SocketTimeoutException e) {
-                System.err.println("Cannot connect with " + packet.getAddress().getHostName() + ":" + packet.getPort() + "\t(Waited for " + timeout + "ms)");
+                System.err.println("Timeout connecting with " + packet.getAddress().getHostName() + ":" + packet.getPort() + "\t(" + timeout + "ms)");
                 timeout *= 2;
+            } catch (DifferentChecksumException e) {
+                i--;
+            } catch (DifferentUUIDException ignore) {
+                System.out.println("oooops");
             }
         }
 
@@ -165,11 +177,11 @@ class Worker implements Runnable {
 
                 try {
                     // Send packet to correct node and obtain an answer
-                    return SendAndReceive(send_packet, 3);
+                    return SendAndReceive(send_packet, request.getMessageID(), 3);
                 } catch (SocketTimeoutException e) {
                     // The correct node seems to be down, answer to the client
                     // TODO A7: Handle node failure internally (update alive nodes list, and start storing keys if necessary)
-                    System.err.println("Could not contact " + node.getAddress().getHostName() + ":" + node.getPort());
+                    System.err.println("[!Down?] Could not contact " + node.getAddress().getHostName() + ":" + node.getPort());
                 }
 
                 break;
@@ -232,11 +244,11 @@ class Worker implements Runnable {
         try {
             KeyValueResponse.KVResponse response;
             Message.Msg rec_msg = null;
+
             // Unpack message from the packet
         	try {
         		rec_msg = UnpackMessage(packet);
-        	}
-        	catch(com.google.protobuf.InvalidProtocolBufferException e) {
+        	} catch(com.google.protobuf.InvalidProtocolBufferException e) {
         		e.printStackTrace();
                 Server.socketPool.returnObject(socket);
                 return;
@@ -293,7 +305,7 @@ class Worker implements Runnable {
                 		KeyValueRequest.KVRequest request = UnpackKVRequest(rec_msg);
                         response = requestProcessor.ProcessRequest(request, uuid);
                         this.cache.Put(uuid, response);
-                	} else if (rec_msg.getType() == 2) {  //Dead node request
+                	} else if (rec_msg.getType() == 2) {  // Dead node request
                         InternalRequest.DeadNodeRequest request = UnpackDNRequest(rec_msg);
                 		Server.removeNode(request.getServer(), request.getPort());
                 		InternalRequest.DeadNodeRequest DNRequest = InternalRequest.DeadNodeRequest.newBuilder()
@@ -319,7 +331,8 @@ class Worker implements Runnable {
                 e.printStackTrace();
                 System.gc();    // Run garbage collector
                 response = KeyValueResponse.KVResponse.newBuilder()
-                        .setErrCode(2)
+                        .setErrCode(3)
+                        .setOverloadWaitTime((int) Server.avgProcessTime)
                         .build();
             } catch (WrongNodeException e) {
                 response = Reroute(rec_msg, e.getHash());
@@ -353,5 +366,6 @@ class Worker implements Runnable {
             e.printStackTrace();
             Server.socketPool.returnObject(socket);
         }
+
     }
 }

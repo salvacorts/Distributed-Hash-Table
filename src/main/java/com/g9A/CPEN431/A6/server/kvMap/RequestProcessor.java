@@ -2,6 +2,7 @@ package com.g9A.CPEN431.A6.server.kvMap;
 
 import ca.NetSysLab.ProtocolBuffers.KeyValueRequest;
 import ca.NetSysLab.ProtocolBuffers.KeyValueResponse;
+import com.g9A.CPEN431.A6.client.exceptions.DifferentUUIDException;
 import com.g9A.CPEN431.A6.server.Server;
 
 import com.g9A.CPEN431.A6.server.exceptions.*;
@@ -55,8 +56,8 @@ public class RequestProcessor {
         long storeSize = request.getKey().size() + request.getValue().size();
         long totalFree = Runtime.getRuntime().maxMemory() - (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
 
-        // Set 5MB free
-        if ((totalFree - storeSize) < 5242880) throw new OutOfSpaceException();
+        // Set 7MB free
+        if ((totalFree - storeSize) < 7340032) throw new OutOfSpaceException();
 
         KVMapValue value = new KVMapValue(request.getValue(), request.getVersion());
 
