@@ -5,9 +5,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.g9A.CPEN431.A6.server.metrics.MetricsServer;
+import com.g9A.CPEN431.A6.server.network.FailureCheck;
 
 import io.prometheus.client.exporter.HTTPServer;
 import io.prometheus.client.hotspot.DefaultExports;
@@ -15,26 +17,28 @@ import io.prometheus.client.hotspot.DefaultExports;
 public class Main {
 	private static MetricsServer metrics;
 
-	private static ArrayList<ServerNode> LoadNodesFromFile(String filename) throws IOException {
-		ArrayList<ServerNode> nodes = new ArrayList<ServerNode>();
+	private static List<ServerNode> LoadNodesFromFile(String filename) throws IOException {
+		List<ServerNode> nodes = 
+				Collections.synchronizedList(new ArrayList<ServerNode>());
 
 		FileReader fileReader = new FileReader(filename);
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
 		String line = null;
 
 		while ((line = bufferedReader.readLine()) != null) {
-			String[] args = line.split(" ");
-
-			String address = args[0];
-			int port = Integer.parseInt(args[1]);
-			int hashStart = Integer.parseInt(args[2]);
-			int hashEnd = Integer.parseInt(args[3]);
 
 			try {
-                nodes.add(new ServerNode(address, port, hashStart, hashEnd));
+                nodes.add(new ServerNode(line,0,1));
             } catch (Exception e) {
 			    e.printStackTrace();
             }
+		}
+		
+		int total = nodes.size();
+		for(int i = 0; i < total; i++) {
+			int start = i == 0 ? 0 : i*255/total + 1;
+			int end = (i+1)*255/total;
+			nodes.get(i).setHashRange(start, end);
 		}
 
 		bufferedReader.close();
@@ -56,8 +60,11 @@ public class Main {
         metrics = MetricsServer.getInstance();
 		metrics.start();
 
+		FailureCheck fc = new FailureCheck();
+		fc.start();
+
         try {
-            ArrayList<ServerNode> nodes = LoadNodesFromFile(args[2]);
+            List<ServerNode> nodes = LoadNodesFromFile(args[2]);
 
             try {
                 Server server = new Server(Integer.parseInt(args[0]), nodes);
@@ -67,7 +74,7 @@ public class Main {
             }
             
         } catch (IOException ex){
-            System.out.println("nodes-list.txt file not found or has invalid format");
+            System.out.println("Node list file not found or has invalid format");
             throw ex;
         }
 

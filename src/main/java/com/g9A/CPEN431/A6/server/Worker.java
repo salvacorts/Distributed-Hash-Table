@@ -1,5 +1,6 @@
 package com.g9A.CPEN431.A6.server;
 
+import ca.NetSysLab.ProtocolBuffers.InternalRequest;
 import ca.NetSysLab.ProtocolBuffers.KeyValueRequest;
 import ca.NetSysLab.ProtocolBuffers.KeyValueResponse;
 import ca.NetSysLab.ProtocolBuffers.Message;
@@ -8,8 +9,10 @@ import ca.NetSysLab.ProtocolBuffers.KeyValueResponse.KVResponse;
 import com.g9A.CPEN431.A6.server.cache.CacheManager;
 import com.g9A.CPEN431.A6.server.exceptions.*;
 import com.g9A.CPEN431.A6.server.kvMap.RequestProcessor;
+import com.g9A.CPEN431.A6.server.network.Epidemic;
 import com.g9A.CPEN431.A6.utils.ByteOrder;
 import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -54,8 +57,12 @@ class Worker implements Runnable {
                     .build();
     }
 
-    private static KeyValueRequest.KVRequest UnpackRequest(Message.Msg msg) throws com.google.protobuf.InvalidProtocolBufferException {
+    private static KeyValueRequest.KVRequest UnpackKVRequest(Message.Msg msg) throws com.google.protobuf.InvalidProtocolBufferException {
         return KeyValueRequest.KVRequest.parseFrom(msg.getPayload());
+    }
+    
+    private static InternalRequest.DeadNodeRequest UnpackDNRequest(Message.Msg msg) throws InvalidProtocolBufferException{
+    	return InternalRequest.DeadNodeRequest.parseFrom(msg.getPayload());
     }
     
     private static KeyValueResponse.KVResponse UnpackResponse(Message.Msg msg) throws com.google.protobuf.InvalidProtocolBufferException {
@@ -268,9 +275,25 @@ class Worker implements Runnable {
             try {
                 // Check if request is cached. If it is not process the request
                 if ((response = this.cache.Get(uuid))  == null) {
-                    KeyValueRequest.KVRequest request = UnpackRequest(rec_msg);
-                    response = requestProcessor.ProcessRequest(request, uuid);
-                    this.cache.Put(uuid, response);
+                	if(!rec_msg.hasType() || rec_msg.getType() == 1) {
+                		KeyValueRequest.KVRequest request = UnpackKVRequest(rec_msg);
+                        response = requestProcessor.ProcessRequest(request, uuid);
+                        this.cache.Put(uuid, response);
+                	}
+                	//Dead node request
+                	else if(rec_msg.getType() == 2){
+                		InternalRequest.DeadNodeRequest request = UnpackDNRequest(rec_msg);
+                		Server.removeNode(request.getServer(), request.getPort());
+                		InternalRequest.DeadNodeRequest DNRequest = InternalRequest.DeadNodeRequest.newBuilder()
+                				.setServer(request.getServer())
+                				.setPort(request.getPort())
+                				.build();
+                		Epidemic epi = new Epidemic(DNRequest.toByteString(), 2);
+                		epi.start();
+                	}
+                	else {
+                		return;
+                	}
                 }
             } catch (ShutdownCommandException e) {
                 Server.KEEP_RECEIVING = false;

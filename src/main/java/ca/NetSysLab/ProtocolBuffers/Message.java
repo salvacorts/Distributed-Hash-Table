@@ -38,6 +38,23 @@ public final class Message {
      * <code>required fixed64 checkSum = 3;</code>
      */
     long getCheckSum();
+
+    /**
+     * <code>optional int32 type = 5;</code>
+     *
+     * <pre>
+     *    optional ClientInfo client = 4;
+     * </pre>
+     */
+    boolean hasType();
+    /**
+     * <code>optional int32 type = 5;</code>
+     *
+     * <pre>
+     *    optional ClientInfo client = 4;
+     * </pre>
+     */
+    int getType();
   }
   /**
    * Protobuf type {@code Msg}
@@ -104,6 +121,11 @@ public final class Message {
             case 25: {
               bitField0_ |= 0x00000004;
               checkSum_ = input.readFixed64();
+              break;
+            }
+            case 40: {
+              bitField0_ |= 0x00000008;
+              type_ = input.readInt32();
               break;
             }
           }
@@ -191,10 +213,34 @@ public final class Message {
       return checkSum_;
     }
 
+    public static final int TYPE_FIELD_NUMBER = 5;
+    private int type_;
+    /**
+     * <code>optional int32 type = 5;</code>
+     *
+     * <pre>
+     *    optional ClientInfo client = 4;
+     * </pre>
+     */
+    public boolean hasType() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional int32 type = 5;</code>
+     *
+     * <pre>
+     *    optional ClientInfo client = 4;
+     * </pre>
+     */
+    public int getType() {
+      return type_;
+    }
+
     private void initFields() {
       messageID_ = com.google.protobuf.ByteString.EMPTY;
       payload_ = com.google.protobuf.ByteString.EMPTY;
       checkSum_ = 0L;
+      type_ = 0;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -230,6 +276,9 @@ public final class Message {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeFixed64(3, checkSum_);
       }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeInt32(5, type_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -250,6 +299,10 @@ public final class Message {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
           .computeFixed64Size(3, checkSum_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(5, type_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -374,6 +427,8 @@ public final class Message {
         bitField0_ = (bitField0_ & ~0x00000002);
         checkSum_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000004);
+        type_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -414,6 +469,10 @@ public final class Message {
           to_bitField0_ |= 0x00000004;
         }
         result.checkSum_ = checkSum_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.type_ = type_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -438,6 +497,9 @@ public final class Message {
         }
         if (other.hasCheckSum()) {
           setCheckSum(other.getCheckSum());
+        }
+        if (other.hasType()) {
+          setType(other.getType());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -580,6 +642,54 @@ public final class Message {
         return this;
       }
 
+      private int type_ ;
+      /**
+       * <code>optional int32 type = 5;</code>
+       *
+       * <pre>
+       *    optional ClientInfo client = 4;
+       * </pre>
+       */
+      public boolean hasType() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>optional int32 type = 5;</code>
+       *
+       * <pre>
+       *    optional ClientInfo client = 4;
+       * </pre>
+       */
+      public int getType() {
+        return type_;
+      }
+      /**
+       * <code>optional int32 type = 5;</code>
+       *
+       * <pre>
+       *    optional ClientInfo client = 4;
+       * </pre>
+       */
+      public Builder setType(int value) {
+        bitField0_ |= 0x00000008;
+        type_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 type = 5;</code>
+       *
+       * <pre>
+       *    optional ClientInfo client = 4;
+       * </pre>
+       */
+      public Builder clearType() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        type_ = 0;
+        onChanged();
+        return this;
+      }
+
       // @@protoc_insertion_point(builder_scope:Msg)
     }
 
@@ -605,9 +715,10 @@ public final class Message {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\rMessage.proto\";\n\003Msg\022\021\n\tmessageID\030\001 \002(" +
-      "\014\022\017\n\007payload\030\002 \002(\014\022\020\n\010checkSum\030\003 \002(\006B\'\n\034" +
-      "ca.NetSysLab.ProtocolBuffersB\007Message"
+      "\n\rMessage.proto\"I\n\003Msg\022\021\n\tmessageID\030\001 \002(" +
+      "\014\022\017\n\007payload\030\002 \002(\014\022\020\n\010checkSum\030\003 \002(\006\022\014\n\004" +
+      "type\030\005 \001(\005B\'\n\034ca.NetSysLab.ProtocolBuffe" +
+      "rsB\007Message"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -626,7 +737,7 @@ public final class Message {
     internal_static_Msg_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_Msg_descriptor,
-        new java.lang.String[] { "MessageID", "Payload", "CheckSum", });
+        new java.lang.String[] { "MessageID", "Payload", "CheckSum", "Type", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
