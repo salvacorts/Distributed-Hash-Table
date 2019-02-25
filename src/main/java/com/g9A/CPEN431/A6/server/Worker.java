@@ -60,11 +60,16 @@ class Worker implements Runnable {
     }
 
     private static KeyValueRequest.KVRequest UnpackKVRequest(Message.Msg msg) throws com.google.protobuf.InvalidProtocolBufferException {
-        return KeyValueRequest.KVRequest.parseFrom(msg.getPayload());
+        //return KeyValueRequest.KVRequest.parseFrom(msg.getPayload());
+
+        return KeyValueRequest.KVRequest.newBuilder().mergeFrom(msg.getPayload()).build();
     }
     
     private static InternalRequest.DeadNodeRequest UnpackDNRequest(Message.Msg msg) throws InvalidProtocolBufferException{
-    	return InternalRequest.DeadNodeRequest.parseFrom(msg.getPayload());
+    	//return InternalRequest.DeadNodeRequest.parseFrom(msg.getPayload());
+
+        return InternalRequest.DeadNodeRequest.newBuilder().mergeFrom(msg.getPayload()).build();
+
     }
     
     private static KeyValueResponse.KVResponse UnpackResponse(Message.Msg msg) throws com.google.protobuf.InvalidProtocolBufferException,
@@ -82,8 +87,7 @@ class Worker implements Runnable {
      */
     private static Message.Msg PackMessage(KeyValueResponse.KVResponse response, ByteString uuid) {
         CRC32 crc32 = new CRC32();
-        byte[] concat = ByteOrder.concatArray(uuid.toByteArray(), response.toByteArray());
-        crc32.update(concat);
+        crc32.update(ByteOrder.concatArray(uuid.toByteArray(), response.toByteArray()));
 
         long checksum = crc32.getValue();
 
@@ -248,7 +252,7 @@ class Worker implements Runnable {
             // Unpack message from the packet
         	try {
         		rec_msg = UnpackMessage(packet);
-        	} catch(com.google.protobuf.InvalidProtocolBufferException e) {
+        	} catch (com.google.protobuf.InvalidProtocolBufferException e) {
         		e.printStackTrace();
                 Server.socketPool.returnObject(socket);
                 return;
@@ -305,6 +309,7 @@ class Worker implements Runnable {
                 		KeyValueRequest.KVRequest request = UnpackKVRequest(rec_msg);
                         response = requestProcessor.ProcessRequest(request, uuid);
                         this.cache.Put(uuid, response);
+                        request = null;
                 	} else if (rec_msg.getType() == 2) {  // Dead node request
                         InternalRequest.DeadNodeRequest request = UnpackDNRequest(rec_msg);
                 		Server.removeNode(request.getServer(), request.getPort());
@@ -316,6 +321,7 @@ class Worker implements Runnable {
                 		Epidemic epi = new Epidemic(DNRequest.toByteString(), uuid, 2);
                 		Server.epiQueue.add(epi);
                         Server.socketPool.returnObject(socket);
+                        DNRequest = null;
                 		return;
                 	} else {
                         Server.socketPool.returnObject(socket);

@@ -17,7 +17,7 @@ public class RequestProcessor {
 	
     private static RequestProcessor ourInstance = new RequestProcessor();
 
-    private ConcurrentHashMap<ByteString, KVMapValue> kvMap = new ConcurrentHashMap<ByteString, KVMapValue>();  // Key value map with mutex
+    private ConcurrentHashMap<KVMapKey, KVMapValue> kvMap = new ConcurrentHashMap<KVMapKey, KVMapValue>();  // Key value map with mutex
     private MetricsServer metrics = MetricsServer.getInstance();
 
     /**
@@ -59,12 +59,14 @@ public class RequestProcessor {
         // Set 7MB free
         if ((totalFree - storeSize) < 7340032) throw new OutOfSpaceException();
 
-        KVMapValue value = new KVMapValue(request.getValue(), request.getVersion());
+        KVMapValue value = new KVMapValue(request.getValue().toByteArray(), request.getVersion());
+        KVMapKey key = new KVMapKey(request.getKey().toByteArray());
 
-        if(!kvMap.containsKey(request.getKey())) {
+        if(!kvMap.containsKey(key)) {
             metrics.keysStored.inc();
         }
-        kvMap.put(request.getKey(), value);
+
+        kvMap.put(key, value);
 
         //System.out.println("PUT with key " + request.getKey().hashCode() + ", value " + value.getValue().hashCode());
 
@@ -88,15 +90,17 @@ public class RequestProcessor {
 
         if (request.getKey().size() > 32) throw new KeyTooLargeException();
 
-        if (!kvMap.containsKey(request.getKey())) throw new UnexistingKey();
+        KVMapKey key = new KVMapKey(request.getKey().toByteArray());
 
-        KVMapValue value = kvMap.get(request.getKey());
+        if (!kvMap.containsKey(key)) throw new UnexistingKey();
+
+        KVMapValue value = kvMap.get(key);
         
         //System.out.println("GET with key " + request.getKey().hashCode() + ", value " + value.getValue().hashCode());
 
         return KeyValueResponse.KVResponse.newBuilder()
                 .setErrCode(0)
-                .setValue(value.getValue())
+                .setValue(ByteString.copyFrom(value.getValue()))
                 .setVersion(value.getVersion())
                 .build();
     }
@@ -116,9 +120,11 @@ public class RequestProcessor {
 
         if (request.getKey().size() > 32) throw new KeyTooLargeException();
 
-        if (!kvMap.containsKey(request.getKey())) throw new UnexistingKey();
+        KVMapKey key = new KVMapKey(request.getKey().toByteArray());
+
+        if (!kvMap.containsKey(key)) throw new UnexistingKey();
         
-        kvMap.remove(request.getKey());
+        kvMap.remove(key);
 
         metrics.keysStored.dec();
 

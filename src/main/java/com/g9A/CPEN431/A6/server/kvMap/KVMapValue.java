@@ -2,16 +2,18 @@ package com.g9A.CPEN431.A6.server.kvMap;
 
 import com.google.protobuf.ByteString;
 
+import java.util.Arrays;
+
 public class KVMapValue {
-    private ByteString value;
+    private byte[] value;
     private int version;
 
-    public KVMapValue(ByteString value, int version) {
-        this.value = value;
+    public KVMapValue(byte[] value, int version) {
+        this.value = Arrays.copyOf(value, value.length);
         this.version = version;
     }
 
-    public ByteString getValue() {
+    public byte[] getValue() {
         return value;
     }
 
@@ -19,7 +21,7 @@ public class KVMapValue {
         return version;
     }
 
-    public void setValue(ByteString value) {
+    public void setValue(byte[] value) {
         this.value = value;
     }
 
@@ -28,6 +30,6 @@ public class KVMapValue {
     }
 
     public String toString() {
-        return value.toStringUtf8()+":v"+version;
+        return ""+":v"+version;
     }
 }
