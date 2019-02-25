@@ -52,9 +52,9 @@ class Worker implements Runnable {
     }
 
     private static Message.Msg UnpackMessage(DatagramPacket packet) throws com.google.protobuf.InvalidProtocolBufferException {
-        return Message.Msg.newBuilder()
-                    .mergeFrom(packet.getData(), 0, packet.getLength())
-                    .build();
+		return Message.Msg.newBuilder()
+			.mergeFrom(packet.getData(), 0, packet.getLength())
+			.build();
     }
 
     private static KeyValueRequest.KVRequest UnpackKVRequest(Message.Msg msg) throws com.google.protobuf.InvalidProtocolBufferException {
@@ -128,7 +128,7 @@ class Worker implements Runnable {
      */
     private KVResponse SendAndReceive(DatagramPacket packet, int maxRetires) throws IOException {
         byte[] buffRecv = new byte[65507];  // Max UPD packet size
-        int timeout = 100;
+        int timeout = 1000;
 
         for (int i = 0; i <= maxRetires; i++) {
             socket.send(packet);
@@ -143,7 +143,7 @@ class Worker implements Runnable {
                 return UnpackResponse(rec_msg);
 
             } catch (SocketTimeoutException e) {
-                System.err.println("Cannot connect with " + packet.getAddress().getHostAddress() + ":" + packet.getPort() + "\t(Waited for " + timeout + "ms)");
+                System.err.println("Cannot connect with " + packet.getAddress().getHostName() + ":" + packet.getPort() + "\t(Waited for " + timeout + "ms)");
                 timeout *= 2;
             }
         }
@@ -169,7 +169,7 @@ class Worker implements Runnable {
                 } catch (SocketTimeoutException e) {
                     // The correct node seems to be down, answer to the client
                     // TODO A7: Handle node failure internally (update alive nodes list, and start storing keys if necessary)
-                    System.err.println("Could not contact " + node.getAddress().getHostAddress() + ":" + node.getPort());
+                    System.err.println("Could not contact " + node.getAddress().getHostName() + ":" + node.getPort());
                 }
 
                 break;
@@ -230,9 +230,17 @@ class Worker implements Runnable {
         long startTime = System.currentTimeMillis();
 
         try {
-            // Unpack message from the packet
-            Message.Msg rec_msg = UnpackMessage(packet);
             KeyValueResponse.KVResponse response;
+            Message.Msg rec_msg = null;
+            // Unpack message from the packet
+        	try {
+        		rec_msg = UnpackMessage(packet);
+        	}
+        	catch(com.google.protobuf.InvalidProtocolBufferException e) {
+        		e.printStackTrace();
+                Server.socketPool.returnObject(socket);
+                return;
+        	}
 
             // If packet has been rerouted by other node, update destination info
             /*if (rec_msg.hasClient()) {
@@ -263,35 +271,42 @@ class Worker implements Runnable {
             //ByteString uuid = (rec_msg.hasClient()) ? rec_msg.getClient().getMessageID() : rec_msg.getMessageID();
             ByteString uuid = rec_msg.getMessageID();
 
-            // If uuid is in processing map, return and let the other thread to finish this work
-            if (processing_messages.contains(uuid)) return;
-
-            // Add this message to the messages being processed set
-            processing_messages.add(uuid);
-
-            // Check if checksum is correct
-            if (!CorrectChecksum(rec_msg)) return;
-
             try {
+                // Check if checksum is correct
+                if (!CorrectChecksum(rec_msg)) {
+                    Server.socketPool.returnObject(socket);
+                	return;
+                }
+
+                // If uuid is in processing map, return and let the other thread to finish this work
+                if (processing_messages.contains(uuid)) {
+                    Server.socketPool.returnObject(socket);
+                	return;
+                }
+
+                // Add this message to the messages being processed set
+                processing_messages.add(uuid);
+
                 // Check if request is cached. If it is not process the request
                 if ((response = this.cache.Get(uuid))  == null) {
-                	if(!rec_msg.hasType() || rec_msg.getType() == 1) {
+                	if (!rec_msg.hasType() || rec_msg.getType() == 1) {
                 		KeyValueRequest.KVRequest request = UnpackKVRequest(rec_msg);
                         response = requestProcessor.ProcessRequest(request, uuid);
                         this.cache.Put(uuid, response);
-                	}
-                	//Dead node request
-                	else if(rec_msg.getType() == 2){
-                		InternalRequest.DeadNodeRequest request = UnpackDNRequest(rec_msg);
+                	} else if (rec_msg.getType() == 2) {  //Dead node request
+                        InternalRequest.DeadNodeRequest request = UnpackDNRequest(rec_msg);
                 		Server.removeNode(request.getServer(), request.getPort());
                 		InternalRequest.DeadNodeRequest DNRequest = InternalRequest.DeadNodeRequest.newBuilder()
                 				.setServer(request.getServer())
                 				.setPort(request.getPort())
                 				.build();
-                		Epidemic epi = new Epidemic(DNRequest.toByteString(), 2);
-                		epi.start();
-                	}
-                	else {
+
+                		Epidemic epi = new Epidemic(DNRequest.toByteString(), uuid, 2);
+                		Server.epiQueue.add(epi);
+                        Server.socketPool.returnObject(socket);
+                		return;
+                	} else {
+                        Server.socketPool.returnObject(socket);
                 		return;
                 	}
                 }
@@ -328,15 +343,15 @@ class Worker implements Runnable {
             // Remove this uuid from the being processed set
             processing_messages.remove(uuid);
 
+            // Update process time in server
+            long endTime = System.currentTimeMillis();
+            Server.UpdateProcessTime(endTime - startTime);
+
+            // Return socket to it's pool
+            Server.socketPool.returnObject(socket);
         } catch (Exception e) {
             e.printStackTrace();
+            Server.socketPool.returnObject(socket);
         }
-
-        // Update process time in server
-        long endTime = System.currentTimeMillis();
-        Server.UpdateProcessTime(endTime - startTime);
-
-        // Return socket to it's pool
-        Server.socketPool.returnObject(socket);
     }
 }
