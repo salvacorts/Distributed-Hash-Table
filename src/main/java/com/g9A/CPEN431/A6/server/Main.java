@@ -26,18 +26,19 @@ public class Main {
 		String line = null;
 
 		while ((line = bufferedReader.readLine()) != null) {
-			String[] args = line.split(" ");
-
-			String address = args[0];
-			int port = Integer.parseInt(args[1]);
-			int hashStart = Integer.parseInt(args[2]);
-			int hashEnd = Integer.parseInt(args[3]);
 
 			try {
-                nodes.add(new ServerNode(address, port, hashStart, hashEnd));
+                nodes.add(new ServerNode(line,0,1));
             } catch (Exception e) {
 			    e.printStackTrace();
             }
+		}
+		
+		int total = nodes.size();
+		for(int i = 0; i < total; i++) {
+			int start = i == 0 ? 0 : i*255/total + 1;
+			int end = (i+1)*255/total;
+			nodes.get(i).setHashRange(start, end);
 		}
 
 		bufferedReader.close();
@@ -73,7 +74,7 @@ public class Main {
             }
             
         } catch (IOException ex){
-            System.out.println("nodes-list.txt file not found or has invalid format");
+            System.out.println("Node list file not found or has invalid format");
             throw ex;
         }
 
