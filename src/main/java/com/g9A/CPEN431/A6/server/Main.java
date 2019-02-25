@@ -5,9 +5,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.g9A.CPEN431.A6.server.metrics.MetricsServer;
+import com.g9A.CPEN431.A6.server.network.FailureCheck;
 
 import io.prometheus.client.exporter.HTTPServer;
 import io.prometheus.client.hotspot.DefaultExports;
@@ -15,8 +17,9 @@ import io.prometheus.client.hotspot.DefaultExports;
 public class Main {
 	private static MetricsServer metrics;
 
-	private static ArrayList<ServerNode> LoadNodesFromFile(String filename) throws IOException {
-		ArrayList<ServerNode> nodes = new ArrayList<ServerNode>();
+	private static List<ServerNode> LoadNodesFromFile(String filename) throws IOException {
+		List<ServerNode> nodes = 
+				Collections.synchronizedList(new ArrayList<ServerNode>());
 
 		FileReader fileReader = new FileReader(filename);
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -56,8 +59,11 @@ public class Main {
         metrics = MetricsServer.getInstance();
 		metrics.start();
 
+		FailureCheck fc = new FailureCheck();
+		fc.start();
+
         try {
-            ArrayList<ServerNode> nodes = LoadNodesFromFile(args[2]);
+            List<ServerNode> nodes = LoadNodesFromFile(args[2]);
 
             try {
                 Server server = new Server(Integer.parseInt(args[0]), nodes);

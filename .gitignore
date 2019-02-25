@@ -1,6 +1,7 @@
 node/install/*
 server/install/*
 *.iml
+.idea/*
 target/*
 .settings/*
 .classpath

@@ -1,5 +1,6 @@
 package com.g9A.CPEN431.A6.client;
 
+import ca.NetSysLab.ProtocolBuffers.InternalRequest;
 import ca.NetSysLab.ProtocolBuffers.KeyValueRequest;
 import ca.NetSysLab.ProtocolBuffers.KeyValueResponse;
 import ca.NetSysLab.ProtocolBuffers.Message;
@@ -10,10 +11,13 @@ import com.g9A.CPEN431.A6.client.exceptions.UnsupportedCommandException;
 import com.g9A.CPEN431.A6.utils.ByteOrder;
 import com.google.protobuf.ByteString;
 
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.zip.CRC32;
@@ -22,11 +26,16 @@ public class Client {
     private String svrAddr;
     private int svrPort;
     private int maxRetires;
+    
+    public void changeServer(String svr, int port) {
+    	this.svrPort = port;
+    	this.svrAddr = svr;
+    }
 
     /* UUID (16B):
         IP (4B) + Port (2B) + Random num (2B) + timestamp (8B)
      */
-    private byte[] GetUUID(DatagramSocket socket) {
+    public byte[] GetUUID(DatagramSocket socket) {
         Random randomGen = new Random();
         byte[] buffUuid = new byte[16];
 
@@ -120,7 +129,7 @@ public class Client {
 
         return sendMsg.build();
     }
-
+    
     private Message.Msg UnpackMessage(byte[] buffer, byte[] uuid) throws com.google.protobuf.InvalidProtocolBufferException,
                                                                          DifferentChecksumException,
                                                                          DifferentUUIDException {
@@ -145,6 +154,29 @@ public class Client {
         this.svrAddr = serverAddr;
         this.svrPort = serverPort;
         this.maxRetires = maxRetires;
+    }
+    
+    public void DoInternalRequest(ByteString payload, int type) throws IOException {
+        DatagramSocket socket = new DatagramSocket();
+    	CRC32 crc32 = new CRC32();
+
+        byte[] uuid = GetUUID(socket);
+        ByteString uuidBS = ByteString.copyFrom(uuid, 0, uuid.length);
+        byte[] concat = ByteOrder.concatArray(uuidBS.toByteArray(), payload.toByteArray());
+        crc32.update(concat);
+        long checksum = crc32.getValue();
+        
+        Message.Msg msg = Message.Msg.newBuilder()
+			.setCheckSum(checksum)
+			.setPayload(payload)
+			.setMessageID(uuidBS)
+			.setType(type)
+			.build();
+
+        InetAddress address = InetAddress.getByName(this.svrAddr);
+        byte[] buf = msg.toByteArray();
+        DatagramPacket packet = new DatagramPacket(buf, buf.length, address, this.svrPort);
+        socket.send(packet);
     }
 
     public KeyValueResponse.KVResponse DoRequest(int reqID, String key, String value, int version) throws Exception {

@@ -8,6 +8,9 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -23,13 +26,13 @@ public class Server {
     private WorkerThreadFactory threadFactory;
 
     public static ServerNode selfNode;
-    public static ArrayList<ServerNode> serverNodes;
+    public static List<ServerNode> serverNodes;
 
     static void UpdateProcessTime(long time) {
         avgProcessTime = (avgProcessTime + time) / 2;
     }
 
-    public Server(int port, ArrayList<ServerNode> otherNodes) throws java.net.SocketException, UnknownHostException {
+    public Server(int port, List<ServerNode> otherNodes) throws java.net.SocketException, UnknownHostException {
         this.listeningSocket = new DatagramSocket(port);
         this.availableCores = Runtime.getRuntime().availableProcessors();
 
@@ -52,6 +55,15 @@ public class Server {
         if (selfNode == null) {
         	throw new IllegalArgumentException("Current server not present in nodes-list");
         }
+    }
+    
+    public static void removeNode(String addr, int port) {
+    	for (Iterator<ServerNode> iter = serverNodes.listIterator(); iter.hasNext(); ) {
+    		ServerNode node = iter.next();
+    	    if (addr.equals(node.getAddress().getHostAddress()) && node.getPort() == port) {
+    	        iter.remove();
+    	    }
+    	}
     }
 
     public void StartServing() {
