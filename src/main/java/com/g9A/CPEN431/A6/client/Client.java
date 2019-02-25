@@ -177,6 +177,7 @@ public class Client {
         byte[] buf = msg.toByteArray();
         DatagramPacket packet = new DatagramPacket(buf, buf.length, address, this.svrPort);
         socket.send(packet);
+        socket.close();
     }
 
     public KeyValueResponse.KVResponse DoRequest(int reqID, String key, String value, int version) throws Exception {
@@ -204,6 +205,7 @@ public class Client {
                 Message.Msg rec_msg = UnpackMessage(data, uuid);
                 KeyValueResponse.KVResponse response = KeyValueResponse.KVResponse.parseFrom(rec_msg.getPayload());
 
+                socket.close();
                 ProcessResponse(response);
                 return response;
 
@@ -216,6 +218,7 @@ public class Client {
                 continue;
             }
         }
+        socket.close();
 
         if (reqID != 4) throw new SocketTimeoutException();
 
