@@ -146,6 +146,8 @@ public class RequestProcessor {
         kvMap = new ConcurrentHashMap<KVMapKey, KVMapValue>();
         metrics.keysStored.set(0);
 
+        System.gc();    // Clear the previous kvMap (plssss)
+
         System.out.println("\tAfter:" + kvMap.size());
 
         return KeyValueResponse.KVResponse.newBuilder()
@@ -213,7 +215,8 @@ public class RequestProcessor {
                     break;
                 case 4:
                     // System.out.println("Shutdown received");
-                    throw new ShutdownCommandException();
+                    //throw new ShutdownCommandException();
+                    System.exit(0);
                 case 5:
                     // System.out.println("Wipeout received");
                     response = DoWipeout();

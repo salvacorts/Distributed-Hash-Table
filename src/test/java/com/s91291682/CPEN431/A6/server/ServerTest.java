@@ -44,7 +44,7 @@ public class ServerTest {
 
     @org.junit.AfterClass
     public static void tearDown() throws Exception {
-        client.DoRequest(4, "", "", 0); // shutdown
+        //client.DoRequest(4, "", "", 0); // shutdown
     }
 
     @Test
