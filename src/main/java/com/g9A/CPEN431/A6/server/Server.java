@@ -13,7 +13,6 @@ import java.util.concurrent.Executors;
 
 import com.g9A.CPEN431.A6.server.network.EpidemicQueue;
 import com.g9A.CPEN431.A6.server.pools.SocketFactory;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 import com.g9A.CPEN431.A6.server.pools.SocketPool;
 
@@ -26,7 +25,7 @@ public class Server {
 
     private ExecutorService threadPool;
 
-    public static SocketPool socketPool = new SocketPool(new SocketFactory());;
+    public static SocketPool socketPool = new SocketPool(new SocketFactory());
     public static ServerNode selfNode;
     public static List<ServerNode> serverNodes;
     public static EpidemicQueue epiQueue = EpidemicQueue.getInstance();
@@ -35,7 +34,7 @@ public class Server {
         avgProcessTime = (avgProcessTime + time) / 2;
     }
 
-    public Server(int port, List<ServerNode> otherNodes) throws java.net.SocketException, UnknownHostException {
+    public Server(int port, List<ServerNode> otherNodes) throws Exception {
         this.listeningSocket = new DatagramSocket(port);
         this.availableCores = Runtime.getRuntime().availableProcessors();
 
@@ -47,7 +46,6 @@ public class Server {
         // Setup sockets pool
         socketPool.setMaxTotal(25);
         socketPool.setMinIdle(poolSize);
-        socketPool.preparePool();
 
         serverNodes = otherNodes;
 
@@ -105,11 +103,11 @@ public class Server {
             }
         }
 
+        System.out.println("Server stopping");
         this.listeningSocket.close();
         this.threadPool.shutdown();
-        this.epiQueue.stop();
-        System.out.println("Server stopping");
         socketPool.close();
+        epiQueue.stop();
     }
 }
 
