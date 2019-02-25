@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.g9A.CPEN431.A6.client.Client;
+import com.g9A.CPEN431.A6.client.exceptions.UnsupportedCommandException;
 import com.g9A.CPEN431.A6.server.Server;
 import com.g9A.CPEN431.A6.server.ServerNode;
 import com.g9A.CPEN431.A6.server.metrics.MetricsServer;
@@ -25,7 +26,7 @@ public class FailureCheck implements Runnable {
     Random rand = new Random();
 
     public FailureCheck(){
-    	client = new Client("",0,0);
+    	client = new Client("",0,3);
     }
     
     private void checkRandom() throws SocketException {
@@ -33,19 +34,24 @@ public class FailureCheck implements Runnable {
     	do {
         	int r = rand.nextInt(Server.serverNodes.size());
         	node = Server.serverNodes.get(r);
+        	if(Server.serverNodes.size() < 2){
+        		return;
+        	}
     	}while(node.equals(Server.selfNode));
     	client.changeServer(node.getAddress().getHostAddress(), node.getPort());
     	KVResponse kvr = null;
-    	System.out.println("Pinging " + node.getAddress().getHostName() + ":" + node.getPort());
     	
     	try {
 			kvr = client.DoRequest(6, "", "", 0);
-		} catch (Exception e1) {
+		} catch (IOException e1) {
 			removeNode(node);
+			System.out.println("Server " + node.getAddress().getHostName() + " offline");
 			return;
+		} catch (UnsupportedCommandException e) {
+			e.printStackTrace();
 		}
     	
-    	if(kvr.getErrCode() != 0) {
+    	if(kvr != null && kvr.getErrCode() != 0) {
 			removeNode(node);
     	}
     }

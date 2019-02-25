@@ -60,9 +60,12 @@ public class RequestProcessor {
 
         KVMapValue value = new KVMapValue(request.getValue(), request.getVersion());
 
+        if(!kvMap.containsKey(request.getKey())) {
+            metrics.keysStored.inc();
+        }
         kvMap.put(request.getKey(), value);
 
-        metrics.keysStored.inc();
+        System.out.println("PUT with key " + request.getKey().hashCode() + ", value " + value.getValue().hashCode());
 
         return KeyValueResponse.KVResponse.newBuilder()
                 .setErrCode(0)
@@ -87,6 +90,8 @@ public class RequestProcessor {
         if (!kvMap.containsKey(request.getKey())) throw new UnexistingKey();
 
         KVMapValue value = kvMap.get(request.getKey());
+        
+        System.out.println("GET with key " + request.getKey().hashCode() + ", value " + value.getValue().hashCode());
 
         return KeyValueResponse.KVResponse.newBuilder()
                 .setErrCode(0)
@@ -111,10 +116,12 @@ public class RequestProcessor {
         if (request.getKey().size() > 32) throw new KeyTooLargeException();
 
         if (!kvMap.containsKey(request.getKey())) throw new UnexistingKey();
-
+        
         kvMap.remove(request.getKey());
 
         metrics.keysStored.dec();
+
+        System.out.println("DELETE with key " + request.getKey().hashCode());
 
         return KeyValueResponse.KVResponse.newBuilder()
                 .setErrCode(0)
@@ -196,7 +203,7 @@ public class RequestProcessor {
                     // System.out.println("Shutdown received");
                     throw new ShutdownCommandException();
                 case 5:
-                    // System.out.println("Wipeout received");
+                    System.out.println("Wipeout received");
                     response = DoWipeout();
                     break;
                 case 6:

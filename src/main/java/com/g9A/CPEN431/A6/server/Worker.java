@@ -143,7 +143,7 @@ class Worker implements Runnable {
                 return UnpackResponse(rec_msg);
 
             } catch (SocketTimeoutException e) {
-                System.err.println("Cannot connect with " + packet.getAddress().getHostAddress() + ":" + packet.getPort() + "\t(Waited for " + timeout + "ms)");
+                System.err.println("Cannot connect with " + packet.getAddress().getHostName() + ":" + packet.getPort() + "\t(Waited for " + timeout + "ms)");
                 timeout *= 2;
             }
         }
@@ -169,7 +169,7 @@ class Worker implements Runnable {
                 } catch (SocketTimeoutException e) {
                     // The correct node seems to be down, answer to the client
                     // TODO A7: Handle node failure internally (update alive nodes list, and start storing keys if necessary)
-                    System.err.println("Could not contact " + node.getAddress().getHostAddress() + ":" + node.getPort());
+                    System.err.println("Could not contact " + node.getAddress().getHostName() + ":" + node.getPort());
                 }
 
                 break;

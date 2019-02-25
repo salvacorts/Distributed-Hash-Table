@@ -27,7 +27,7 @@ public class Epidemic {
     private int iterations;
 
     public Epidemic(ByteString payload, ByteString uuid, int type){
-    	client = new Client("",0,0);
+    	client = new Client("",0,3);
     	this.uuid = uuid;
     	this.payload = payload;
     	this.type = type;
@@ -39,6 +39,10 @@ public class Epidemic {
     	do {
 	    	int r = rand.nextInt(Server.serverNodes.size());
 	    	node = Server.serverNodes.get(r);
+	    	if(Server.serverNodes.size() < 2) {
+	    		stopflag = true;
+	    		return;
+	    	}
     	} while(node.equals(Server.selfNode));
     	
     	System.out.println("epidemic sending to " + node.getAddress().getHostName() + ":" + node.getPort());

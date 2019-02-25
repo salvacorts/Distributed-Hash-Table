@@ -198,7 +198,7 @@ public class Client {
         socket.close();
     }
 
-    public KeyValueResponse.KVResponse DoRequest(int reqID, String key, String value, int version) throws Exception {
+    public KeyValueResponse.KVResponse DoRequest(int reqID, String key, String value, int version) throws UnsupportedCommandException, IOException {
         DatagramSocket socket = new DatagramSocket();
         InetAddress address = InetAddress.getByName(this.svrAddr);
         byte[] buffRecv = new byte[16+16384];
@@ -228,7 +228,7 @@ public class Client {
                 return response;
 
             } catch (SocketTimeoutException e) {
-                //System.err.println("Cannot connect with " + this.svrAddr + ":" + this.svrPort + "\t(Waited for " + timeout + "ms)");
+                System.err.println("Cannot connect with " + this.svrAddr + ":" + this.svrPort + "\t(Waited for " + timeout + "ms)");
                 timeout *= 2;
             } catch (DifferentChecksumException e) {
                 i--;
