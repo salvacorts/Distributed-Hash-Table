@@ -60,8 +60,6 @@ public class Main {
         metrics = MetricsServer.getInstance();
 		metrics.start();
 
-		FailureCheck fc = new FailureCheck();
-		fc.start();
 
         try {
             List<ServerNode> nodes = LoadNodesFromFile(args[3]);

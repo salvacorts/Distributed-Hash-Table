@@ -26,7 +26,7 @@ public class FailureCheck implements Runnable {
     Random rand = new Random();
 
     public FailureCheck(){
-    	client = new Client("",0,3);
+    	client = new Client("",0,8);
     }
     
     private void checkRandom() throws SocketException {
@@ -104,6 +104,7 @@ public class FailureCheck implements Runnable {
 
         if (t == null) {
             t = new Thread(this);
+            t.setPriority(Thread.MAX_PRIORITY);
             t.start();
         }
     }

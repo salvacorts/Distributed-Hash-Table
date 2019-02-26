@@ -81,7 +81,11 @@ public class EpidemicServer implements Runnable {
 
         if (t == null) {
             t = new Thread(this);
+            t.setPriority(Thread.MAX_PRIORITY);
             t.start();
+
+    		FailureCheck fc = new FailureCheck();
+    		fc.start();
         }
 	}
 	
