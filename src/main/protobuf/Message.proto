@@ -6,6 +6,6 @@ message Msg {
     required bytes payload = 2;
     required fixed64 checkSum = 3;
 
-	optional int32 epID = 4;
+	optional int64 epID = 4;
 	optional int32 type = 5;
 }

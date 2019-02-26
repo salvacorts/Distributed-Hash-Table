@@ -1,6 +1,7 @@
 package com.g9A.CPEN431.A6.server.network;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.zip.CRC32;
@@ -14,13 +15,13 @@ import com.google.protobuf.ByteString;
 import ca.NetSysLab.ProtocolBuffers.KeyValueResponse.KVResponse;
 import ca.NetSysLab.ProtocolBuffers.Message;
 
-public class Epidemic {
+public class Epidemic implements Runnable {
 
     private boolean stopflag = false;
     
     ByteString payload;
     int type;
-    int epId;
+    long epId;
     Client client;
     Random rand = new Random();
     
@@ -31,21 +32,35 @@ public class Epidemic {
     	this.payload = payload;
     	this.type = type;
     	iterations = Server.serverNodes.size();
-    	epId = EpidemicQueue.generateId();
+    	if(iterations < 10) {
+    		iterations = (10-iterations)*2;
+    	}
     }
     
-    public Epidemic(ByteString payload, int type, int epId){
+    public Epidemic(ByteString payload, int type, long epId){
     	client = new Client("",0,3);
     	this.payload = payload;
     	this.type = type;
     	this.epId = epId;
     	iterations = Server.serverNodes.size();
+    	if(iterations < 10) {
+    		iterations = (10-iterations)*2;
+    	}
+    }
+    
+    public void generateId(String svr, int epiPort) {
+    	CRC32 crc = new CRC32();
+    	crc.update(svr.getBytes());
+    	crc.update(epiPort);
+    	this.epId = crc.getValue();
+    	crc = null;
     }
     
     private void sendRandom() throws IOException {
     	ServerNode node = null;
+    	int r;
     	do {
-	    	int r = rand.nextInt(Server.serverNodes.size());
+	    	r = rand.nextInt(Server.serverNodes.size());
 	    	node = Server.serverNodes.get(r);
 	    	if(Server.serverNodes.size() < 2) {
 	    		stopflag = true;
@@ -53,8 +68,8 @@ public class Epidemic {
 	    	}
     	} while(node.equals(Server.selfNode));
     	
-    	System.out.println("epidemic sending to " + node.getAddress().getHostName() + ":" + node.getPort());
-    	client.changeServer(node.getAddress().getHostAddress(), node.getPort());
+    	System.out.println("epidemic sending to " + node.getAddress().getHostName() + ":" + node.getEpiPort());
+    	client.changeServer(node.getAddress().getHostAddress(), node.getEpiPort());
     	client.DoInternalRequest(payload, type, epId);
     	
     	if(iterations-- > 0){

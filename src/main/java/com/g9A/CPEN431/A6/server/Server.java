@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.g9A.CPEN431.A6.server.network.EpidemicQueue;
+import com.g9A.CPEN431.A6.server.network.EpidemicServer;
 import com.g9A.CPEN431.A6.server.pools.SocketFactory;
 
 import com.g9A.CPEN431.A6.server.pools.SocketPool;
@@ -28,13 +28,13 @@ public class Server {
     public static SocketPool socketPool = new SocketPool(new SocketFactory());
     public static ServerNode selfNode;
     public static List<ServerNode> serverNodes;
-    public static EpidemicQueue epiQueue = EpidemicQueue.getInstance();
+    public static EpidemicServer epiSrv;;
 
     static void UpdateProcessTime(long time) {
         avgProcessTime = (avgProcessTime + time) / 2;
     }
 
-    public Server(int port, List<ServerNode> otherNodes) throws Exception {
+    public Server(int port, int epiPort, List<ServerNode> otherNodes) throws Exception {
         this.listeningSocket = new DatagramSocket(port);
         this.availableCores = Runtime.getRuntime().availableProcessors();
 
@@ -62,7 +62,8 @@ public class Server {
         if (selfNode == null) {
         	throw new IllegalArgumentException("Current server not present in nodes-list");
         }
-        epiQueue.start();
+        epiSrv = new EpidemicServer(epiPort);
+        epiSrv.start();
     }
 
     public static void removeNode(String addr, int port) {
@@ -110,7 +111,7 @@ public class Server {
         this.listeningSocket.close();
         this.threadPool.shutdown();
         socketPool.close();
-        epiQueue.stop();
+        epiSrv.stop();
     }
 }
 

@@ -176,7 +176,7 @@ public class Client {
         this.maxRetires = maxRetires;
     }
     
-    public void DoInternalRequest(ByteString payload, int type, int epId) throws IOException {
+    public void DoInternalRequest(ByteString payload, int type, long epId) throws IOException {
         DatagramSocket socket = new DatagramSocket();
     	CRC32 crc32 = new CRC32();
 

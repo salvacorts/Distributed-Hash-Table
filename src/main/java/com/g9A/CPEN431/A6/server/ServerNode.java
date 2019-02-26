@@ -8,21 +8,24 @@ import java.net.UnknownHostException;
 public class ServerNode {
     private InetAddress address;
     private int port;
+    private int epiPort;
     private int hashStart;
     private int hashEnd;
 
-    public ServerNode(String host, int port, int hashStart, int hashEnd) throws InvalidHashRangeException,
+    public ServerNode(String host, int port, int epiPort, int hashStart, int hashEnd) throws InvalidHashRangeException,
                                                                                 java.net.UnknownHostException {
         if (hashStart > hashEnd) throw new InvalidHashRangeException();
 
         this.address = InetAddress.getByName(host);
         this.port = port;
+        this.epiPort = epiPort;
         this.hashStart = hashStart;
         this.hashEnd = hashEnd;
     }
     
     public ServerNode(String line, int index, int total) throws IllegalArgumentException, UnknownHostException {
 		String[] args = line.split(":");
+		this.epiPort = Integer.parseInt(args[2]);
 		this.address = InetAddress.getByName(args[0]);
 		this.port = Integer.parseInt(args[1]);
 		this.hashStart = index == 0 ? 0 : index*255/total + 1;
@@ -56,6 +59,10 @@ public class ServerNode {
 
     public int getPort() {
         return port;
+    }
+    
+    public int getEpiPort() {
+    	return epiPort;
     }
 
     public int getHashStart() {

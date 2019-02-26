@@ -23,7 +23,7 @@ import java.net.*;
 import java.util.*;
 import java.util.zip.CRC32;
 
-class Worker implements Runnable {
+public class Worker implements Runnable {
     // Set to manage processes being processed at a time
     private static Set<ByteString> processing_messages = Collections.synchronizedSet(new HashSet<ByteString>());
     private static DatagramSocket staticSocket = null;
@@ -53,7 +53,7 @@ class Worker implements Runnable {
         return ByteString.copyFrom(buffUuid);
     }
 
-    private static Message.Msg UnpackMessage(DatagramPacket packet) throws com.google.protobuf.InvalidProtocolBufferException {
+    public static Message.Msg UnpackMessage(DatagramPacket packet) throws com.google.protobuf.InvalidProtocolBufferException {
 		return Message.Msg.newBuilder()
 			.mergeFrom(packet.getData(), 0, packet.getLength())
 			.build();
@@ -63,13 +63,6 @@ class Worker implements Runnable {
         //return KeyValueRequest.KVRequest.parseFrom(msg.getPayload());
 
         return KeyValueRequest.KVRequest.newBuilder().mergeFrom(msg.getPayload()).build();
-    }
-    
-    private static InternalRequest.DeadNodeRequest UnpackDNRequest(Message.Msg msg) throws InvalidProtocolBufferException{
-    	//return InternalRequest.DeadNodeRequest.parseFrom(msg.getPayload());
-
-        return InternalRequest.DeadNodeRequest.newBuilder().mergeFrom(msg.getPayload()).build();
-
     }
     
     private static KeyValueResponse.KVResponse UnpackResponse(Message.Msg msg) throws com.google.protobuf.InvalidProtocolBufferException,
@@ -307,18 +300,6 @@ class Worker implements Runnable {
                 		KeyValueRequest.KVRequest request = UnpackKVRequest(rec_msg);
                         response = requestProcessor.ProcessRequest(request, uuid);
                         this.cache.Put(uuid, response);
-                	} else if (rec_msg.getType() == 2) {  // Dead node request
-                        InternalRequest.DeadNodeRequest request = UnpackDNRequest(rec_msg);
-                		Server.removeNode(request.getServer(), request.getPort());
-                		InternalRequest.DeadNodeRequest DNRequest = InternalRequest.DeadNodeRequest.newBuilder()
-                				.setServer(request.getServer())
-                				.setPort(request.getPort())
-                				.build();
-
-                		Epidemic epi = new Epidemic(DNRequest.toByteString(), 2, rec_msg.getEpID());
-                		Server.epiQueue.add(epi);
-                        Server.socketPool.returnObject(socket);
-                		return;
                 	} else {
                         Server.socketPool.returnObject(socket);
                 		return;

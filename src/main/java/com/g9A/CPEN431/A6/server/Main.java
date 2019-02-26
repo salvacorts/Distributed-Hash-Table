@@ -48,9 +48,9 @@ public class Main {
 
     public static void main(String[] args) throws IllegalArgumentException, IOException {
     	
-        if (args.length != 3) {
+        if (args.length != 4) {
             System.err.println("Error: Missing parameters!");
-            System.err.println("java -jar A6.jar <server port> <metrics port> <nodes list>");
+            System.err.println("java -jar A6.jar <server port> <metrics port> <epidemic port> <nodes list>");
             return;
         }
 
@@ -66,10 +66,10 @@ public class Main {
 		// Run epidemic service
 
         try {
-            List<ServerNode> nodes = LoadNodesFromFile(args[2]);
+            List<ServerNode> nodes = LoadNodesFromFile(args[3]);
 
             try {
-                Server server = new Server(Integer.parseInt(args[0]), nodes);
+                Server server = new Server(Integer.parseInt(args[0]), Integer.parseInt(args[2]), nodes);
                 server.StartServing();
             } catch (Exception e) {
                 e.printStackTrace();

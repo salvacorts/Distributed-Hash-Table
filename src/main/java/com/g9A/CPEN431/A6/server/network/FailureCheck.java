@@ -67,7 +67,8 @@ public class FailureCheck implements Runnable {
 				.build();
 		
 		Epidemic epi = new Epidemic(DNRequest.toByteString(), 2);
-		Server.epiQueue.add(epi);
+		epi.generateId(node.getAddress().getHostAddress(), node.getEpiPort());
+		Server.epiSrv.add(epi);
     }
 
     public void run() {

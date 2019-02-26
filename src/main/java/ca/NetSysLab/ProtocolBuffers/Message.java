@@ -40,13 +40,13 @@ public final class Message {
     long getCheckSum();
 
     /**
-     * <code>optional int32 epID = 4;</code>
+     * <code>optional int64 epID = 4;</code>
      */
     boolean hasEpID();
     /**
-     * <code>optional int32 epID = 4;</code>
+     * <code>optional int64 epID = 4;</code>
      */
-    int getEpID();
+    long getEpID();
 
     /**
      * <code>optional int32 type = 5;</code>
@@ -126,7 +126,7 @@ public final class Message {
             }
             case 32: {
               bitField0_ |= 0x00000008;
-              epID_ = input.readInt32();
+              epID_ = input.readInt64();
               break;
             }
             case 40: {
@@ -220,17 +220,17 @@ public final class Message {
     }
 
     public static final int EPID_FIELD_NUMBER = 4;
-    private int epID_;
+    private long epID_;
     /**
-     * <code>optional int32 epID = 4;</code>
+     * <code>optional int64 epID = 4;</code>
      */
     public boolean hasEpID() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
-     * <code>optional int32 epID = 4;</code>
+     * <code>optional int64 epID = 4;</code>
      */
-    public int getEpID() {
+    public long getEpID() {
       return epID_;
     }
 
@@ -253,7 +253,7 @@ public final class Message {
       messageID_ = com.google.protobuf.ByteString.EMPTY;
       payload_ = com.google.protobuf.ByteString.EMPTY;
       checkSum_ = 0L;
-      epID_ = 0;
+      epID_ = 0L;
       type_ = 0;
     }
     private byte memoizedIsInitialized = -1;
@@ -291,7 +291,7 @@ public final class Message {
         output.writeFixed64(3, checkSum_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeInt32(4, epID_);
+        output.writeInt64(4, epID_);
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         output.writeInt32(5, type_);
@@ -319,7 +319,7 @@ public final class Message {
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(4, epID_);
+          .computeInt64Size(4, epID_);
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
@@ -448,7 +448,7 @@ public final class Message {
         bitField0_ = (bitField0_ & ~0x00000002);
         checkSum_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000004);
-        epID_ = 0;
+        epID_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000008);
         type_ = 0;
         bitField0_ = (bitField0_ & ~0x00000010);
@@ -672,34 +672,34 @@ public final class Message {
         return this;
       }
 
-      private int epID_ ;
+      private long epID_ ;
       /**
-       * <code>optional int32 epID = 4;</code>
+       * <code>optional int64 epID = 4;</code>
        */
       public boolean hasEpID() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
-       * <code>optional int32 epID = 4;</code>
+       * <code>optional int64 epID = 4;</code>
        */
-      public int getEpID() {
+      public long getEpID() {
         return epID_;
       }
       /**
-       * <code>optional int32 epID = 4;</code>
+       * <code>optional int64 epID = 4;</code>
        */
-      public Builder setEpID(int value) {
+      public Builder setEpID(long value) {
         bitField0_ |= 0x00000008;
         epID_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional int32 epID = 4;</code>
+       * <code>optional int64 epID = 4;</code>
        */
       public Builder clearEpID() {
         bitField0_ = (bitField0_ & ~0x00000008);
-        epID_ = 0;
+        epID_ = 0L;
         onChanged();
         return this;
       }
@@ -763,7 +763,7 @@ public final class Message {
     java.lang.String[] descriptorData = {
       "\n\rMessage.proto\"W\n\003Msg\022\021\n\tmessageID\030\001 \002(" +
       "\014\022\017\n\007payload\030\002 \002(\014\022\020\n\010checkSum\030\003 \002(\006\022\014\n\004" +
-      "epID\030\004 \001(\005\022\014\n\004type\030\005 \001(\005B\'\n\034ca.NetSysLab" +
+      "epID\030\004 \001(\003\022\014\n\004type\030\005 \001(\005B\'\n\034ca.NetSysLab" +
       ".ProtocolBuffersB\007Message"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
