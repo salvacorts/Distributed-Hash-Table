@@ -2,6 +2,7 @@ package com.g9A.CPEN431.A6.server.network;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,6 +10,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 
+import ca.NetSysLab.ProtocolBuffers.KeyValueRequest;
+import ca.NetSysLab.ProtocolBuffers.KeyValueResponse;
+import com.g9A.CPEN431.A6.client.Client;
 import com.g9A.CPEN431.A6.server.Server;
 import com.g9A.CPEN431.A6.server.ServerNode;
 import com.g9A.CPEN431.A6.server.Worker;
@@ -24,6 +28,7 @@ public class EpidemicServer implements Runnable {
 	static boolean KEEP_RECEIVING = true;
 	int port;
 	private Thread t;
+    private FailureCheck fc;
 	
 	private DatagramSocket listeningSocket;
     private static EpidemicCache cache = EpidemicCache.getInstance();
@@ -31,7 +36,9 @@ public class EpidemicServer implements Runnable {
 	public EpidemicServer(int port) throws SocketException{
 		this.port = port;
         this.listeningSocket = new DatagramSocket(port);
-	}
+        this.fc = new FailureCheck();
+
+    }
 	
 	public void add(Epidemic epi) {
 		if (!cache.check(epi.epId)) {
@@ -42,7 +49,6 @@ public class EpidemicServer implements Runnable {
     
     private static InternalRequest.DeadNodeRequest UnpackDNRequest(Message.Msg msg) throws InvalidProtocolBufferException{
         return InternalRequest.DeadNodeRequest.newBuilder().mergeFrom(msg.getPayload()).build();
-
     }
 	
 	public void run() {
@@ -80,9 +86,15 @@ public class EpidemicServer implements Runnable {
 	public void start() {
 		KEEP_RECEIVING = true;
 
+
         if (t == null) {
+            // Launch this system
             t = new Thread(this);
+            t.setPriority(Thread.MAX_PRIORITY);
             t.start();
+
+            // Launch failure detection system
+            fc.start();
         }
 	}
 	

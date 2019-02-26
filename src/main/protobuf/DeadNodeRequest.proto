@@ -1,8 +1,9 @@
 syntax = "proto2";
 option java_package = "ca.NetSysLab.ProtocolBuffers";
-option java_outer_classname = "InternalRequest";
+option java_outer_classname = "Internal";
 
 message DeadNodeRequest {
-    required string server = 1;
-	required int32 port = 2;
+    required int32 opCode = 1;
+    optional string server = 2;
+	optional int32 port = 3;
 }

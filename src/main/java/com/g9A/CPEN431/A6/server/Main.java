@@ -23,7 +23,7 @@ public class Main {
 
 		FileReader fileReader = new FileReader(filename);
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
-		String line = null;
+		String line;
 
 		while ((line = bufferedReader.readLine()) != null) {
 
@@ -33,15 +33,15 @@ public class Main {
 			    e.printStackTrace();
             }
 		}
-		
-		int total = nodes.size();
-		for(int i = 0; i < total; i++) {
+
+        bufferedReader.close();
+
+        int total = nodes.size();
+		for (int i = 0; i < total; i++) {
 			int start = i == 0 ? 0 : i*255/total + 1;
 			int end = (i+1)*255/total;
 			nodes.get(i).setHashRange(start, end);
 		}
-
-		bufferedReader.close();
 
 		return nodes;
 	}
@@ -59,9 +59,6 @@ public class Main {
         DefaultExports.initialize();
         metrics = MetricsServer.getInstance();
 		metrics.start();
-
-		FailureCheck fc = new FailureCheck();
-		fc.start();
 
         try {
             List<ServerNode> nodes = LoadNodesFromFile(args[3]);

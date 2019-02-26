@@ -39,7 +39,7 @@ public class Epidemic implements Runnable {
     }
     
     public Epidemic(ByteString payload, int type, long epId){
-    	client = new Client("",0,3);
+    	client = new Client("",0,5);
     	this.payload = payload;
     	this.type = type;
     	this.epId = epId;

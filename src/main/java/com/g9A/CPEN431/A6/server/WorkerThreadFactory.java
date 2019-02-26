@@ -34,6 +34,9 @@ class WorkerThreadFactory implements ThreadFactory {
         // Create a thread for the worker to be launched
         Thread t = new Thread(r);
 
+        // Set worker priority
+        t.setPriority(Thread.MIN_PRIORITY);
+
         // Round robin in socket assignation
         nextSocketAssigned = (nextSocketAssigned + 1) % sockets.length;
 

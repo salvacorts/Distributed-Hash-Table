@@ -104,8 +104,7 @@ public class Server {
                 listeningSocket.receive(rec_packet);
 
                 // Launch a new worker on the pool
-                DatagramSocket socket = socketPool.borrowObject();
-                this.threadPool.execute(new Worker(rec_packet, socket));
+                this.threadPool.execute(new Worker(rec_packet));
 
             } catch (Exception e) {
                 e.printStackTrace();

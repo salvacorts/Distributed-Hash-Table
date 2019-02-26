@@ -25,12 +25,13 @@ public class ServerNode {
     
     public ServerNode(String line, int index, int total) throws IllegalArgumentException, UnknownHostException {
 		String[] args = line.split(":");
-		this.epiPort = Integer.parseInt(args[2]);
-		this.address = InetAddress.getByName(args[0]);
-		this.port = Integer.parseInt(args[1]);
+        this.address = InetAddress.getByName(args[0]);
+        this.port = Integer.parseInt(args[1]);
+        this.epiPort = Integer.parseInt(args[2]);
+
 		this.hashStart = index == 0 ? 0 : index*255/total + 1;
 		this.hashEnd = (index+1)*255/total;
-		if(hashStart > hashEnd) {
+		if (hashStart > hashEnd) {
 			throw new IllegalArgumentException("Hash end must be greater than start");
 		}
 	}

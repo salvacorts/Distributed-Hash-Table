@@ -52,7 +52,7 @@ public class Client {
         return buffUuid;
     }
     
-    public ByteString GetUUID() throws SocketException {
+    public static ByteString GetUUID() throws SocketException {
     	DatagramSocket socket = new DatagramSocket();
         Random randomGen = new Random();
         byte[] buffUuid = new byte[16];
@@ -133,7 +133,7 @@ public class Client {
         /**/
     }
 
-    private Message.Msg PackMessage(KeyValueRequest.KVRequest request, byte[] uuid) {
+    public static Message.Msg PackMessage(KeyValueRequest.KVRequest request, byte[] uuid, int type) {
         CRC32 crc32 = new CRC32();
         Message.Msg.Builder sendMsg = Message.Msg.newBuilder();
 
@@ -146,6 +146,7 @@ public class Client {
         sendMsg.setMessageID(uuidBS);
         sendMsg.setPayload(request.toByteString());
         sendMsg.setCheckSum(checksum);
+        sendMsg.setType(type);
 
         return sendMsg.build();
     }
@@ -210,7 +211,7 @@ public class Client {
 
         byte[] uuid = GetUUID(socket);
         KeyValueRequest.KVRequest request = PackRequest(reqID, key, value, version);
-        Message.Msg sendMsg = PackMessage(request, uuid);
+        Message.Msg sendMsg = PackMessage(request, uuid, 1);
 
         for (int i = 0; i <= this.maxRetires; i++) {
             byte[] buffSend = sendMsg.toByteArray();

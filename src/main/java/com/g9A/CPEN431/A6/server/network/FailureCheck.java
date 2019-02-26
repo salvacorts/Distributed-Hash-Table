@@ -1,14 +1,18 @@
 package com.g9A.CPEN431.A6.server.network;
 
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.util.List;
 import java.util.Random;
 
+import ca.NetSysLab.ProtocolBuffers.KeyValueRequest;
 import com.g9A.CPEN431.A6.client.Client;
 import com.g9A.CPEN431.A6.client.exceptions.UnsupportedCommandException;
 import com.g9A.CPEN431.A6.server.Server;
 import com.g9A.CPEN431.A6.server.ServerNode;
+import com.g9A.CPEN431.A6.server.Worker;
 import com.g9A.CPEN431.A6.server.metrics.MetricsServer;
 import com.google.protobuf.ByteString;
 
@@ -16,17 +20,19 @@ import ca.NetSysLab.ProtocolBuffers.InternalRequest;
 import ca.NetSysLab.ProtocolBuffers.Message;
 import ca.NetSysLab.ProtocolBuffers.KeyValueResponse.KVResponse;
 
+import javax.xml.crypto.Data;
+
 public class FailureCheck implements Runnable {
 
     private Thread t;
     private boolean stopflag = false;
     private boolean firstFlag = true;
+    private DatagramSocket socket;
     
-    Client client;
     Random rand = new Random();
 
-    public FailureCheck(){
-    	client = new Client("",0,3);
+    public FailureCheck() throws SocketException {
+    	this.socket = new DatagramSocket();
     }
 
 	/**
@@ -46,11 +52,19 @@ public class FailureCheck implements Runnable {
     	} while(node.equals(Server.selfNode));
 
 		// Set the client to use this server
-    	client.changeServer(node.getAddress().getHostAddress(), node.getPort());
+    	//client.changeServer(node.getAddress().getHostAddress(), node.getEpiPort());
 
     	try {
 			// Send isAlive to the node
-			KVResponse kvr = client.DoRequest(6, "", "", 0);
+			ByteString uuid = Client.GetUUID();
+			KeyValueRequest.KVRequest request = KeyValueRequest.KVRequest.newBuilder().setCommand(6).build();
+			Message.Msg msg = Client.PackMessage(request, uuid.toByteArray(), 1);
+
+			// Serialize to packet
+			DatagramPacket send_packet = new DatagramPacket(msg.toByteArray(), msg.getSerializedSize(), node.getAddress(), node.getPort());
+
+			// Send packet
+			KVResponse kvr = Worker.SendAndReceive(socket, send_packet, uuid, 8);
 
 			// if sth went wrong
 			if (kvr.getErrCode() != 0) removeNode(node);
@@ -58,12 +72,10 @@ public class FailureCheck implements Runnable {
 		} catch (IOException e) {	// If could not establish contact with the node, remove the node
 			System.out.println("[FailureCheck] Server " + node.getAddress().getHostName() + ":" + node.getPort() + " is down");
 			removeNode(node);
-		} catch (UnsupportedCommandException e) {
-			e.printStackTrace();
 		}
     }
     
-    private void removeNode(ServerNode node) {
+    public static void removeNode(ServerNode node) {
 		Server.removeNode(node.getAddress().getHostAddress(), node.getPort());
 
 		InternalRequest.DeadNodeRequest DNRequest = InternalRequest.DeadNodeRequest.newBuilder()
@@ -112,7 +124,8 @@ public class FailureCheck implements Runnable {
 
         if (t == null) {
             t = new Thread(this);
-            t.start();
+			t.setPriority(Thread.MAX_PRIORITY);
+			t.start();
         }
     }
 

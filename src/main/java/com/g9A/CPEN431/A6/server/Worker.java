@@ -12,6 +12,7 @@ import com.g9A.CPEN431.A6.server.cache.CacheManager;
 import com.g9A.CPEN431.A6.server.exceptions.*;
 import com.g9A.CPEN431.A6.server.kvMap.RequestProcessor;
 import com.g9A.CPEN431.A6.server.network.Epidemic;
+import com.g9A.CPEN431.A6.server.network.FailureCheck;
 import com.g9A.CPEN431.A6.utils.ByteOrder;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -59,13 +60,13 @@ public class Worker implements Runnable {
 			.build();
     }
 
-    private static KeyValueRequest.KVRequest UnpackKVRequest(Message.Msg msg) throws com.google.protobuf.InvalidProtocolBufferException {
+    public static KeyValueRequest.KVRequest UnpackKVRequest(Message.Msg msg) throws com.google.protobuf.InvalidProtocolBufferException {
         //return KeyValueRequest.KVRequest.parseFrom(msg.getPayload());
 
         return KeyValueRequest.KVRequest.newBuilder().mergeFrom(msg.getPayload()).build();
     }
     
-    private static KeyValueResponse.KVResponse UnpackResponse(Message.Msg msg) throws com.google.protobuf.InvalidProtocolBufferException,
+    public static KeyValueResponse.KVResponse UnpackResponse(Message.Msg msg) throws com.google.protobuf.InvalidProtocolBufferException,
                                                                                       com.g9A.CPEN431.A6.client.exceptions.DifferentChecksumException {
         if (!CorrectChecksum(msg)) throw new DifferentChecksumException();
 
@@ -78,7 +79,7 @@ public class Worker implements Runnable {
      * @param uuid message ID
      * @return the message to be sent with checksum
      */
-    private static Message.Msg PackMessage(KeyValueResponse.KVResponse response, ByteString uuid) {
+    public static Message.Msg PackMessage(KeyValueResponse.KVResponse response, ByteString uuid) {
         CRC32 crc32 = new CRC32();
         crc32.update(ByteOrder.concatArray(uuid.toByteArray(), response.toByteArray()));
 
@@ -128,7 +129,7 @@ public class Worker implements Runnable {
      * @return response from the other node, usually a error code 0 (success)
      * @throws IOException when SocketTimeOutException. It means the other node is probably down
      */
-    private KVResponse SendAndReceive(DatagramPacket packet, ByteString uuid, int maxRetires) throws IOException {
+    public static KVResponse SendAndReceive(DatagramSocket socket, DatagramPacket packet, ByteString uuid, int maxRetires) throws IOException {
         byte[] buffRecv = new byte[65507];  // Max UPD packet size
         int timeout = 1000;
 
@@ -172,11 +173,12 @@ public class Worker implements Runnable {
 
                 try {
                     // Send packet to correct node and obtain an answer
-                    return SendAndReceive(send_packet, request.getMessageID(), 3);
+                    return SendAndReceive(socket, send_packet, request.getMessageID(), 3);
                 } catch (SocketTimeoutException e) {
                     // The correct node seems to be down, answer to the client
                     // TODO A7: Handle node failure internally (update alive nodes list, and start storing keys if necessary)
                     System.err.println("[!Down?] Could not contact " + node.getAddress().getHostName() + ":" + node.getPort());
+                    //FailureCheck.removeNode(node);
                 }
 
                 break;
@@ -226,8 +228,12 @@ public class Worker implements Runnable {
     }
 
     Worker(DatagramPacket packet, DatagramSocket socket) {
-        this.packet = packet;
-        this.socket = socket;
+        try {
+            this.packet = packet;
+            this.socket = Server.socketPool.borrowObject();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         this.cache = CacheManager.getInstance();
         this.requestProcessor = RequestProcessor.getInstance();
