@@ -26,8 +26,6 @@ public class EpidemicServer implements Runnable {
 	private Thread t;
 	
 	private DatagramSocket listeningSocket;
-    private ExecutorService threadPool;
-    public static SocketPool socketPool = new SocketPool(new SocketFactory());
     private static EpidemicCache cache = EpidemicCache.getInstance();
 	
 	public EpidemicServer(int port) throws SocketException{
@@ -36,15 +34,13 @@ public class EpidemicServer implements Runnable {
 	}
 	
 	public void add(Epidemic epi) {
-		if(!cache.check(epi.epId)) {
+		if (!cache.check(epi.epId)) {
 			epi.start();
 			cache.put(epi.epId);
 		}
 	}
     
     private static InternalRequest.DeadNodeRequest UnpackDNRequest(Message.Msg msg) throws InvalidProtocolBufferException{
-    	//return InternalRequest.DeadNodeRequest.parseFrom(msg.getPayload());
-
         return InternalRequest.DeadNodeRequest.newBuilder().mergeFrom(msg.getPayload()).build();
 
     }
@@ -59,9 +55,14 @@ public class EpidemicServer implements Runnable {
                 // Receive a packet
                 listeningSocket.receive(rec_packet);
 
+                // Deserialize packet
                 Message.Msg rec_msg = Worker.UnpackMessage(rec_packet);
                 InternalRequest.DeadNodeRequest request = UnpackDNRequest(rec_msg);
+
+                // Remove the node that is down
         		Server.removeNode(request.getServer(), request.getPort());
+
+                // Spread the epidemic
         		InternalRequest.DeadNodeRequest DNRequest = InternalRequest.DeadNodeRequest.newBuilder()
         				.setServer(request.getServer())
         				.setPort(request.getPort())
