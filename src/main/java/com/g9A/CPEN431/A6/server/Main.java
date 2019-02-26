@@ -63,8 +63,6 @@ public class Main {
 		FailureCheck fc = new FailureCheck();
 		fc.start();
 
-		// Run epidemic service
-
         try {
             List<ServerNode> nodes = LoadNodesFromFile(args[3]);
 

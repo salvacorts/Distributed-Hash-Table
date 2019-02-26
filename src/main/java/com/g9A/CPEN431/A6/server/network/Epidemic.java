@@ -72,7 +72,7 @@ public class Epidemic implements Runnable {
     	client.changeServer(node.getAddress().getHostAddress(), node.getEpiPort());
     	client.DoInternalRequest(payload, type, epId);
     	
-    	if(iterations-- > 0){
+    	if(iterations-- <= 0){
     		stopflag = true;
     	}
     }
