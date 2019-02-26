@@ -227,7 +227,7 @@ public class Worker implements Runnable {
         socket.send(send_packet);
     }
 
-    Worker(DatagramPacket packet, DatagramSocket socket) {
+    Worker(DatagramPacket packet) {
         try {
             this.packet = packet;
             this.socket = Server.socketPool.borrowObject();
