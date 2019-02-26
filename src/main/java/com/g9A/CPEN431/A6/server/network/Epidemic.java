@@ -18,6 +18,7 @@ import ca.NetSysLab.ProtocolBuffers.Message;
 public class Epidemic implements Runnable {
 
     private boolean stopflag = false;
+    private Thread t;
     
     ByteString payload;
     int type;
@@ -100,7 +101,11 @@ public class Epidemic implements Runnable {
 
     public void start() {
         stopflag = false;
-        run();
+        if (t == null) {
+            t = new Thread(this);
+            t.setPriority(Thread.MAX_PRIORITY);
+            t.start();
+        }
     }
 
     public void stop() {

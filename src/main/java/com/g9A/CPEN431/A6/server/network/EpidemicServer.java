@@ -28,7 +28,6 @@ public class EpidemicServer implements Runnable {
 	static boolean KEEP_RECEIVING = true;
 	int port;
 	private Thread t;
-    private FailureCheck fc;
 	
 	private DatagramSocket listeningSocket;
     private static EpidemicCache cache = EpidemicCache.getInstance();
@@ -36,9 +35,7 @@ public class EpidemicServer implements Runnable {
 	public EpidemicServer(int port) throws SocketException{
 		this.port = port;
         this.listeningSocket = new DatagramSocket(port);
-        this.fc = new FailureCheck();
-
-    }
+	}
 	
 	public void add(Epidemic epi) {
 		if (!cache.check(epi.epId)) {
@@ -86,15 +83,10 @@ public class EpidemicServer implements Runnable {
 	public void start() {
 		KEEP_RECEIVING = true;
 
-
         if (t == null) {
-            // Launch this system
             t = new Thread(this);
             t.setPriority(Thread.MAX_PRIORITY);
             t.start();
-
-            // Launch failure detection system
-            fc.start();
         }
 	}
 	

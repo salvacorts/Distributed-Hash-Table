@@ -28,7 +28,7 @@ public class FailureCheck implements Runnable {
     private boolean stopflag = false;
     private boolean firstFlag = true;
     private DatagramSocket socket;
-    
+
     Random rand = new Random();
 
     public FailureCheck() throws SocketException {
