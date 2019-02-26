@@ -95,7 +95,7 @@ public class FailureCheck implements Runnable {
     	if (firstFlag) {
     		firstFlag = false;
     		try {
-				Thread.sleep(30*1000);
+				Thread.sleep(2*60*1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
