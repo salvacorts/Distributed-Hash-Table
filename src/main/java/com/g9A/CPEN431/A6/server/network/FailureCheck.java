@@ -28,46 +28,54 @@ public class FailureCheck implements Runnable {
     public FailureCheck(){
     	client = new Client("",0,3);
     }
-    
-    private void checkRandom() throws SocketException {
-    	ServerNode node = null;
 
-    	do {
+	/**
+	 * Check if a random node is infected
+	 * @throws SocketException
+	 */
+	private void checkRandom() throws SocketException {
+		// If there is only one node (this one), return, there is nothing to check
+    	if (Server.serverNodes.size() < 2) return;
+
+    	// Randomly select a node to check
+		ServerNode node;
+
+		do {
         	int r = rand.nextInt(Server.serverNodes.size());
         	node = Server.serverNodes.get(r);
-
-        	if (Server.serverNodes.size() < 2) {
-        		return;
-        	}
     	} while(node.equals(Server.selfNode));
 
+		// Set the client to use this server
     	client.changeServer(node.getAddress().getHostAddress(), node.getPort());
-    	KVResponse kvr = null;
-    	
+
     	try {
-			kvr = client.DoRequest(6, "", "", 0);
-		} catch (IOException e1) {
+			// Send isAlive to the node
+			KVResponse kvr = client.DoRequest(6, "", "", 0);
+
+			// if sth went wrong
+			if (kvr.getErrCode() != 0) removeNode(node);
+
+		} catch (IOException e) {	// If could not establish contact with the node, remove the node
+			System.out.println("[FailureCheck] Server " + node.getAddress().getHostName() + ":" + node.getPort() + " is down");
 			removeNode(node);
-			System.out.println("Server " + node.getAddress().getHostName() + ":" + node.getPort() + " offline");
-			return;
 		} catch (UnsupportedCommandException e) {
 			e.printStackTrace();
 		}
-    	
-    	if (kvr != null && kvr.getErrCode() != 0) {
-			removeNode(node);
-    	}
     }
     
     private void removeNode(ServerNode node) {
 		Server.removeNode(node.getAddress().getHostAddress(), node.getPort());
+
 		InternalRequest.DeadNodeRequest DNRequest = InternalRequest.DeadNodeRequest.newBuilder()
 				.setServer(node.getAddress().getHostName())
 				.setPort(node.getPort())
 				.build();
-		
+
+		// Create epidemic containing DNRequest
 		Epidemic epi = new Epidemic(DNRequest.toByteString(), 2);
 		epi.generateId(node.getAddress().getHostAddress(), node.getEpiPort());
+
+		//  Spread the epidemic across nodes
 		Server.epiSrv.add(epi);
     }
 

@@ -32,8 +32,9 @@ public class Epidemic implements Runnable {
     	this.payload = payload;
     	this.type = type;
     	iterations = Server.serverNodes.size();
-    	if(iterations < 10) {
-    		iterations = (10-iterations)*2;
+
+    	if (iterations < 10) {
+    		iterations = (10 - iterations) * 2;
     	}
     }
     
@@ -43,54 +44,58 @@ public class Epidemic implements Runnable {
     	this.type = type;
     	this.epId = epId;
     	iterations = Server.serverNodes.size();
-    	if(iterations < 10) {
-    		iterations = (10-iterations)*2;
+
+    	if (iterations < 10) {
+    		iterations = (10 - iterations) * 2;
     	}
     }
     
     public void generateId(String svr, int epiPort) {
     	CRC32 crc = new CRC32();
+
     	crc.update(svr.getBytes());
     	crc.update(epiPort);
+
     	this.epId = crc.getValue();
-    	crc = null;
     }
     
     private void sendRandom() throws IOException {
-    	ServerNode node = null;
-    	int r;
+
+    	// If there is only one node (this one) there is nothing to spread
+    	if (Server.serverNodes.size() < 2) {
+    		stopflag = true;
+    		return;
+		}
+
+    	// Pick a node randomly
+    	ServerNode node;
+
     	do {
-	    	r = rand.nextInt(Server.serverNodes.size());
+	    	int r = rand.nextInt(Server.serverNodes.size());
 	    	node = Server.serverNodes.get(r);
-	    	if(Server.serverNodes.size() < 2) {
-	    		stopflag = true;
-	    		return;
-	    	}
     	} while(node.equals(Server.selfNode));
-    	
-    	System.out.println("epidemic sending to " + node.getAddress().getHostName() + ":" + node.getEpiPort());
+
+    	// Send the payload to that node
+    	System.out.println("[Epidemic] sending to " + node.getAddress().getHostName() + ":" + node.getEpiPort());
     	client.changeServer(node.getAddress().getHostAddress(), node.getEpiPort());
     	client.DoInternalRequest(payload, type, epId);
-    	
-    	if(iterations-- > 0){
-    		stopflag = true;
-    	}
+
+    	iterations--;
     }
     
     public void run() {
-    	try {
-			sendRandom();
-		} catch (IOException e) {
-			System.out.println("Epidemic failure");
-			e.printStackTrace();
-		}
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
-        if(!stopflag) this.run();
+    	while (!stopflag && iterations > 0) {
+			try {
+				sendRandom();
+				Thread.sleep(5000);
+			} catch (IOException e) {
+				System.out.println("Epidemic failure");
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
     }
 
     public void start() {

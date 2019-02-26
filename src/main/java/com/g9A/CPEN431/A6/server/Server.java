@@ -28,7 +28,7 @@ public class Server {
     public static SocketPool socketPool = new SocketPool(new SocketFactory());
     public static ServerNode selfNode;
     public static List<ServerNode> serverNodes;
-    public static EpidemicServer epiSrv;;
+    public static EpidemicServer epiSrv;
 
     static void UpdateProcessTime(long time) {
         avgProcessTime = (avgProcessTime + time) / 2;
@@ -62,25 +62,30 @@ public class Server {
         if (selfNode == null) {
         	throw new IllegalArgumentException("Current server not present in nodes-list");
         }
+
+        // Launch the epidemic service to update nodes state across the ring
         epiSrv = new EpidemicServer(epiPort);
         epiSrv.start();
     }
 
     public static void removeNode(String addr, int port) {
+        // Remove the node from the nodes list
     	for (Iterator<ServerNode> iter = serverNodes.listIterator(); iter.hasNext(); ) {
     		ServerNode node = iter.next();
 
     	    if (addr.equals(node.getAddress().getHostAddress()) && node.getPort() == port) {
     	        iter.remove();
-    	        return;
+    	        break;
     	    }
     	}
 
     	int total = serverNodes.size();
 
+    	// Re-balance hash space
     	for (int i = 0; i < total; i++) {
-    		int start = i == 0 ? 0 : i*255/total + 1;
+    		int start = (i == 0) ? 0 : i*255/total + 1;
     		int end = (i+1)*255/total;
+
     		serverNodes.get(i).setHashRange(start, end);
     	}
     }
