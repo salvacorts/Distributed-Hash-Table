@@ -74,20 +74,30 @@ public class Server {
     		ServerNode node = iter.next();
 
     	    if (addr.equals(node.getAddress().getHostAddress()) && node.getPort() == port) {
-    	        iter.remove();
-    	        break;
+    	    	
+            	// Re-balance hash space
+            	if(!iter.hasNext()) {
+            		ServerNode lastNode = serverNodes.get(serverNodes.size()-2);
+            		lastNode.setHashRange(lastNode.getHashStart(), node.getHashEnd());
+            	}
+            	else {
+        	        ServerNode nextNode = iter.next();
+            		nextNode.setHashRange(node.getHashStart(), nextNode.getHashEnd());
+            	}
+    	        serverNodes.remove(node);
+    	        
+
+    	    	/*for (int i = 0; i < serverNodes.size(); i++) {
+
+    	    		//serverNodes.get(i).setHashRange(start, end);
+    	    		node = serverNodes.get(i);
+    	    		System.out.println(node.getAddress().getHostName() + ":" + node.getPort() + ", Range: " + node.getHashStart() + "-" + node.getHashEnd());
+    	    	}*/
+    	        
+    	        return;
     	    }
     	}
-
-    	int total = serverNodes.size();
-
-    	// Re-balance hash space
-    	for (int i = 0; i < total; i++) {
-    		int start = (i == 0) ? 0 : i*255/total + 1;
-    		int end = (i+1)*255/total;
-
-    		serverNodes.get(i).setHashRange(start, end);
-    	}
+		System.err.println("Attempted to remove nonexistent node");
     }
 
     public void StartServing() {
