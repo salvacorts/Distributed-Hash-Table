@@ -162,18 +162,30 @@ public class Worker implements Runnable {
     /**
      * Routes a request to the correct node
      * @param request the request to reroute
+     * @param clientAddr address of the original client
+     * @param clientPort port of the original client
      * @param hash hash of the key
      * @throws IOException
      */
-    private KVResponse Reroute(Message.Msg request, int hash) throws IOException{
+    private void Reroute(Message.Msg request, InetAddress clientAddr, int clientPort, int hash) throws IOException{
+    	ByteString addr = ByteString.copyFrom(clientAddr.getAddress());
+    	Message.ClientInfo client = Message.ClientInfo.newBuilder()
+    			.setAddress(addr)
+    			.setPort(clientPort)
+    			.build();
+    	Message.Msg newRequest = Message.Msg.newBuilder()
+    			.setMessageID(request.getMessageID())
+    			.setPayload(request.getPayload())
+    			.setCheckSum(request.getCheckSum())
+    			.setClient(client)
+    			.build();
     	for (ServerNode node : Server.serverNodes) {
     	    if (node.inSpace(hash)) {
-                // Serialize message
-                DatagramPacket send_packet = new DatagramPacket(request.toByteArray(), request.getSerializedSize(), node.getAddress(), node.getPort());
 
                 try {
-                    // Send packet to correct node and obtain an answer
-                    return SendAndReceive(socket, send_packet, request.getMessageID(), 3);
+                    // Send packet to correct node 
+                	Send(newRequest, node.getAddress(), node.getPort());
+                    return;
                 } catch (SocketTimeoutException e) {
                     // The correct node seems to be down, answer to the client
                     // TODO A7: Handle node failure internally (update alive nodes list, and start storing keys if necessary)
@@ -184,8 +196,6 @@ public class Worker implements Runnable {
                 break;
     	    }
         }
-
-    	return KVResponse.newBuilder().setErrCode(1).build();   // Send un-existing key error;
     }
 
     private static boolean CorrectChecksum(Message.Msg msg) {
@@ -256,7 +266,7 @@ public class Worker implements Runnable {
         	}
 
             // If packet has been rerouted by other node, update destination info
-            /*if (rec_msg.hasClient()) {
+            if (rec_msg.hasClient()) {
                 //System.out.println("Received packet rerouted");
 
                 // Check if the confirmation for the other node is cached
@@ -278,7 +288,7 @@ public class Worker implements Runnable {
 
                 packet.setAddress(InetAddress.getByAddress(addr));
                 packet.setPort(port);
-            }*/
+            }
 
             // Get the uuid for this message. It may be a forwarded message
             //ByteString uuid = (rec_msg.hasClient()) ? rec_msg.getClient().getMessageID() : rec_msg.getMessageID();
@@ -306,6 +316,7 @@ public class Worker implements Runnable {
                 		KeyValueRequest.KVRequest request = UnpackKVRequest(rec_msg);
                         response = requestProcessor.ProcessRequest(request, uuid);
                         this.cache.Put(uuid, response);
+                        
                 	} else {
                         Server.socketPool.returnObject(socket);
                 		return;
@@ -324,11 +335,11 @@ public class Worker implements Runnable {
                         .setOverloadWaitTime((int) Server.avgProcessTime)
                         .build();
             } catch (WrongNodeException e) {
-                response = Reroute(rec_msg, e.getHash());
-
-                // Otherwise, send the error to the client catching the response
-                this.cache.Put(rec_msg.getMessageID(), response);
-
+                Reroute(rec_msg, packet.getAddress(), packet.getPort(), e.getHash());
+                Server.socketPool.returnObject(socket);
+                processing_messages.remove(uuid);
+                return;
+                
             } catch (Exception e) {
                 e.printStackTrace();
                 response = KeyValueResponse.KVResponse.newBuilder()
