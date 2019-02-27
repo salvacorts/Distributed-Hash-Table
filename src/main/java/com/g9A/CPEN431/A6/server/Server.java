@@ -23,8 +23,7 @@ public class Server {
     private DatagramSocket listeningSocket;        // Server UDP socket to send and receive packets
     private int availableCores;
 
-    private ExecutorService threadPool;
-
+    public static ExecutorService threadPool;
     public static SocketPool socketPool = new SocketPool(new SocketFactory());
     public static ServerNode selfNode;
     public static List<ServerNode> serverNodes;
@@ -41,7 +40,8 @@ public class Server {
         int poolSize = (this.availableCores > 1) ? this.availableCores - 1 : 1;
 
         // Setup threads pool
-        this.threadPool = Executors.newFixedThreadPool(poolSize);
+        if (threadPool != null && !threadPool.isShutdown()) threadPool.shutdownNow();
+        threadPool = Executors.newFixedThreadPool(poolSize);
 
         // Setup sockets pool
         socketPool.setMaxTotal(25);
@@ -100,6 +100,10 @@ public class Server {
 		System.err.println("Attempted to remove nonexistent node");
     }
 
+    public static void LaunchWorkerWithPriority(DatagramPacket packet, int priority) {
+        threadPool.execute(new Worker(packet, priority));
+    }
+
     public void StartServing() {
         byte[] receiveData = new byte[65507];
 
@@ -114,7 +118,7 @@ public class Server {
                 listeningSocket.receive(rec_packet);
 
                 // Launch a new worker on the pool
-                this.threadPool.execute(new Worker(rec_packet));
+                threadPool.execute(new Worker(rec_packet));
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -123,7 +127,7 @@ public class Server {
 
         System.out.println("Server stopping");
         this.listeningSocket.close();
-        this.threadPool.shutdown();
+        threadPool.shutdown();
         socketPool.close();
         epiSrv.stop();
     }
