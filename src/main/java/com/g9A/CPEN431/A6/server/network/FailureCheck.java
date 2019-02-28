@@ -61,10 +61,10 @@ public class FailureCheck implements Runnable {
 			Message.Msg msg = Client.PackMessage(request, uuid.toByteArray(), 1);
 
 			// Serialize to packet
-			DatagramPacket send_packet = new DatagramPacket(msg.toByteArray(), msg.getSerializedSize(), node.getAddress(), node.getPort());
+			DatagramPacket send_packet = new DatagramPacket(msg.toByteArray(), msg.getSerializedSize(), node.getAddress(), node.getEpiPort());
 
 			// Send packet
-			KVResponse kvr = Worker.SendAndReceive(socket, send_packet, uuid, 8);
+			KVResponse kvr = Worker.SendAndReceive(socket, send_packet, uuid, 5);
 
 			// if sth went wrong
 			if (kvr.getErrCode() != 0) removeNode(node);

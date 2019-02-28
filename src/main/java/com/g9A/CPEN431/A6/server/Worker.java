@@ -18,6 +18,7 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import org.jetbrains.annotations.NotNull;
+import org.omg.CORBA.DynAnyPackage.Invalid;
 
 import java.io.IOException;
 import java.net.*;
@@ -33,6 +34,7 @@ public class Worker implements Runnable {
     private DatagramPacket packet;
     private CacheManager cache;
     private RequestProcessor requestProcessor;
+    private int priority;
 
     /* UUID (16B):
         IP (4B) + Port (2B) + Random num (2B) + timestamp (8B)
@@ -54,10 +56,15 @@ public class Worker implements Runnable {
         return ByteString.copyFrom(buffUuid);
     }
 
-    public static Message.Msg UnpackMessage(DatagramPacket packet) throws com.google.protobuf.InvalidProtocolBufferException {
-		return Message.Msg.newBuilder()
+    public static Message.Msg UnpackMessage(DatagramPacket packet) throws com.google.protobuf.InvalidProtocolBufferException,
+                                                                          DifferentChecksumException {
+		Message.Msg unpacked = Message.Msg.newBuilder()
 			.mergeFrom(packet.getData(), 0, packet.getLength())
 			.build();
+
+		if (!CorrectChecksum(unpacked)) throw new DifferentChecksumException();
+
+		return unpacked;
     }
 
     public static KeyValueRequest.KVRequest UnpackKVRequest(Message.Msg msg) throws com.google.protobuf.InvalidProtocolBufferException {
@@ -169,22 +176,25 @@ public class Worker implements Runnable {
      */
     private void Reroute(Message.Msg request, InetAddress clientAddr, int clientPort, int hash) throws IOException{
     	ByteString addr = ByteString.copyFrom(clientAddr.getAddress());
+
     	Message.ClientInfo client = Message.ClientInfo.newBuilder()
     			.setAddress(addr)
     			.setPort(clientPort)
     			.build();
+
     	Message.Msg newRequest = Message.Msg.newBuilder()
     			.setMessageID(request.getMessageID())
     			.setPayload(request.getPayload())
     			.setCheckSum(request.getCheckSum())
     			.setClient(client)
     			.build();
+
     	for (ServerNode node : Server.serverNodes) {
     	    if (node.inSpace(hash)) {
 
                 try {
                     // Send packet to correct node 
-                	Send(newRequest, node.getAddress(), node.getPort());
+                	Send(socket, newRequest, node.getAddress(), node.getPort());
                     return;
                 } catch (SocketTimeoutException e) {
                     // The correct node seems to be down, answer to the client
@@ -214,7 +224,7 @@ public class Worker implements Runnable {
      * @param packet packet received
      * @param time waitForTime in milliseconds
      */
-    void SendOverloadWaitTime(@NotNull DatagramPacket packet, long time) throws java.io.IOException {
+    void SendOverloadWaitTime(@NotNull DatagramPacket packet, long time) throws java.io.IOException, DifferentChecksumException {
         ByteString uuid = UnpackMessage(packet).getMessageID();
 
         KeyValueResponse.KVResponse response = KeyValueResponse.KVResponse.newBuilder()
@@ -224,10 +234,10 @@ public class Worker implements Runnable {
 
         Message.Msg msg = PackMessage(response, uuid);
 
-        Send(msg, packet.getAddress(), packet.getPort());
+        Send(socket, msg, packet.getAddress(), packet.getPort());
     }
 
-    private void Send(Message.Msg msg, InetAddress address, int port) throws IOException {
+    public static void Send(DatagramSocket socket, Message.Msg msg, InetAddress address, int port) throws IOException {
         if (socket == null) socket = new DatagramSocket();
 
         // Serialize message
@@ -237,8 +247,13 @@ public class Worker implements Runnable {
         socket.send(send_packet);
     }
 
-    Worker(DatagramPacket packet) {
+    public Worker(DatagramPacket packet) {
+        this(packet, Thread.NORM_PRIORITY);
+    }
+
+    public Worker(DatagramPacket packet, int priority) {
         try {
+            this.priority = priority;
             this.packet = packet;
             this.socket = Server.socketPool.borrowObject();
         } catch (Exception e) {
@@ -251,6 +266,7 @@ public class Worker implements Runnable {
 
     public void run() {
         long startTime = System.currentTimeMillis();
+        Thread.currentThread().setPriority(this.priority);
 
         try {
             KeyValueResponse.KVResponse response;
@@ -258,8 +274,12 @@ public class Worker implements Runnable {
 
             // Unpack message from the packet
         	try {
-        		rec_msg = UnpackMessage(packet);
-        	} catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                rec_msg = UnpackMessage(packet);
+            } catch (InvalidProtocolBufferException e) {
+        	    e.printStackTrace();
+                Server.socketPool.returnObject(socket);
+                return;
+        	} catch (Exception e) {
         		e.printStackTrace();
                 Server.socketPool.returnObject(socket);
                 return;
@@ -267,21 +287,6 @@ public class Worker implements Runnable {
 
             // If packet has been rerouted by other node, update destination info
             if (rec_msg.hasClient()) {
-                //System.out.println("Received packet rerouted");
-
-                // Check if the confirmation for the other node is cached
-                response = this.cache.Get(rec_msg.getMessageID());
-
-                if (response == null) {
-                    response = KVResponse.newBuilder().setErrCode(0).build();
-
-                    this.cache.Put(rec_msg.getMessageID(), response);
-                }
-
-                // Send confirmation to the other node
-                Message.Msg response_msg = PackMessage(response, rec_msg.getMessageID());
-                Send(response_msg, packet.getAddress(), packet.getPort());
-
                 // Update address to the original client in order to answer him and not to the other node
                 byte[] addr = rec_msg.getClient().getAddress().toByteArray();
                 int port = rec_msg.getClient().getPort();
@@ -291,16 +296,9 @@ public class Worker implements Runnable {
             }
 
             // Get the uuid for this message. It may be a forwarded message
-            //ByteString uuid = (rec_msg.hasClient()) ? rec_msg.getClient().getMessageID() : rec_msg.getMessageID();
             ByteString uuid = rec_msg.getMessageID();
 
             try {
-                // Check if checksum is correct
-                if (!CorrectChecksum(rec_msg)) {
-                    Server.socketPool.returnObject(socket);
-                	return;
-                }
-
                 // If uuid is in processing map, return and let the other thread to finish this work
                 if (processing_messages.contains(uuid)) {
                     Server.socketPool.returnObject(socket);
@@ -351,7 +349,7 @@ public class Worker implements Runnable {
             Message.Msg response_msg = PackMessage(response, uuid);
 
             // Send message to destination
-            Send(response_msg, packet.getAddress(), packet.getPort());
+            Send(socket, response_msg, packet.getAddress(), packet.getPort());
 
             // Remove this uuid from the being processed set
             processing_messages.remove(uuid);

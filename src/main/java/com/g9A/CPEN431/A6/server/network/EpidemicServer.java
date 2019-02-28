@@ -16,6 +16,7 @@ import com.g9A.CPEN431.A6.client.Client;
 import com.g9A.CPEN431.A6.server.Server;
 import com.g9A.CPEN431.A6.server.ServerNode;
 import com.g9A.CPEN431.A6.server.Worker;
+import com.g9A.CPEN431.A6.server.kvMap.RequestProcessor;
 import com.g9A.CPEN431.A6.server.pools.SocketFactory;
 import com.g9A.CPEN431.A6.server.pools.SocketPool;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -51,10 +52,9 @@ public class EpidemicServer implements Runnable {
     }
 	
 	public void run() {
-        byte[] receiveData = new byte[65507];
-        
 		while (KEEP_RECEIVING) {
-            DatagramPacket rec_packet = new DatagramPacket(receiveData, receiveData.length);
+			byte[] receiveData = new byte[65507];
+			DatagramPacket rec_packet = new DatagramPacket(receiveData, receiveData.length);
 
             try {
                 // Receive a packet
@@ -62,6 +62,14 @@ public class EpidemicServer implements Runnable {
 
                 // Deserialize packet
                 Message.Msg rec_msg = Worker.UnpackMessage(rec_packet);
+
+                // If it is a normal request (usually a isAlive) launch a worker for it on the thread pool
+                if (rec_msg.hasType() && rec_msg.getType() == 1) {
+					Worker worker = new Worker(rec_packet, Thread.MAX_PRIORITY);
+					worker.run();
+					continue;
+				}
+
                 InternalRequest.DeadNodeRequest request = UnpackDNRequest(rec_msg);
 
                 // Remove the node that is down
