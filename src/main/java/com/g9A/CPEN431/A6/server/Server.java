@@ -107,9 +107,9 @@ public class Server {
     public void StartServing() {
         System.out.println("Listening on: " + this.listeningSocket.getLocalPort());
         System.out.println("CPUs: " + this.availableCores);
-
+        
         while (KEEP_RECEIVING) {
-            byte[] receiveData = new byte[65507];
+            byte[] receiveData = new byte[20000];
             DatagramPacket rec_packet = new DatagramPacket(receiveData, receiveData.length);
 
             try {
