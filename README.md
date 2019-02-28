@@ -34,7 +34,7 @@ The epidemic protocol is implemented by two separate threads that run in the sam
 
 FailureCheck (src\main\java\com\g9A\CPEN431\A7\server\network\FailureCheck.java)
 
-This thread periodically sends an "IsAlive" request to a random node, then sleeps for 5 seconds
+This thread periodically sends an "IsAlive" request to a random node, then sleeps for 5 seconds.
 If the request times out, it assumes the node is down and pushes a new Epidemic thread to EpidemicServer.
 Initially it waits 2 minutes to allow all servers to come online before pinging them.
 
@@ -48,11 +48,12 @@ Epidemic (src\main\java\com\g9A\CPEN431\A7\server\network\Epidemic.java)
 
 An epidemic thread is created by EpidemicServer. It periodically sends a DeadNodeRequest 
 to other servers and then sleeps for 5 seconds. The number of iterations is equal to the 
-amount of alive nodes.
+amount of alive nodes. It generates an ID based on the CRC32 hash of the server/port that is down,
+which is put into a cache and checked by EpidemicServer to avoid recursive epidemics.
 
 A new protocol buffer "DeadNodeRequest.proto" was created to send epidemic messages.
 It contains the server address/port of the dead node and an operation code,
-so it may possibly be used for other epidemic types in the future
+so it may possibly be used for other epidemic types in the future.
 
 Another optional field "epId" (epidemic ID) was added to Message.proto to avoid recursive epidemics
 
