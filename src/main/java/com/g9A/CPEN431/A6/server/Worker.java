@@ -18,6 +18,7 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import org.jetbrains.annotations.NotNull;
+import org.omg.CORBA.DynAnyPackage.Invalid;
 
 import java.io.IOException;
 import java.net.*;
@@ -273,7 +274,11 @@ public class Worker implements Runnable {
 
             // Unpack message from the packet
         	try {
-        		rec_msg = UnpackMessage(packet);
+                rec_msg = UnpackMessage(packet);
+            } catch (InvalidProtocolBufferException e) {
+        	    e.printStackTrace();
+                Server.socketPool.returnObject(socket);
+                return;
         	} catch (Exception e) {
         		e.printStackTrace();
                 Server.socketPool.returnObject(socket);

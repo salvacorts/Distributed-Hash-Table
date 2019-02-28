@@ -105,12 +105,11 @@ public class Server {
     }
 
     public void StartServing() {
-        byte[] receiveData = new byte[65507];
-
         System.out.println("Listening on: " + this.listeningSocket.getLocalPort());
         System.out.println("CPUs: " + this.availableCores);
 
         while (KEEP_RECEIVING) {
+            byte[] receiveData = new byte[65507];
             DatagramPacket rec_packet = new DatagramPacket(receiveData, receiveData.length);
 
             try {

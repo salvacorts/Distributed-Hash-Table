@@ -52,10 +52,9 @@ public class EpidemicServer implements Runnable {
     }
 	
 	public void run() {
-        byte[] receiveData = new byte[65507];
-        
 		while (KEEP_RECEIVING) {
-            DatagramPacket rec_packet = new DatagramPacket(receiveData, receiveData.length);
+			byte[] receiveData = new byte[65507];
+			DatagramPacket rec_packet = new DatagramPacket(receiveData, receiveData.length);
 
             try {
                 // Receive a packet
