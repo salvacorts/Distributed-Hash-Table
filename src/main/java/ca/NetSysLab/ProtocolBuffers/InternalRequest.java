@@ -433,11 +433,7 @@ public final class InternalRequest {
           
           return false;
         }
-        if (!hasPort()) {
-          
-          return false;
-        }
-        return true;
+        return hasPort();
       }
 
       public Builder mergeFrom(

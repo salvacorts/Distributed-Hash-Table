@@ -3,19 +3,16 @@ package com.g9A.CPEN431.A7.server;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import com.g9A.CPEN431.A7.server.metrics.MetricsServer;
-import com.g9A.CPEN431.A7.server.network.FailureCheck;
 
 import io.prometheus.client.exporter.HTTPServer;
 import io.prometheus.client.hotspot.DefaultExports;
 
 public class Main {
-	private static MetricsServer metrics;
 
 	private static List<ServerNode> LoadNodesFromFile(String filename) throws IOException {
 		List<ServerNode> nodes = 
@@ -59,7 +56,7 @@ public class Main {
         // Run prometheus Metrics
         HTTPServer promServer = new HTTPServer(Integer.parseInt(args[1]));
         DefaultExports.initialize();
-        metrics = MetricsServer.getInstance();
+        MetricsServer metrics = MetricsServer.getInstance();
 		metrics.start();
 
         try {

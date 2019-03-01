@@ -8,7 +8,7 @@ import com.google.protobuf.ByteString;
 import java.util.concurrent.TimeUnit;
 
 public class CacheManager {
-    private static CacheManager ourInstance = new CacheManager();
+    private static final CacheManager ourInstance = new CacheManager();
 
     private Cache<ByteString, KeyValueResponse.KVResponse> requestCache;
 

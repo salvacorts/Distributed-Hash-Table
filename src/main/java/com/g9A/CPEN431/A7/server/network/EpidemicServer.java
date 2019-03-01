@@ -2,24 +2,10 @@ package com.g9A.CPEN431.A7.server.network;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.Socket;
 import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.ExecutorService;
 
-import ca.NetSysLab.ProtocolBuffers.KeyValueRequest;
-import ca.NetSysLab.ProtocolBuffers.KeyValueResponse;
-
-import com.g9A.CPEN431.A7.client.Client;
 import com.g9A.CPEN431.A7.server.Server;
-import com.g9A.CPEN431.A7.server.ServerNode;
 import com.g9A.CPEN431.A7.server.Worker;
-import com.g9A.CPEN431.A7.server.kvMap.RequestProcessor;
-import com.g9A.CPEN431.A7.server.pools.SocketFactory;
-import com.g9A.CPEN431.A7.server.pools.SocketPool;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import ca.NetSysLab.ProtocolBuffers.InternalRequest;
@@ -29,7 +15,7 @@ public class EpidemicServer implements Runnable {
 	
 	private static boolean KEEP_RECEIVING = true;
 
-	private EpidemicCache Cache = EpidemicCache.getInstance();
+	private final EpidemicCache Cache = EpidemicCache.getInstance();
 	private DatagramSocket listeningSocket;
 	private Thread t;
 

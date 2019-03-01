@@ -3,7 +3,6 @@ package com.g9A.CPEN431.A7.server.kvMap;
 import ca.NetSysLab.ProtocolBuffers.KeyValueRequest;
 import ca.NetSysLab.ProtocolBuffers.KeyValueResponse;
 
-import com.g9A.CPEN431.A7.client.exceptions.DifferentUUIDException;
 import com.g9A.CPEN431.A7.server.Server;
 import com.g9A.CPEN431.A7.server.exceptions.*;
 import com.g9A.CPEN431.A7.server.metrics.MetricsServer;
@@ -12,15 +11,13 @@ import com.google.protobuf.ByteString;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class RequestProcessor {
 	
-    private static RequestProcessor ourInstance = new RequestProcessor();
+    private static final RequestProcessor ourInstance = new RequestProcessor();
 
-    private ReentrantLock mapLock = new ReentrantLock();
     private ConcurrentHashMap<KVMapKey, KVMapValue> kvMap = new ConcurrentHashMap<KVMapKey, KVMapValue>();  // Key value map with mutex
-    private MetricsServer metrics = MetricsServer.getInstance();
+    private final MetricsServer metrics = MetricsServer.getInstance();
 
     /**
      * Indicates if the request's key places it in the current node
@@ -64,17 +61,9 @@ public class RequestProcessor {
         KVMapValue value = new KVMapValue(request.getValue().toByteArray(), request.getVersion());
         KVMapKey key = new KVMapKey(request.getKey().toByteArray());
 
-        mapLock.lock();
-
-        if(!kvMap.containsKey(key)) {
-            metrics.keysStored.inc();
-        }
+        if (!kvMap.containsKey(key)) metrics.keysStored.inc();
 
         kvMap.put(key, value);
-        
-        mapLock.unlock();
-
-        //System.out.println("PUT with key " + request.getKey().hashCode() + ", value " + value.getValue().hashCode());
 
         return KeyValueResponse.KVResponse.newBuilder()
                 .setErrCode(0)
@@ -97,20 +86,10 @@ public class RequestProcessor {
         if (request.getKey().size() > 32) throw new KeyTooLargeException();
 
         KVMapKey key = new KVMapKey(request.getKey().toByteArray());
-        
-        mapLock.lock();
 
-        if (!kvMap.containsKey(key)) {
-        	mapLock.unlock();
-        	throw new UnexistingKey();
-        }
-
+        if (!kvMap.containsKey(key)) throw new UnexistingKey();
         
         KVMapValue value = kvMap.get(key);
-        
-        //System.out.println("GET with key " + request.getKey().hashCode() + ", value " + value.getValue().hashCode());
-        
-        mapLock.unlock();
 
         return KeyValueResponse.KVResponse.newBuilder()
                 .setErrCode(0)
@@ -136,15 +115,9 @@ public class RequestProcessor {
 
         KVMapKey key = new KVMapKey(request.getKey().toByteArray());
 
+        if (!kvMap.containsKey(key)) throw new UnexistingKey();
 
-        mapLock.lock();
-        if (!kvMap.containsKey(key)) {
-        	mapLock.unlock();
-        	throw new UnexistingKey();
-        }
-        
         kvMap.remove(key);
-        mapLock.unlock();
 
         metrics.keysStored.dec();
 
@@ -160,19 +133,14 @@ public class RequestProcessor {
      * @return a response containing an error (actual error or success)
      */
     private KeyValueResponse.KVResponse DoWipeout() {
-        System.out.println("[-] Wipeout:\n\tBefore:" + kvMap.size());
-
-        mapLock.lock();
+        System.out.println("[-] Wipeout: " + kvMap.size() + " removed" );
 
         kvMap.clear();
         kvMap = new ConcurrentHashMap<KVMapKey, KVMapValue>();
         
-        mapLock.unlock();
         metrics.keysStored.set(0);
 
         System.gc();    // Clear the previous kvMap
-
-        System.out.println("\tAfter:" + kvMap.size());
 
         return KeyValueResponse.KVResponse.newBuilder()
                 .setErrCode(0)

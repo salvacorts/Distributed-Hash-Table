@@ -15,7 +15,6 @@ import static org.junit.Assert.assertTrue;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
 
 public class ServerTest {
     private static Client client;

@@ -20,10 +20,9 @@ public class Epidemic implements Runnable {
 	private ByteString epId = null;
 	private ByteString payload;
 	private DatagramSocket socket;
-	private Thread t;
-	int type;
-
 	private int iterations;
+	private Thread t;
+	private int type;
 
     public Epidemic(ByteString payload, int type) throws java.net.SocketException {
     	this.socket = new DatagramSocket();
@@ -31,9 +30,7 @@ public class Epidemic implements Runnable {
     	this.type = type;
     	iterations = Server.ServerNodes.size();
 
-    	if (iterations < 10) {
-    		iterations = (10 - iterations) * 2;
-    	}
+    	if (iterations < 10) iterations = (10 - iterations) * 2;
     }
     
     public Epidemic(ByteString payload, int type, ByteString epId) throws java.net.SocketException {

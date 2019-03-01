@@ -1,7 +1,7 @@
 package com.g9A.CPEN431.A7.server.exceptions;
 
 public class WrongNodeException extends Exception {
-    private int hash;
+    private final int hash;
 
     public WrongNodeException(int hash) {
         this.hash = hash;

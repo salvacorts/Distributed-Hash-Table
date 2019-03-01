@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.net.DatagramSocket;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
 
 class WorkerThreadFactory implements ThreadFactory {
     private DatagramSocket[] sockets;
