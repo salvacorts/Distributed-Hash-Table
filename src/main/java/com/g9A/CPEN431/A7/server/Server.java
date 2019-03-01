@@ -12,6 +12,7 @@ import java.util.concurrent.Executors;
 import com.g9A.CPEN431.A7.server.network.EpidemicServer;
 import com.g9A.CPEN431.A7.server.pools.SocketFactory;
 import com.g9A.CPEN431.A7.server.pools.SocketPool;
+import com.g9A.CPEN431.A7.server.network.FailureCheck;
 
 public class Server {
     static boolean KEEP_RECEIVING = true;

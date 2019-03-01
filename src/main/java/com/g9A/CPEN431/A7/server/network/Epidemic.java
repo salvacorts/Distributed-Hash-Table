@@ -1,18 +1,16 @@
 package com.g9A.CPEN431.A7.server.network;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.Random;
 import java.util.zip.CRC32;
 
 import ca.NetSysLab.ProtocolBuffers.Message;
-import com.g9A.CPEN431.A6.client.Client;
-import com.g9A.CPEN431.A6.server.Server;
-import com.g9A.CPEN431.A6.server.ServerNode;
-import com.g9A.CPEN431.A6.server.Worker;
-import com.g9A.CPEN431.A6.utils.ByteOrder;
+import com.g9A.CPEN431.A7.server.Server;
+import com.g9A.CPEN431.A7.server.ServerNode;
+import com.g9A.CPEN431.A7.server.Worker;
+import com.g9A.CPEN431.A7.utils.ByteOrder;
 import com.google.protobuf.ByteString;
 
 public class Epidemic implements Runnable {

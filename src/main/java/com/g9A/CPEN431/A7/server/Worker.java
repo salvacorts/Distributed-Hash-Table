@@ -71,7 +71,7 @@ public class Worker implements Runnable {
     }
     
     public static KeyValueResponse.KVResponse UnpackResponse(Message.Msg msg) throws com.google.protobuf.InvalidProtocolBufferException,
-                                                                                      com.g9A.CPEN431.A6.client.exceptions.DifferentChecksumException {
+                                                                                     DifferentChecksumException {
         if (!CorrectChecksum(msg)) throw new DifferentChecksumException();
 
         return KeyValueResponse.KVResponse.parseFrom(msg.getPayload());
