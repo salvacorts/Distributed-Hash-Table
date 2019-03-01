@@ -1,92 +1,110 @@
 package com.g9A.CPEN431.A6.server.network;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.Random;
 import java.util.zip.CRC32;
 
+import ca.NetSysLab.ProtocolBuffers.Message;
 import com.g9A.CPEN431.A6.client.Client;
 import com.g9A.CPEN431.A6.server.Server;
 import com.g9A.CPEN431.A6.server.ServerNode;
+import com.g9A.CPEN431.A6.server.Worker;
 import com.g9A.CPEN431.A6.utils.ByteOrder;
 import com.google.protobuf.ByteString;
 
-import ca.NetSysLab.ProtocolBuffers.KeyValueResponse.KVResponse;
-import ca.NetSysLab.ProtocolBuffers.Message;
-
 public class Epidemic implements Runnable {
 
-    private boolean stopflag = false;
-    private Thread t;
-    
-    ByteString payload;
-    int type;
-    long epId;
-    Client client;
-    Random rand = new Random();
-    
-    private int iterations;
+    private static boolean STOP_FLAG = false;
 
-    public Epidemic(ByteString payload, int type){
-    	client = new Client("",0,3);
+	private ByteString epId = null;
+	private ByteString payload;
+	private DatagramSocket socket;
+	private Thread t;
+	int type;
+
+	private int iterations;
+
+    public Epidemic(ByteString payload, int type) throws java.net.SocketException {
+    	this.socket = new DatagramSocket();
     	this.payload = payload;
     	this.type = type;
-    	iterations = Server.serverNodes.size();
+    	iterations = Server.ServerNodes.size();
 
     	if (iterations < 10) {
     		iterations = (10 - iterations) * 2;
     	}
     }
     
-    public Epidemic(ByteString payload, int type, long epId){
-    	client = new Client("",0,5);
-    	this.payload = payload;
-    	this.type = type;
+    public Epidemic(ByteString payload, int type, ByteString epId) throws java.net.SocketException {
+    	this(payload, type);
     	this.epId = epId;
-    	iterations = Server.serverNodes.size();
-
-    	if (iterations < 10) {
-    		iterations = (10 - iterations) * 2;
-    	}
     }
-    
-    public void generateId(String svr, int epiPort) {
-    	CRC32 crc = new CRC32();
 
-    	crc.update(svr.getBytes());
-    	crc.update(epiPort);
+	public void generateID(InetAddress svr, int port) {
+		Random randomGen = new Random();
+		byte[] buffUuid = new byte[16];
 
-    	this.epId = crc.getValue();
-    }
+		byte[] addr = svr.getAddress();
+		short rnd = (short) randomGen.nextInt(Short.MAX_VALUE + 1);
+		long timestamp = System.nanoTime();
+
+		System.arraycopy(addr, 0, buffUuid, 0, 4);
+		ByteOrder.int2leb(port, buffUuid, 4);
+		ByteOrder.short2leb(rnd, buffUuid, 6);
+		ByteOrder.long2leb(timestamp, buffUuid, 8);
+
+		this.epId = ByteString.copyFrom(buffUuid);
+	}
+
+	private static Message.Msg PackInternalMessage(ByteString payload, int type, ByteString epId, DatagramSocket socket) {
+		CRC32 crc32 = new CRC32();
+		ByteString uuid = Worker.GetUUID(socket);
+
+		byte[] concat = ByteOrder.concatArray(uuid.toByteArray(), payload.toByteArray());
+		crc32.update(concat);
+
+		return Message.Msg.newBuilder()
+					.setMessageID(Worker.GetUUID(socket))
+					.setCheckSum(crc32.getValue())
+					.setPayload(payload)
+					.setType(type)
+					.setEpidemic(Message.EpidemicInfo.newBuilder().setId(epId).build())
+				.build();
+	}
     
     private void sendRandom() throws IOException {
 
     	// If there is only one node (this one) there is nothing to spread
-    	if (Server.serverNodes.size() < 2) {
-    		stopflag = true;
+    	if (Server.ServerNodes.size() < 2) {
+			STOP_FLAG = true;
     		return;
 		}
 
     	// Pick a node randomly
     	ServerNode node;
+		Random rand = new Random();
 
-    	do {
-	    	int r = rand.nextInt(Server.serverNodes.size());
-	    	node = Server.serverNodes.get(r);
+		do {
+	    	int r = rand.nextInt(Server.ServerNodes.size());
+	    	node = Server.ServerNodes.get(r);
     	} while(node.equals(Server.selfNode));
 
-    	// Send the payload to that node
-    	System.out.println("[Epidemic] sending to " + node.getAddress().getHostName() + ":" + node.getEpiPort());
-    	client.changeServer(node.getAddress().getHostAddress(), node.getEpiPort());
-    	client.DoInternalRequest(payload, type, epId);
+		// Pack internal message
+		Message.Msg msg = PackInternalMessage(payload, type, epId, socket);
+
+		// Send the payload to that node
+		System.out.println("[Epidemic] sending to " + node.getAddress().getHostName() + ":" + node.getEpiPort());
+		Worker.Send(socket, msg, node.getAddress(), node.getEpiPort());
 
     	iterations--;
     }
     
     public void run() {
 
-    	while (!stopflag && iterations > 0) {
+    	while (!STOP_FLAG && iterations > 0) {
 			try {
 				sendRandom();
 				Thread.sleep(5000);
@@ -100,7 +118,8 @@ public class Epidemic implements Runnable {
     }
 
     public void start() {
-        stopflag = false;
+		STOP_FLAG = false;
+
         if (t == null) {
             t = new Thread(this);
             t.setPriority(Thread.MAX_PRIORITY);
@@ -109,15 +128,17 @@ public class Epidemic implements Runnable {
     }
 
     public void stop() {
-        stopflag = true;
+		STOP_FLAG = true;
     }
+
+	public ByteString getID() {
+		return epId;
+	}
 
     @Override
     public boolean equals(Object other) {
     	if (other instanceof Epidemic) return this.epId == ((Epidemic) other).epId;
 
-    	if (other instanceof Integer) return this.epId == (Integer) other;
-
-    	return false;
+    	return this.epId.equals(other);
 	}
 }

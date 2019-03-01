@@ -40,22 +40,34 @@ public final class Message {
     long getCheckSum();
 
     /**
-     * <code>optional int64 epID = 4;</code>
-     */
-    boolean hasEpID();
-    /**
-     * <code>optional int64 epID = 4;</code>
-     */
-    long getEpID();
-
-    /**
-     * <code>optional int32 type = 5;</code>
+     * <code>optional int32 type = 4;</code>
+     *
+     * <pre>
+     * 1 = normal request, 2 = internal request
+     * </pre>
      */
     boolean hasType();
     /**
-     * <code>optional int32 type = 5;</code>
+     * <code>optional int32 type = 4;</code>
+     *
+     * <pre>
+     * 1 = normal request, 2 = internal request
+     * </pre>
      */
     int getType();
+
+    /**
+     * <code>optional .EpidemicInfo epidemic = 5;</code>
+     */
+    boolean hasEpidemic();
+    /**
+     * <code>optional .EpidemicInfo epidemic = 5;</code>
+     */
+    ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo getEpidemic();
+    /**
+     * <code>optional .EpidemicInfo epidemic = 5;</code>
+     */
+    ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfoOrBuilder getEpidemicOrBuilder();
 
     /**
      * <code>optional .ClientInfo client = 6;</code>
@@ -139,12 +151,20 @@ public final class Message {
             }
             case 32: {
               bitField0_ |= 0x00000008;
-              epID_ = input.readInt64();
+              type_ = input.readInt32();
               break;
             }
-            case 40: {
+            case 42: {
+              ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                subBuilder = epidemic_.toBuilder();
+              }
+              epidemic_ = input.readMessage(ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(epidemic_);
+                epidemic_ = subBuilder.buildPartial();
+              }
               bitField0_ |= 0x00000010;
-              type_ = input.readInt32();
               break;
             }
             case 50: {
@@ -245,34 +265,48 @@ public final class Message {
       return checkSum_;
     }
 
-    public static final int EPID_FIELD_NUMBER = 4;
-    private long epID_;
+    public static final int TYPE_FIELD_NUMBER = 4;
+    private int type_;
     /**
-     * <code>optional int64 epID = 4;</code>
+     * <code>optional int32 type = 4;</code>
+     *
+     * <pre>
+     * 1 = normal request, 2 = internal request
+     * </pre>
      */
-    public boolean hasEpID() {
+    public boolean hasType() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
-     * <code>optional int64 epID = 4;</code>
-     */
-    public long getEpID() {
-      return epID_;
-    }
-
-    public static final int TYPE_FIELD_NUMBER = 5;
-    private int type_;
-    /**
-     * <code>optional int32 type = 5;</code>
-     */
-    public boolean hasType() {
-      return ((bitField0_ & 0x00000010) == 0x00000010);
-    }
-    /**
-     * <code>optional int32 type = 5;</code>
+     * <code>optional int32 type = 4;</code>
+     *
+     * <pre>
+     * 1 = normal request, 2 = internal request
+     * </pre>
      */
     public int getType() {
       return type_;
+    }
+
+    public static final int EPIDEMIC_FIELD_NUMBER = 5;
+    private ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo epidemic_;
+    /**
+     * <code>optional .EpidemicInfo epidemic = 5;</code>
+     */
+    public boolean hasEpidemic() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    /**
+     * <code>optional .EpidemicInfo epidemic = 5;</code>
+     */
+    public ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo getEpidemic() {
+      return epidemic_;
+    }
+    /**
+     * <code>optional .EpidemicInfo epidemic = 5;</code>
+     */
+    public ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfoOrBuilder getEpidemicOrBuilder() {
+      return epidemic_;
     }
 
     public static final int CLIENT_FIELD_NUMBER = 6;
@@ -300,8 +334,8 @@ public final class Message {
       messageID_ = com.google.protobuf.ByteString.EMPTY;
       payload_ = com.google.protobuf.ByteString.EMPTY;
       checkSum_ = 0L;
-      epID_ = 0L;
       type_ = 0;
+      epidemic_ = ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo.getDefaultInstance();
       client_ = ca.NetSysLab.ProtocolBuffers.Message.ClientInfo.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
@@ -321,6 +355,12 @@ public final class Message {
       if (!hasCheckSum()) {
         memoizedIsInitialized = 0;
         return false;
+      }
+      if (hasEpidemic()) {
+        if (!getEpidemic().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
       }
       if (hasClient()) {
         if (!getClient().isInitialized()) {
@@ -345,10 +385,10 @@ public final class Message {
         output.writeFixed64(3, checkSum_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeInt64(4, epID_);
+        output.writeInt32(4, type_);
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        output.writeInt32(5, type_);
+        output.writeMessage(5, epidemic_);
       }
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         output.writeMessage(6, client_);
@@ -376,11 +416,11 @@ public final class Message {
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(4, epID_);
+          .computeInt32Size(4, type_);
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(5, type_);
+          .computeMessageSize(5, epidemic_);
       }
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         size += com.google.protobuf.CodedOutputStream
@@ -495,6 +535,7 @@ public final class Message {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getEpidemicFieldBuilder();
           getClientFieldBuilder();
         }
       }
@@ -510,9 +551,13 @@ public final class Message {
         bitField0_ = (bitField0_ & ~0x00000002);
         checkSum_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000004);
-        epID_ = 0L;
-        bitField0_ = (bitField0_ & ~0x00000008);
         type_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        if (epidemicBuilder_ == null) {
+          epidemic_ = ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo.getDefaultInstance();
+        } else {
+          epidemicBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000010);
         if (clientBuilder_ == null) {
           client_ = ca.NetSysLab.ProtocolBuffers.Message.ClientInfo.getDefaultInstance();
@@ -563,11 +608,15 @@ public final class Message {
         if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
           to_bitField0_ |= 0x00000008;
         }
-        result.epID_ = epID_;
+        result.type_ = type_;
         if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
           to_bitField0_ |= 0x00000010;
         }
-        result.type_ = type_;
+        if (epidemicBuilder_ == null) {
+          result.epidemic_ = epidemic_;
+        } else {
+          result.epidemic_ = epidemicBuilder_.build();
+        }
         if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
           to_bitField0_ |= 0x00000020;
         }
@@ -601,11 +650,11 @@ public final class Message {
         if (other.hasCheckSum()) {
           setCheckSum(other.getCheckSum());
         }
-        if (other.hasEpID()) {
-          setEpID(other.getEpID());
-        }
         if (other.hasType()) {
           setType(other.getType());
+        }
+        if (other.hasEpidemic()) {
+          mergeEpidemic(other.getEpidemic());
         }
         if (other.hasClient()) {
           mergeClient(other.getClient());
@@ -626,6 +675,12 @@ public final class Message {
         if (!hasCheckSum()) {
           
           return false;
+        }
+        if (hasEpidemic()) {
+          if (!getEpidemic().isInitialized()) {
+            
+            return false;
+          }
         }
         if (hasClient()) {
           if (!getClient().isInitialized()) {
@@ -757,68 +812,168 @@ public final class Message {
         return this;
       }
 
-      private long epID_ ;
+      private int type_ ;
       /**
-       * <code>optional int64 epID = 4;</code>
+       * <code>optional int32 type = 4;</code>
+       *
+       * <pre>
+       * 1 = normal request, 2 = internal request
+       * </pre>
        */
-      public boolean hasEpID() {
+      public boolean hasType() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
-       * <code>optional int64 epID = 4;</code>
-       */
-      public long getEpID() {
-        return epID_;
-      }
-      /**
-       * <code>optional int64 epID = 4;</code>
-       */
-      public Builder setEpID(long value) {
-        bitField0_ |= 0x00000008;
-        epID_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional int64 epID = 4;</code>
-       */
-      public Builder clearEpID() {
-        bitField0_ = (bitField0_ & ~0x00000008);
-        epID_ = 0L;
-        onChanged();
-        return this;
-      }
-
-      private int type_ ;
-      /**
-       * <code>optional int32 type = 5;</code>
-       */
-      public boolean hasType() {
-        return ((bitField0_ & 0x00000010) == 0x00000010);
-      }
-      /**
-       * <code>optional int32 type = 5;</code>
+       * <code>optional int32 type = 4;</code>
+       *
+       * <pre>
+       * 1 = normal request, 2 = internal request
+       * </pre>
        */
       public int getType() {
         return type_;
       }
       /**
-       * <code>optional int32 type = 5;</code>
+       * <code>optional int32 type = 4;</code>
+       *
+       * <pre>
+       * 1 = normal request, 2 = internal request
+       * </pre>
        */
       public Builder setType(int value) {
-        bitField0_ |= 0x00000010;
+        bitField0_ |= 0x00000008;
         type_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional int32 type = 5;</code>
+       * <code>optional int32 type = 4;</code>
+       *
+       * <pre>
+       * 1 = normal request, 2 = internal request
+       * </pre>
        */
       public Builder clearType() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ = (bitField0_ & ~0x00000008);
         type_ = 0;
         onChanged();
         return this;
+      }
+
+      private ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo epidemic_ = ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo, ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo.Builder, ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfoOrBuilder> epidemicBuilder_;
+      /**
+       * <code>optional .EpidemicInfo epidemic = 5;</code>
+       */
+      public boolean hasEpidemic() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>optional .EpidemicInfo epidemic = 5;</code>
+       */
+      public ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo getEpidemic() {
+        if (epidemicBuilder_ == null) {
+          return epidemic_;
+        } else {
+          return epidemicBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .EpidemicInfo epidemic = 5;</code>
+       */
+      public Builder setEpidemic(ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo value) {
+        if (epidemicBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          epidemic_ = value;
+          onChanged();
+        } else {
+          epidemicBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+      /**
+       * <code>optional .EpidemicInfo epidemic = 5;</code>
+       */
+      public Builder setEpidemic(
+          ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo.Builder builderForValue) {
+        if (epidemicBuilder_ == null) {
+          epidemic_ = builderForValue.build();
+          onChanged();
+        } else {
+          epidemicBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+      /**
+       * <code>optional .EpidemicInfo epidemic = 5;</code>
+       */
+      public Builder mergeEpidemic(ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo value) {
+        if (epidemicBuilder_ == null) {
+          if (((bitField0_ & 0x00000010) == 0x00000010) &&
+              epidemic_ != ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo.getDefaultInstance()) {
+            epidemic_ =
+              ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo.newBuilder(epidemic_).mergeFrom(value).buildPartial();
+          } else {
+            epidemic_ = value;
+          }
+          onChanged();
+        } else {
+          epidemicBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+      /**
+       * <code>optional .EpidemicInfo epidemic = 5;</code>
+       */
+      public Builder clearEpidemic() {
+        if (epidemicBuilder_ == null) {
+          epidemic_ = ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo.getDefaultInstance();
+          onChanged();
+        } else {
+          epidemicBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000010);
+        return this;
+      }
+      /**
+       * <code>optional .EpidemicInfo epidemic = 5;</code>
+       */
+      public ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo.Builder getEpidemicBuilder() {
+        bitField0_ |= 0x00000010;
+        onChanged();
+        return getEpidemicFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .EpidemicInfo epidemic = 5;</code>
+       */
+      public ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfoOrBuilder getEpidemicOrBuilder() {
+        if (epidemicBuilder_ != null) {
+          return epidemicBuilder_.getMessageOrBuilder();
+        } else {
+          return epidemic_;
+        }
+      }
+      /**
+       * <code>optional .EpidemicInfo epidemic = 5;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo, ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo.Builder, ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfoOrBuilder> 
+          getEpidemicFieldBuilder() {
+        if (epidemicBuilder_ == null) {
+          epidemicBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo, ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo.Builder, ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfoOrBuilder>(
+                  getEpidemic(),
+                  getParentForChildren(),
+                  isClean());
+          epidemic_ = null;
+        }
+        return epidemicBuilder_;
       }
 
       private ca.NetSysLab.ProtocolBuffers.Message.ClientInfo client_ = ca.NetSysLab.ProtocolBuffers.Message.ClientInfo.getDefaultInstance();
@@ -1442,6 +1597,414 @@ public final class Message {
     // @@protoc_insertion_point(class_scope:ClientInfo)
   }
 
+  public interface EpidemicInfoOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:EpidemicInfo)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>required bytes id = 1;</code>
+     */
+    boolean hasId();
+    /**
+     * <code>required bytes id = 1;</code>
+     */
+    com.google.protobuf.ByteString getId();
+  }
+  /**
+   * Protobuf type {@code EpidemicInfo}
+   */
+  public static final class EpidemicInfo extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:EpidemicInfo)
+      EpidemicInfoOrBuilder {
+    // Use EpidemicInfo.newBuilder() to construct.
+    private EpidemicInfo(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private EpidemicInfo(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final EpidemicInfo defaultInstance;
+    public static EpidemicInfo getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public EpidemicInfo getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private EpidemicInfo(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              id_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return ca.NetSysLab.ProtocolBuffers.Message.internal_static_EpidemicInfo_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return ca.NetSysLab.ProtocolBuffers.Message.internal_static_EpidemicInfo_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo.class, ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<EpidemicInfo> PARSER =
+        new com.google.protobuf.AbstractParser<EpidemicInfo>() {
+      public EpidemicInfo parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new EpidemicInfo(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<EpidemicInfo> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    public static final int ID_FIELD_NUMBER = 1;
+    private com.google.protobuf.ByteString id_;
+    /**
+     * <code>required bytes id = 1;</code>
+     */
+    public boolean hasId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required bytes id = 1;</code>
+     */
+    public com.google.protobuf.ByteString getId() {
+      return id_;
+    }
+
+    private void initFields() {
+      id_ = com.google.protobuf.ByteString.EMPTY;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, id_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, id_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code EpidemicInfo}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:EpidemicInfo)
+        ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfoOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return ca.NetSysLab.ProtocolBuffers.Message.internal_static_EpidemicInfo_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return ca.NetSysLab.ProtocolBuffers.Message.internal_static_EpidemicInfo_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo.class, ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo.Builder.class);
+      }
+
+      // Construct using ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        id_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return ca.NetSysLab.ProtocolBuffers.Message.internal_static_EpidemicInfo_descriptor;
+      }
+
+      public ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo getDefaultInstanceForType() {
+        return ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo.getDefaultInstance();
+      }
+
+      public ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo build() {
+        ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo buildPartial() {
+        ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo result = new ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.id_ = id_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo) {
+          return mergeFrom((ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo other) {
+        if (other == ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo.getDefaultInstance()) return this;
+        if (other.hasId()) {
+          setId(other.getId());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasId()) {
+          
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (ca.NetSysLab.ProtocolBuffers.Message.EpidemicInfo) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private com.google.protobuf.ByteString id_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>required bytes id = 1;</code>
+       */
+      public boolean hasId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required bytes id = 1;</code>
+       */
+      public com.google.protobuf.ByteString getId() {
+        return id_;
+      }
+      /**
+       * <code>required bytes id = 1;</code>
+       */
+      public Builder setId(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        id_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required bytes id = 1;</code>
+       */
+      public Builder clearId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        id_ = getDefaultInstance().getId();
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:EpidemicInfo)
+    }
+
+    static {
+      defaultInstance = new EpidemicInfo(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:EpidemicInfo)
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_Msg_descriptor;
   private static
@@ -1452,6 +2015,11 @@ public final class Message {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_ClientInfo_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_EpidemicInfo_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_EpidemicInfo_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -1461,12 +2029,13 @@ public final class Message {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\rMessage.proto\"t\n\003Msg\022\021\n\tmessageID\030\001 \002(" +
-      "\014\022\017\n\007payload\030\002 \002(\014\022\020\n\010checkSum\030\003 \002(\006\022\014\n\004" +
-      "epID\030\004 \001(\003\022\014\n\004type\030\005 \001(\005\022\033\n\006client\030\006 \001(\013" +
-      "2\013.ClientInfo\"+\n\nClientInfo\022\017\n\007address\030\001" +
-      " \002(\014\022\014\n\004port\030\002 \002(\005B\'\n\034ca.NetSysLab.Proto" +
-      "colBuffersB\007Message"
+      "\n\rMessage.proto\"\207\001\n\003Msg\022\021\n\tmessageID\030\001 \002" +
+      "(\014\022\017\n\007payload\030\002 \002(\014\022\020\n\010checkSum\030\003 \002(\006\022\014\n" +
+      "\004type\030\004 \001(\005\022\037\n\010epidemic\030\005 \001(\0132\r.Epidemic" +
+      "Info\022\033\n\006client\030\006 \001(\0132\013.ClientInfo\"+\n\nCli" +
+      "entInfo\022\017\n\007address\030\001 \002(\014\022\014\n\004port\030\002 \002(\005\"\032" +
+      "\n\014EpidemicInfo\022\n\n\002id\030\001 \002(\014B\'\n\034ca.NetSysL" +
+      "ab.ProtocolBuffersB\007Message"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1485,13 +2054,19 @@ public final class Message {
     internal_static_Msg_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_Msg_descriptor,
-        new java.lang.String[] { "MessageID", "Payload", "CheckSum", "EpID", "Type", "Client", });
+        new java.lang.String[] { "MessageID", "Payload", "CheckSum", "Type", "Epidemic", "Client", });
     internal_static_ClientInfo_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_ClientInfo_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_ClientInfo_descriptor,
         new java.lang.String[] { "Address", "Port", });
+    internal_static_EpidemicInfo_descriptor =
+      getDescriptor().getMessageTypes().get(2);
+    internal_static_EpidemicInfo_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_EpidemicInfo_descriptor,
+        new java.lang.String[] { "Id", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

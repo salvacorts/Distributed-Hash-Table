@@ -4,15 +4,15 @@ package com.g9A.CPEN431.A6.server;
 // TODO: Calc if PUT will be successful based on heap size and used size.
 
 import java.net.*;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.g9A.CPEN431.A6.server.network.EpidemicServer;
+import com.g9A.CPEN431.A6.server.network.FailureCheck;
 import com.g9A.CPEN431.A6.server.pools.SocketFactory;
+import com.g9A.CPEN431.A6.server.Worker;
 
 import com.g9A.CPEN431.A6.server.pools.SocketPool;
 
@@ -26,8 +26,9 @@ public class Server {
     public static ExecutorService threadPool;
     public static SocketPool socketPool = new SocketPool(new SocketFactory());
     public static ServerNode selfNode;
-    public static List<ServerNode> serverNodes;
-    public static EpidemicServer epiSrv;
+    public static List<ServerNode> ServerNodes;
+    public static EpidemicServer EpidemicServer;
+    public static FailureCheck FailureCheck;
 
     static void UpdateProcessTime(long time) {
         avgProcessTime = (avgProcessTime + time) / 2;
@@ -47,11 +48,15 @@ public class Server {
         socketPool.setMaxTotal(25);
         socketPool.setMinIdle(poolSize);
 
-        serverNodes = otherNodes;
+        ServerNodes = otherNodes;
 
         InetAddress local = InetAddress.getLocalHost();
 
-        for (ServerNode node : serverNodes) {
+        // Initialize additional services
+        EpidemicServer = new EpidemicServer(epiPort);
+        FailureCheck = new FailureCheck();
+
+        for (ServerNode node : ServerNodes) {
             if (port == node.getPort() && (local.equals(node.getAddress())
                                             || node.getAddress().getHostAddress().equals("127.0.0.1"))) {
                 selfNode = node;
@@ -62,35 +67,30 @@ public class Server {
         if (selfNode == null) {
         	throw new IllegalArgumentException("Current server not present in nodes-list");
         }
-
-        // Launch the epidemic service to update nodes state across the ring
-        epiSrv = new EpidemicServer(epiPort);
-        epiSrv.start();
     }
 
     public static void removeNode(String addr, int port) {
         // Remove the node from the nodes list
-    	for (Iterator<ServerNode> iter = serverNodes.listIterator(); iter.hasNext(); ) {
+    	for (Iterator<ServerNode> iter = ServerNodes.listIterator(); iter.hasNext(); ) {
     		ServerNode node = iter.next();
 
     	    if (addr.equals(node.getAddress().getHostAddress()) && node.getPort() == port) {
     	    	
             	// Re-balance hash space
-            	if(!iter.hasNext()) {
-            		ServerNode lastNode = serverNodes.get(serverNodes.size()-2);
+            	if (!iter.hasNext()) {
+            		ServerNode lastNode = ServerNodes.get(ServerNodes.size()-2);
             		lastNode.setHashRange(lastNode.getHashStart(), node.getHashEnd());
-            	}
-            	else {
+            	} else {
         	        ServerNode nextNode = iter.next();
             		nextNode.setHashRange(node.getHashStart(), nextNode.getHashEnd());
             	}
-    	        serverNodes.remove(node);
-    	        
 
-    	    	/*for (int i = 0; i < serverNodes.size(); i++) {
+    	        ServerNodes.remove(node);
 
-    	    		//serverNodes.get(i).setHashRange(start, end);
-    	    		node = serverNodes.get(i);
+    	    	/*for (int i = 0; i < ServerNodes.size(); i++) {
+
+    	    		//ServerNodes.get(i).setHashRange(start, end);
+    	    		node = ServerNodes.get(i);
     	    		System.out.println(node.getAddress().getHostName() + ":" + node.getPort() + ", Range: " + node.getHashStart() + "-" + node.getHashEnd());
     	    	}*/
     	        
@@ -108,6 +108,12 @@ public class Server {
         System.out.println("Listening on: " + this.listeningSocket.getLocalPort());
         System.out.println("CPUs: " + this.availableCores);
 
+        // Launch the epidemic service to update nodes state across the ring
+        EpidemicServer.start();
+
+        // Launch the FailureCheck system
+        FailureCheck.start();
+
         while (KEEP_RECEIVING) {
             byte[] receiveData = new byte[20000];
             DatagramPacket rec_packet = new DatagramPacket(receiveData, receiveData.length);
@@ -124,11 +130,12 @@ public class Server {
             }
         }
 
-        System.out.println("Server stopping");
+        System.out.println("Stopping server");
         this.listeningSocket.close();
         threadPool.shutdown();
         socketPool.close();
-        epiSrv.stop();
+        EpidemicServer.stop();
+        FailureCheck.stop();
     }
 }
 

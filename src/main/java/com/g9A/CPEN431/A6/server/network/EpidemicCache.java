@@ -12,7 +12,7 @@ import ca.NetSysLab.ProtocolBuffers.KeyValueResponse;
 public class EpidemicCache {
     private static EpidemicCache ourInstance = new EpidemicCache();
 
-    private Cache<Long, Integer> epiCache;
+    private Cache<ByteString, Byte> epiCache;
 
     public static EpidemicCache getInstance() {
         return ourInstance;
@@ -25,12 +25,12 @@ public class EpidemicCache {
                 .build();
     }
     
-    public boolean check(long epId) {
-    	return epiCache.getIfPresent(epId) != null;
+    public boolean check(ByteString id) {
+    	return epiCache.getIfPresent(id) != null;
     }
     
-    public void put(long epId) {
-    	epiCache.put(epId, 0);
+    public void put(ByteString id) {
+    	epiCache.put(id, (byte) 0);
     }
 
     public long Size() {

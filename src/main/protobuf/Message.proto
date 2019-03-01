@@ -6,12 +6,17 @@ message Msg {
     required bytes payload = 2;
     required fixed64 checkSum = 3;
 
-	optional int64 epID = 4;
-	optional int32 type = 5;
+	optional int32 type = 4;	// 1 = normal request, 2 = internal request
+
+	optional EpidemicInfo epidemic = 5;
 	optional ClientInfo client = 6;
 }
 
 message ClientInfo {
 	required bytes address = 1;
 	required int32 port = 2;
+}
+
+message EpidemicInfo {
+	required bytes id = 1;
 }

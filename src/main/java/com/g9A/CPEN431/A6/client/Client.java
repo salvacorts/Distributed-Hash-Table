@@ -177,7 +177,7 @@ public class Client {
         this.maxRetires = maxRetires;
     }
     
-    public void DoInternalRequest(ByteString payload, int type, long epId) throws IOException {
+    /*public void DoInternalRequest(ByteString payload, int type, long epId) throws IOException {
         DatagramSocket socket = new DatagramSocket();
     	CRC32 crc32 = new CRC32();
 
@@ -201,7 +201,7 @@ public class Client {
         DatagramPacket packet = new DatagramPacket(buf, buf.length, address, this.svrPort);
         socket.send(packet);
         socket.close();
-    }
+    }*/
 
     public KeyValueResponse.KVResponse DoRequest(int reqID, String key, String value, int version) throws UnsupportedCommandException, IOException {
         DatagramSocket socket = new DatagramSocket();

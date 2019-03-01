@@ -1,6 +1,5 @@
 package com.g9A.CPEN431.A6.server;
 
-import ca.NetSysLab.ProtocolBuffers.InternalRequest;
 import ca.NetSysLab.ProtocolBuffers.KeyValueRequest;
 import ca.NetSysLab.ProtocolBuffers.KeyValueResponse;
 import ca.NetSysLab.ProtocolBuffers.Message;
@@ -11,14 +10,11 @@ import com.g9A.CPEN431.A6.client.exceptions.DifferentUUIDException;
 import com.g9A.CPEN431.A6.server.cache.CacheManager;
 import com.g9A.CPEN431.A6.server.exceptions.*;
 import com.g9A.CPEN431.A6.server.kvMap.RequestProcessor;
-import com.g9A.CPEN431.A6.server.network.Epidemic;
-import com.g9A.CPEN431.A6.server.network.FailureCheck;
 import com.g9A.CPEN431.A6.utils.ByteOrder;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import org.jetbrains.annotations.NotNull;
-import org.omg.CORBA.DynAnyPackage.Invalid;
 
 import java.io.IOException;
 import java.net.*;
@@ -28,7 +24,6 @@ import java.util.zip.CRC32;
 public class Worker implements Runnable {
     // Set to manage processes being processed at a time
     private static Set<ByteString> processing_messages = Collections.synchronizedSet(new HashSet<ByteString>());
-    private static DatagramSocket staticSocket = null;
 
     private DatagramSocket socket;
     private DatagramPacket packet;
@@ -39,7 +34,7 @@ public class Worker implements Runnable {
     /* UUID (16B):
         IP (4B) + Port (2B) + Random num (2B) + timestamp (8B)
      */
-    private static ByteString GetUUID(DatagramSocket socket) {
+    public static ByteString GetUUID(DatagramSocket socket) {
         Random randomGen = new Random();
         byte[] buffUuid = new byte[16];
 
@@ -98,36 +93,6 @@ public class Worker implements Runnable {
                 .setCheckSum(checksum)
                 .build();
     }
-    
-    /**
-     * Pack a message calculating checksum
-     * @param request original client request
-     * @param uuid new message uuid
-     * @param address client address
-     * @param port client port
-     * @return the message to be sent with checksum
-     */
-    /*private static Message.Msg PackMessageForward(Message.Msg request, ByteString uuid, InetAddress address, int port) {
-        CRC32 crc32 = new CRC32();
-        byte[] concat = ByteOrder.concatArray(uuid.toByteArray(), request.getPayload().toByteArray());
-        crc32.update(concat);
-
-        long checksum = crc32.getValue();
-        ByteString addressBytes = ByteString.copyFrom(address.getAddress());
-
-        return Message.Msg.newBuilder()
-                .setMessageID(uuid)
-                .setPayload(request.getPayload())
-                .setCheckSum(checksum)
-                .setClient(
-                        Message.ClientInfo.newBuilder()
-                            .setAddress(addressBytes)
-                            .setPort(port)
-                            .setMessageID(request.getMessageID())
-                            .build()
-                )
-                .build();
-    }/*
 
     /**
      * Send packet to another node and wait for confirmation
@@ -189,7 +154,7 @@ public class Worker implements Runnable {
     			.setClient(client)
     			.build();
 
-    	for (ServerNode node : Server.serverNodes) {
+    	for (ServerNode node : Server.ServerNodes) {
     	    if (node.inSpace(hash)) {
 
                 try {
@@ -270,20 +235,10 @@ public class Worker implements Runnable {
 
         try {
             KeyValueResponse.KVResponse response;
-            Message.Msg rec_msg = null;
+            Message.Msg rec_msg;
 
             // Unpack message from the packet
-        	try {
-                rec_msg = UnpackMessage(packet);
-            } catch (InvalidProtocolBufferException e) {
-        	    e.printStackTrace();
-                Server.socketPool.returnObject(socket);
-                return;
-        	} catch (Exception e) {
-        		e.printStackTrace();
-                Server.socketPool.returnObject(socket);
-                return;
-        	}
+            rec_msg = UnpackMessage(packet);
 
             // If packet has been rerouted by other node, update destination info
             if (rec_msg.hasClient()) {
@@ -300,26 +255,18 @@ public class Worker implements Runnable {
 
             try {
                 // If uuid is in processing map, return and let the other thread to finish this work
-                if (processing_messages.contains(uuid)) {
-                    Server.socketPool.returnObject(socket);
-                	return;
-                }
+                if (processing_messages.contains(uuid)) return;
 
                 // Add this message to the messages being processed set
                 processing_messages.add(uuid);
 
                 // Check if request is cached. If it is not process the request
                 if ((response = this.cache.Get(uuid))  == null) {
-                	if (!rec_msg.hasType() || rec_msg.getType() == 1) {
-                		KeyValueRequest.KVRequest request = UnpackKVRequest(rec_msg);
-                        response = requestProcessor.ProcessRequest(request, uuid);
-                        this.cache.Put(uuid, response);
-                        
-                	} else {
-                        Server.socketPool.returnObject(socket);
-                		return;
-                	}
+                    KeyValueRequest.KVRequest request = UnpackKVRequest(rec_msg);
+                    response = requestProcessor.ProcessRequest(request, uuid);
+                    this.cache.Put(uuid, response);
                 }
+
             } catch (ShutdownCommandException e) {
                 Server.KEEP_RECEIVING = false;
                 response = KeyValueResponse.KVResponse.newBuilder()
@@ -334,7 +281,6 @@ public class Worker implements Runnable {
                         .build();
             } catch (WrongNodeException e) {
                 Reroute(rec_msg, packet.getAddress(), packet.getPort(), e.getHash());
-                Server.socketPool.returnObject(socket);
                 processing_messages.remove(uuid);
                 return;
                 
@@ -358,12 +304,10 @@ public class Worker implements Runnable {
             long endTime = System.currentTimeMillis();
             Server.UpdateProcessTime(endTime - startTime);
 
-            // Return socket to it's pool
-            Server.socketPool.returnObject(socket);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
             Server.socketPool.returnObject(socket);
         }
-
     }
 }
