@@ -1,6 +1,6 @@
 syntax = "proto2";
 option java_package = "ca.NetSysLab.ProtocolBuffers";
-option java_outer_classname = "Internal";
+option java_outer_classname = "InternalRequest";
 
 message DeadNodeRequest {
     required int32 opCode = 1;
