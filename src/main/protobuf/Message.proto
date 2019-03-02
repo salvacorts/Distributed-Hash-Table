@@ -7,16 +7,11 @@ message Msg {
     required fixed64 checkSum = 3;
 
 	optional int32 type = 4;	// 1 = normal request, 2 = internal request
-
-	optional EpidemicInfo epidemic = 5;
-	optional ClientInfo client = 6;
+	
+	optional ClientInfo client = 5;
 }
 
 message ClientInfo {
 	required bytes address = 1;
 	required int32 port = 2;
-}
-
-message EpidemicInfo {
-	required bytes id = 1;
 }

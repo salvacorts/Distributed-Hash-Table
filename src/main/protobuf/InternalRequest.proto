@@ -1,0 +1,14 @@
+syntax = "proto2";
+option java_package = "ca.NetSysLab.ProtocolBuffers";
+option java_outer_classname = "InternalRequest";
+
+message EpidemicRequest {
+	enum EpidemicType {
+		DEAD = 0;
+		ALIVE = 1;
+	}
+	required bytes epId = 1;
+    required EpidemicType type = 2;
+    optional string server = 3;
+	optional int32 port = 4;
+}

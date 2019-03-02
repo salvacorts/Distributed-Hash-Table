@@ -23,23 +23,16 @@ public class Epidemic implements Runnable {
 	private DatagramSocket socket;
 	private int iterations;
 	private Thread t;
-	private int type;
 
-    public Epidemic(ByteString payload, int type) throws java.net.SocketException {
+    public Epidemic(ByteString payload, ByteString epId) throws java.net.SocketException {
     	this.socket = new DatagramSocket();
     	this.payload = payload;
-    	this.type = type;
     	iterations = Server.ServerNodes.size();
 
     	if (iterations < 10) iterations = (10 - iterations) * 2;
     }
-    
-    public Epidemic(ByteString payload, int type, ByteString epId) throws java.net.SocketException {
-    	this(payload, type);
-    	this.epId = epId;
-    }
 
-	public void generateID(InetAddress svr, int port) {
+	public static ByteString generateID(InetAddress svr, int port) {
 		Random randomGen = new Random();
 		byte[] buffUuid = new byte[16];
 
@@ -52,10 +45,10 @@ public class Epidemic implements Runnable {
 		ByteOrder.short2leb(rnd, buffUuid, 6);
 		ByteOrder.long2leb(timestamp, buffUuid, 8);
 
-		this.epId = ByteString.copyFrom(buffUuid);
+		return ByteString.copyFrom(buffUuid);
 	}
 
-	private static Message.Msg PackInternalMessage(ByteString payload, int type, ByteString epId, DatagramSocket socket) {
+	private static Message.Msg PackInternalMessage(ByteString payload, DatagramSocket socket) {
 		CRC32 crc32 = new CRC32();
 		ByteString uuid = Worker.GetUUID(socket);
 
@@ -66,8 +59,6 @@ public class Epidemic implements Runnable {
 					.setMessageID(Worker.GetUUID(socket))
 					.setCheckSum(crc32.getValue())
 					.setPayload(payload)
-					.setType(type)
-					.setEpidemic(Message.EpidemicInfo.newBuilder().setId(epId).build())
 				.build();
 	}
     
@@ -89,7 +80,7 @@ public class Epidemic implements Runnable {
     	} while(node.equals(Server.selfNode));
 
 		// Pack internal message
-		Message.Msg msg = PackInternalMessage(payload, type, epId, socket);
+		Message.Msg msg = PackInternalMessage(payload, socket);
 
 		// Send the payload to that node
 		System.out.println("[Epidemic] sending to " + node.getAddress().getHostName() + ":" + node.getEpiPort());

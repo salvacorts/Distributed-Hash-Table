@@ -11,6 +11,7 @@ import java.util.concurrent.Executors;
 
 import com.g9A.CPEN431.A8.server.network.EpidemicServer;
 import com.g9A.CPEN431.A8.server.network.FailureCheck;
+import com.g9A.CPEN431.A8.server.network.RejoinCheck;
 import com.g9A.CPEN431.A8.server.pools.SocketFactory;
 import com.g9A.CPEN431.A8.server.pools.SocketPool;
 
@@ -27,6 +28,7 @@ public class Server {
     public static List<ServerNode> ServerNodes;
     public static EpidemicServer EpidemicServer;
     public static FailureCheck FailureCheck;
+    public static RejoinCheck RejoinCheck;
 
     static void UpdateProcessTime(long time) {
         avgProcessTime = (avgProcessTime + time) / 2;
@@ -95,7 +97,21 @@ public class Server {
     	        return;
     	    }
     	}
-		System.err.println("Attempted to remove nonexistent node");
+    }
+    
+    public static void rejoinNode(String addr, int port) {
+        // Add the node to the nodes list
+    	for (Iterator<ServerNode> iter = ServerNodes.listIterator(); iter.hasNext(); ) {
+    		ServerNode node = iter.next();
+
+    	    //TODO: rebalance hash space
+    	}
+    	/*for (int i = 0; i < ServerNodes.size(); i++) {
+
+		//ServerNodes.get(i).setHashRange(start, end);
+		node = ServerNodes.get(i);
+		System.out.println(node.getAddress().getHostName() + ":" + node.getPort() + ", Range: " + node.getHashStart() + "-" + node.getHashEnd());
+	}*/
     }
 
     public static void LaunchWorkerWithPriority(DatagramPacket packet, int priority) {
@@ -109,8 +125,9 @@ public class Server {
         // Launch the epidemic service to update nodes state across the ring
         EpidemicServer.start();
 
-        // Launch the FailureCheck system
+        // Launch the FailureCheck and RejoinCheck threads
         FailureCheck.start();
+        RejoinCheck.stop();
 
         while (KEEP_RECEIVING) {
             byte[] receiveData = new byte[20000];
@@ -134,6 +151,7 @@ public class Server {
         socketPool.close();
         EpidemicServer.stop();
         FailureCheck.stop();
+        RejoinCheck.stop();
     }
 }
 

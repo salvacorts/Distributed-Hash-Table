@@ -23,8 +23,8 @@ public class EpidemicServer implements Runnable {
         this.listeningSocket = new DatagramSocket(port);
 	}
 
-	public static InternalRequest.DeadNodeRequest UnpackDNRequest(Message.Msg msg) throws InvalidProtocolBufferException{
-		return InternalRequest.DeadNodeRequest.newBuilder().mergeFrom(msg.getPayload()).build();
+	public static InternalRequest.EpidemicRequest UnpackEpidemicRequest(Message.Msg msg) throws InvalidProtocolBufferException{
+		return InternalRequest.EpidemicRequest.newBuilder().mergeFrom(msg.getPayload()).build();
 	}
 	
 	public void add(Epidemic epi) {
@@ -45,18 +45,20 @@ public class EpidemicServer implements Runnable {
 
                 // Deserialize packet
                 Message.Msg rec_msg = Worker.UnpackMessage(rec_packet);
-                InternalRequest.DeadNodeRequest request = EpidemicServer.UnpackDNRequest(rec_msg);
+                InternalRequest.EpidemicRequest request = EpidemicServer.UnpackEpidemicRequest(rec_msg);
 
                 // Remove the node that is down
         		Server.removeNode(request.getServer(), request.getPort());
 
                 // Spread the epidemic
-        		InternalRequest.DeadNodeRequest DNRequest = InternalRequest.DeadNodeRequest.newBuilder()
+        		InternalRequest.EpidemicRequest newRequest = InternalRequest.EpidemicRequest.newBuilder()
+        				.setEpId(request.getEpId())
+        				.setType(request.getType())
         				.setServer(request.getServer())
         				.setPort(request.getPort())
         				.build();
 
-        		Epidemic epi = new Epidemic(DNRequest.toByteString(), 2, rec_msg.getEpidemic().getId());
+        		Epidemic epi = new Epidemic(newRequest.toByteString(), request.getEpId());
         		this.add(epi);
 
             } catch (Exception e) {
