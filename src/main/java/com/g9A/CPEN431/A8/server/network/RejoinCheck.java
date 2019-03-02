@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -30,6 +32,17 @@ public class RejoinCheck implements Runnable{
 
 	public RejoinCheck() throws SocketException {
 		socket = new DatagramSocket();
+		deadNodes = Collections.synchronizedList(new ArrayList<ServerNode>());
+	}
+	
+	/**
+	 * Adds a dead node to ping for alive status
+	 * @param node the dead node
+	 */
+	public void addDeadNode(ServerNode node) {
+		if(!deadNodes.contains(node)) {
+			deadNodes.add(node);
+		}
 	}
 	
 	/**
@@ -38,6 +51,7 @@ public class RejoinCheck implements Runnable{
 	 * @throws SocketException 
 	 */
 	private void rejoinNode(ServerNode node) throws SocketException {
+		deadNodes.remove(node);
 		Server.rejoinNode(node.getAddress().getHostAddress(), node.getPort());
 		ByteString id = Epidemic.generateID(node.getAddress(), node.getEpiPort());
 
@@ -112,6 +126,16 @@ public class RejoinCheck implements Runnable{
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public void start() {
+		STOP_FLAG = false;
+
+        if (t == null) {
+            t = new Thread(this);
+            t.setPriority(Thread.MAX_PRIORITY);
+            t.start();
+        }
 	}
 	
 	public void stop() {

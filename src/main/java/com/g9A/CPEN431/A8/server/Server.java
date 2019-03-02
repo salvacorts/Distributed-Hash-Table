@@ -85,7 +85,9 @@ public class Server {
             		nextNode.setHashRange(node.getHashStart(), nextNode.getHashEnd());
             	}
 
+            	RejoinCheck.addDeadNode(node);
     	        ServerNodes.remove(node);
+    	        
 
     	    	/*for (int i = 0; i < ServerNodes.size(); i++) {
 
@@ -127,7 +129,7 @@ public class Server {
 
         // Launch the FailureCheck and RejoinCheck threads
         FailureCheck.start();
-        RejoinCheck.stop();
+        RejoinCheck.start();
 
         while (KEEP_RECEIVING) {
             byte[] receiveData = new byte[20000];
