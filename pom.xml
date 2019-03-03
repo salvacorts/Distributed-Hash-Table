@@ -3,9 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion>
+<properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+</properties>
 
-<groupId>com.g9A.CPEN431.A7</groupId>
-<artifactId>CPEN431_A7</artifactId>
+<groupId>com.g9A.CPEN431.A8</groupId>
+<artifactId>CPEN431_A8</artifactId>
 <version>1.0</version>
 
 <dependencies>
@@ -73,7 +77,7 @@
                     <configuration>
                         <archive>
                             <manifest>
-                                <mainClass>com.g9A.CPEN431.A7.client.Main</mainClass>
+                                <mainClass>com.g9A.CPEN431.A8.client.Main</mainClass>
                             </manifest>
                         </archive>
                         <descriptorRefs>
@@ -91,7 +95,7 @@
                     <configuration>
                         <archive>
                             <manifest>
-                                <mainClass>com.g9A.CPEN431.A7.server.Main</mainClass>
+                                <mainClass>com.g9A.CPEN431.A8.server.Main</mainClass>
                             </manifest>
                         </archive>
                         <descriptorRefs>

@@ -10,6 +10,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 import ca.NetSysLab.ProtocolBuffers.InternalRequest;
 import ca.NetSysLab.ProtocolBuffers.Message;
+import ca.NetSysLab.ProtocolBuffers.InternalRequest.EpidemicRequest.EpidemicType;
 
 public class EpidemicServer implements Runnable {
 	
@@ -47,8 +48,16 @@ public class EpidemicServer implements Runnable {
                 Message.Msg rec_msg = Worker.UnpackMessage(rec_packet);
                 InternalRequest.EpidemicRequest request = EpidemicServer.UnpackEpidemicRequest(rec_msg);
 
-                // Remove the node that is down
-        		Server.removeNode(request.getServer(), request.getPort());
+                switch(request.getType()) {
+                case DEAD:
+                    // Remove the node that is down
+            		Server.removeNode(request.getServer(), request.getPort());
+                	break;
+                case ALIVE:
+                    // Readd the node that is down
+            		Server.rejoinNode(request.getServer(), request.getPort(), request.getHashStart(), request.getHashEnd());
+                	break;
+                }
 
                 // Spread the epidemic
         		InternalRequest.EpidemicRequest newRequest = InternalRequest.EpidemicRequest.newBuilder()

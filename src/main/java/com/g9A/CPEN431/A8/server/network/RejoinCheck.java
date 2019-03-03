@@ -3,7 +3,9 @@ package com.g9A.CPEN431.A8.server.network;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,6 +15,7 @@ import com.g9A.CPEN431.A8.client.Client;
 import com.g9A.CPEN431.A8.server.Server;
 import com.g9A.CPEN431.A8.server.ServerNode;
 import com.g9A.CPEN431.A8.server.Worker;
+import com.g9A.CPEN431.A8.server.exceptions.InvalidHashRangeException;
 import com.google.protobuf.ByteString;
 
 import ca.NetSysLab.ProtocolBuffers.InternalRequest;
@@ -46,13 +49,31 @@ public class RejoinCheck implements Runnable{
 	}
 	
 	/**
+	 * Removes a dead node
+	 * @param addr
+	 * @param port
+	 * @throws UnknownHostException 
+	 */
+	public ServerNode removeDeadNode(String addr, int port) throws UnknownHostException {
+		InetAddress address = InetAddress.getByName(addr);
+		for(ServerNode node: deadNodes) {
+			if(node.getAddress().equals(address) && node.getPort() == port) {
+				return node;
+			}
+		}
+		return null;
+	}
+	
+	/**
 	 * Re-adds a previously dead node to the list. Starts an alive node epidemic
 	 * @param node the node to rejoin
 	 * @throws SocketException 
+	 * @throws InvalidHashRangeException 
+	 * @throws UnknownHostException 
 	 */
-	private void rejoinNode(ServerNode node) throws SocketException {
+	private void rejoinNode(ServerNode node) throws SocketException, UnknownHostException, InvalidHashRangeException {
 		deadNodes.remove(node);
-		Server.rejoinNode(node.getAddress().getHostAddress(), node.getPort());
+		Server.rejoinNode(node);
 		ByteString id = Epidemic.generateID(node.getAddress(), node.getEpiPort());
 
 		InternalRequest.EpidemicRequest epiRequest = InternalRequest.EpidemicRequest.newBuilder()
@@ -60,6 +81,8 @@ public class RejoinCheck implements Runnable{
 				.setPort(node.getPort())
 				.setEpId(id)
 				.setType(EpidemicType.ALIVE)
+				.setHashEnd(node.getHashEnd())
+				.setHashStart(node.getHashStart())
 				.build();
 
 		// Create epidemic containing DNRequest
@@ -72,8 +95,9 @@ public class RejoinCheck implements Runnable{
 	/**
 	 * Check if a random dead node is alive
 	 * @throws SocketException
+	 * @throws InvalidHashRangeException 
 	 */
-	private void checkRandom() throws SocketException {
+	private void checkRandom() throws SocketException, InvalidHashRangeException {
 		// If there is only one node (this one), return, there is nothing to check
     	if (this.deadNodes.size() < 1) return;
 

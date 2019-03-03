@@ -6,6 +6,7 @@ import java.net.InetAddress;
 import java.util.Random;
 import java.util.zip.CRC32;
 
+import ca.NetSysLab.ProtocolBuffers.InternalRequest.EpidemicRequest.EpidemicType;
 import ca.NetSysLab.ProtocolBuffers.Message;
 
 import com.g9A.CPEN431.A8.server.Server;

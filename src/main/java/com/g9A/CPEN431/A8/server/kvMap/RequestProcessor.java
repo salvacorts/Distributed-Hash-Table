@@ -1,5 +1,6 @@
 package com.g9A.CPEN431.A8.server.kvMap;
 
+import ca.NetSysLab.ProtocolBuffers.InternalRequest;
 import ca.NetSysLab.ProtocolBuffers.KeyValueRequest;
 import ca.NetSysLab.ProtocolBuffers.KeyValueResponse;
 
@@ -10,7 +11,10 @@ import com.google.protobuf.ByteString;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiConsumer;
 
 public class RequestProcessor {
 	
@@ -28,10 +32,69 @@ public class RequestProcessor {
     private static boolean CorrectNode(KeyValueRequest.KVRequest request) throws MissingParameterException {
     	if (!request.hasKey()) throw new MissingParameterException();
 
-        int hash = Math.floorMod(request.getKey().hashCode(), 256);
+        int hash = getHash(request.getKey());
 
     	return Server.selfNode.inSpace(hash);
     }
+    
+    /**
+     * Generates a hash value of a ByteString in the range [0,255]
+     * @param key the key to hash
+     * @return
+     */
+    public static int getHash(ByteString key) {
+    	return Math.floorMod(key.hashCode(), 256);
+    }
+    public static int getHash(KVMapKey key) {
+    	return getHash(ByteString.copyFrom(key.getKey()));
+    }
+    
+    /**
+     * Retrieves all values between the hash bounds
+     * @param hashStart
+     * @param hashEnd
+     * @return
+     */
+    public Map<ByteString, KVMapValue> MassGet(int hashStart, int hashEnd){
+    	Map<ByteString, KVMapValue> map = new HashMap<ByteString, KVMapValue>();
+		kvMap.forEach(100, (k,v) -> {
+			ByteString key = ByteString.copyFrom(k.getKey());
+			int hash = getHash(key);
+			if(hash >= hashStart && hash <= hashEnd) {
+				map.put(key,v);
+			}
+		});
+    	return map;
+    }
+
+    /**
+     * Deletes all keys between the hash bounds
+     * @param hashStart
+     * @param hashEnd
+     * @return
+     */
+	public void MassDelete(int hashStart, int hashEnd) {
+		kvMap.keySet().removeIf(k -> 
+			getHash(k) >= hashStart && getHash(k) <= hashEnd
+		);
+	}
+	
+	/**
+     * Puts a new set of keys
+     * @param hashStart
+     * @param hashEnd
+     * @return
+     */
+	public KeyValueResponse.KVResponse MassPut(InternalRequest.KVTransfer request) {
+		request.getKvlistList().forEach(pair -> {
+			KVMapKey key = new KVMapKey(pair.getKey().toByteArray());
+			KVMapValue value = new KVMapValue(pair.getValue().toByteArray(), pair.getVersion());
+			kvMap.put(key, value);
+		});
+		return KeyValueResponse.KVResponse.newBuilder()
+				.setErrCode(0)
+				.build();
+	}
     
     /**
      * Process a PUT request updating the kvMap
@@ -175,7 +238,7 @@ public class RequestProcessor {
      * @return 1 (just for now)
      */
     private KeyValueResponse.KVResponse DoGetMembershipCount() {
-        int count = 1;
+        int count = Server.ServerNodes.size();
 
         return KeyValueResponse.KVResponse.newBuilder()
                 .setErrCode(0)

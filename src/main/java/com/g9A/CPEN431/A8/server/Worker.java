@@ -1,5 +1,6 @@
 package com.g9A.CPEN431.A8.server;
 
+import ca.NetSysLab.ProtocolBuffers.InternalRequest;
 import ca.NetSysLab.ProtocolBuffers.KeyValueRequest;
 import ca.NetSysLab.ProtocolBuffers.KeyValueResponse;
 import ca.NetSysLab.ProtocolBuffers.Message;
@@ -12,6 +13,7 @@ import com.g9A.CPEN431.A8.server.exceptions.*;
 import com.g9A.CPEN431.A8.server.kvMap.RequestProcessor;
 import com.g9A.CPEN431.A8.utils.ByteOrder;
 import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -67,6 +69,12 @@ public class Worker implements Runnable {
         return KeyValueRequest.KVRequest.newBuilder().mergeFrom(msg.getPayload()).build();
     }
     
+    public static InternalRequest.KVTransfer UnpackKVTransfer(Message.Msg msg) throws com.google.protobuf.InvalidProtocolBufferException {
+        //return KeyValueRequest.KVRequest.parseFrom(msg.getPayload());
+
+        return InternalRequest.KVTransfer.newBuilder().mergeFrom(msg.getPayload()).build();
+    }
+    
     public static KeyValueResponse.KVResponse UnpackResponse(Message.Msg msg) throws com.google.protobuf.InvalidProtocolBufferException,
                                                                                      DifferentChecksumException {
         if (!CorrectChecksum(msg)) throw new DifferentChecksumException();
@@ -89,6 +97,19 @@ public class Worker implements Runnable {
         return Message.Msg.newBuilder()
                 .setMessageID(uuid)
                 .setPayload(response.toByteString())
+                .setCheckSum(checksum)
+                .build();
+    }
+    
+    public static Message.Msg PackMessage(InternalRequest.KVTransfer request, ByteString uuid) {
+        CRC32 crc32 = new CRC32();
+        crc32.update(ByteOrder.concatArray(uuid.toByteArray(), request.toByteArray()));
+
+        long checksum = crc32.getValue();
+
+        return Message.Msg.newBuilder()
+                .setMessageID(uuid)
+                .setPayload(request.toByteString())
                 .setCheckSum(checksum)
                 .build();
     }
@@ -261,9 +282,16 @@ public class Worker implements Runnable {
 
                 // Check if request is cached. If it is not process the request
                 if ((response = this.cache.Get(uuid))  == null) {
-                    KeyValueRequest.KVRequest request = UnpackKVRequest(rec_msg);
-                    response = requestProcessor.ProcessRequest(request, uuid);
-                    this.cache.Put(uuid, response);
+                	try {
+                		InternalRequest.KVTransfer transfer = UnpackKVTransfer(rec_msg);
+                		response = requestProcessor.MassPut(transfer);
+                        this.cache.Put(uuid, response);
+                	}
+                	catch(InvalidProtocolBufferException e) {
+                        KeyValueRequest.KVRequest request = UnpackKVRequest(rec_msg);
+                        response = requestProcessor.ProcessRequest(request, uuid);
+                        this.cache.Put(uuid, response);
+                	}
                 }
 
             } catch (ShutdownCommandException e) {
