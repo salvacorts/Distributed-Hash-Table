@@ -47,6 +47,12 @@ public class EpidemicServer implements Runnable {
                 // Deserialize packet
                 Message.Msg rec_msg = Worker.UnpackMessage(rec_packet);
                 InternalRequest.EpidemicRequest request = EpidemicServer.UnpackEpidemicRequest(rec_msg);
+                
+                InternalRequest.EpidemicRequest.Builder builder = InternalRequest.EpidemicRequest.newBuilder();
+                builder.setEpId(request.getEpId())
+					.setType(request.getType())
+					.setServer(request.getServer())
+					.setPort(request.getPort());
 
                 switch(request.getType()) {
                 case DEAD:
@@ -56,17 +62,14 @@ public class EpidemicServer implements Runnable {
                 case ALIVE:
                     // Readd the node that is down
             		Server.rejoinNode(request.getServer(), request.getPort(), request.getHashStart(), request.getHashEnd());
+            		builder.setHashStart(request.getHashStart());
+            		builder.setHashEnd(request.getHashEnd());
                 	break;
                 }
 
                 // Spread the epidemic
-        		InternalRequest.EpidemicRequest newRequest = InternalRequest.EpidemicRequest.newBuilder()
-        				.setEpId(request.getEpId())
-        				.setType(request.getType())
-        				.setServer(request.getServer())
-        				.setPort(request.getPort())
-        				.build();
-
+        		InternalRequest.EpidemicRequest newRequest = builder.build(); 
+        		
         		Epidemic epi = new Epidemic(newRequest.toByteString(), request.getEpId());
         		this.add(epi);
 
