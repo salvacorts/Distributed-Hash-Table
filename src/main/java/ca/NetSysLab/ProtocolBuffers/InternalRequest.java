@@ -31,43 +31,56 @@ public final class InternalRequest {
     ca.NetSysLab.ProtocolBuffers.InternalRequest.EpidemicRequest.EpidemicType getType();
 
     /**
-     * <code>optional string server = 3;</code>
+     * <code>optional .StateTransfer state = 3;</code>
+     */
+    boolean hasState();
+    /**
+     * <code>optional .StateTransfer state = 3;</code>
+     */
+    ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer getState();
+    /**
+     * <code>optional .StateTransfer state = 3;</code>
+     */
+    ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransferOrBuilder getStateOrBuilder();
+
+    /**
+     * <code>optional string server = 4;</code>
      */
     boolean hasServer();
     /**
-     * <code>optional string server = 3;</code>
+     * <code>optional string server = 4;</code>
      */
     java.lang.String getServer();
     /**
-     * <code>optional string server = 3;</code>
+     * <code>optional string server = 4;</code>
      */
     com.google.protobuf.ByteString
         getServerBytes();
 
     /**
-     * <code>optional int32 port = 4;</code>
+     * <code>optional int32 port = 5;</code>
      */
     boolean hasPort();
     /**
-     * <code>optional int32 port = 4;</code>
+     * <code>optional int32 port = 5;</code>
      */
     int getPort();
 
     /**
-     * <code>optional int32 hashStart = 5;</code>
+     * <code>optional int32 hashStart = 6;</code>
      */
     boolean hasHashStart();
     /**
-     * <code>optional int32 hashStart = 5;</code>
+     * <code>optional int32 hashStart = 6;</code>
      */
     int getHashStart();
 
     /**
-     * <code>optional int32 hashEnd = 6;</code>
+     * <code>optional int32 hashEnd = 7;</code>
      */
     boolean hasHashEnd();
     /**
-     * <code>optional int32 hashEnd = 6;</code>
+     * <code>optional int32 hashEnd = 7;</code>
      */
     int getHashEnd();
   }
@@ -140,23 +153,36 @@ public final class InternalRequest {
               break;
             }
             case 26: {
-              com.google.protobuf.ByteString bs = input.readBytes();
+              ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                subBuilder = state_.toBuilder();
+              }
+              state_ = input.readMessage(ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(state_);
+                state_ = subBuilder.buildPartial();
+              }
               bitField0_ |= 0x00000004;
-              server_ = bs;
               break;
             }
-            case 32: {
+            case 34: {
+              com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000008;
-              port_ = input.readInt32();
+              server_ = bs;
               break;
             }
             case 40: {
               bitField0_ |= 0x00000010;
-              hashStart_ = input.readInt32();
+              port_ = input.readInt32();
               break;
             }
             case 48: {
               bitField0_ |= 0x00000020;
+              hashStart_ = input.readInt32();
+              break;
+            }
+            case 56: {
+              bitField0_ |= 0x00000040;
               hashEnd_ = input.readInt32();
               break;
             }
@@ -312,16 +338,37 @@ public final class InternalRequest {
       return type_;
     }
 
-    public static final int SERVER_FIELD_NUMBER = 3;
-    private java.lang.Object server_;
+    public static final int STATE_FIELD_NUMBER = 3;
+    private ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer state_;
     /**
-     * <code>optional string server = 3;</code>
+     * <code>optional .StateTransfer state = 3;</code>
      */
-    public boolean hasServer() {
+    public boolean hasState() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>optional string server = 3;</code>
+     * <code>optional .StateTransfer state = 3;</code>
+     */
+    public ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer getState() {
+      return state_;
+    }
+    /**
+     * <code>optional .StateTransfer state = 3;</code>
+     */
+    public ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransferOrBuilder getStateOrBuilder() {
+      return state_;
+    }
+
+    public static final int SERVER_FIELD_NUMBER = 4;
+    private java.lang.Object server_;
+    /**
+     * <code>optional string server = 4;</code>
+     */
+    public boolean hasServer() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional string server = 4;</code>
      */
     public java.lang.String getServer() {
       java.lang.Object ref = server_;
@@ -338,7 +385,7 @@ public final class InternalRequest {
       }
     }
     /**
-     * <code>optional string server = 3;</code>
+     * <code>optional string server = 4;</code>
      */
     public com.google.protobuf.ByteString
         getServerBytes() {
@@ -354,46 +401,46 @@ public final class InternalRequest {
       }
     }
 
-    public static final int PORT_FIELD_NUMBER = 4;
+    public static final int PORT_FIELD_NUMBER = 5;
     private int port_;
     /**
-     * <code>optional int32 port = 4;</code>
+     * <code>optional int32 port = 5;</code>
      */
     public boolean hasPort() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
+      return ((bitField0_ & 0x00000010) == 0x00000010);
     }
     /**
-     * <code>optional int32 port = 4;</code>
+     * <code>optional int32 port = 5;</code>
      */
     public int getPort() {
       return port_;
     }
 
-    public static final int HASHSTART_FIELD_NUMBER = 5;
+    public static final int HASHSTART_FIELD_NUMBER = 6;
     private int hashStart_;
     /**
-     * <code>optional int32 hashStart = 5;</code>
+     * <code>optional int32 hashStart = 6;</code>
      */
     public boolean hasHashStart() {
-      return ((bitField0_ & 0x00000010) == 0x00000010);
+      return ((bitField0_ & 0x00000020) == 0x00000020);
     }
     /**
-     * <code>optional int32 hashStart = 5;</code>
+     * <code>optional int32 hashStart = 6;</code>
      */
     public int getHashStart() {
       return hashStart_;
     }
 
-    public static final int HASHEND_FIELD_NUMBER = 6;
+    public static final int HASHEND_FIELD_NUMBER = 7;
     private int hashEnd_;
     /**
-     * <code>optional int32 hashEnd = 6;</code>
+     * <code>optional int32 hashEnd = 7;</code>
      */
     public boolean hasHashEnd() {
-      return ((bitField0_ & 0x00000020) == 0x00000020);
+      return ((bitField0_ & 0x00000040) == 0x00000040);
     }
     /**
-     * <code>optional int32 hashEnd = 6;</code>
+     * <code>optional int32 hashEnd = 7;</code>
      */
     public int getHashEnd() {
       return hashEnd_;
@@ -402,6 +449,7 @@ public final class InternalRequest {
     private void initFields() {
       epId_ = com.google.protobuf.ByteString.EMPTY;
       type_ = ca.NetSysLab.ProtocolBuffers.InternalRequest.EpidemicRequest.EpidemicType.DEAD;
+      state_ = ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer.getDefaultInstance();
       server_ = "";
       port_ = 0;
       hashStart_ = 0;
@@ -421,6 +469,12 @@ public final class InternalRequest {
         memoizedIsInitialized = 0;
         return false;
       }
+      if (hasState()) {
+        if (!getState().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -435,16 +489,19 @@ public final class InternalRequest {
         output.writeEnum(2, type_.getNumber());
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeBytes(3, getServerBytes());
+        output.writeMessage(3, state_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeInt32(4, port_);
+        output.writeBytes(4, getServerBytes());
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        output.writeInt32(5, hashStart_);
+        output.writeInt32(5, port_);
       }
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
-        output.writeInt32(6, hashEnd_);
+        output.writeInt32(6, hashStart_);
+      }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        output.writeInt32(7, hashEnd_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -465,19 +522,23 @@ public final class InternalRequest {
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(3, getServerBytes());
+          .computeMessageSize(3, state_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(4, port_);
+          .computeBytesSize(4, getServerBytes());
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(5, hashStart_);
+          .computeInt32Size(5, port_);
       }
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(6, hashEnd_);
+          .computeInt32Size(6, hashStart_);
+      }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(7, hashEnd_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -588,6 +649,7 @@ public final class InternalRequest {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getStateFieldBuilder();
         }
       }
       private static Builder create() {
@@ -600,14 +662,20 @@ public final class InternalRequest {
         bitField0_ = (bitField0_ & ~0x00000001);
         type_ = ca.NetSysLab.ProtocolBuffers.InternalRequest.EpidemicRequest.EpidemicType.DEAD;
         bitField0_ = (bitField0_ & ~0x00000002);
-        server_ = "";
+        if (stateBuilder_ == null) {
+          state_ = ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer.getDefaultInstance();
+        } else {
+          stateBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000004);
-        port_ = 0;
+        server_ = "";
         bitField0_ = (bitField0_ & ~0x00000008);
-        hashStart_ = 0;
+        port_ = 0;
         bitField0_ = (bitField0_ & ~0x00000010);
-        hashEnd_ = 0;
+        hashStart_ = 0;
         bitField0_ = (bitField0_ & ~0x00000020);
+        hashEnd_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000040);
         return this;
       }
 
@@ -647,17 +715,25 @@ public final class InternalRequest {
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
         }
-        result.server_ = server_;
+        if (stateBuilder_ == null) {
+          result.state_ = state_;
+        } else {
+          result.state_ = stateBuilder_.build();
+        }
         if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
           to_bitField0_ |= 0x00000008;
         }
-        result.port_ = port_;
+        result.server_ = server_;
         if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
           to_bitField0_ |= 0x00000010;
         }
-        result.hashStart_ = hashStart_;
+        result.port_ = port_;
         if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
           to_bitField0_ |= 0x00000020;
+        }
+        result.hashStart_ = hashStart_;
+        if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+          to_bitField0_ |= 0x00000040;
         }
         result.hashEnd_ = hashEnd_;
         result.bitField0_ = to_bitField0_;
@@ -682,8 +758,11 @@ public final class InternalRequest {
         if (other.hasType()) {
           setType(other.getType());
         }
+        if (other.hasState()) {
+          mergeState(other.getState());
+        }
         if (other.hasServer()) {
-          bitField0_ |= 0x00000004;
+          bitField0_ |= 0x00000008;
           server_ = other.server_;
           onChanged();
         }
@@ -708,6 +787,12 @@ public final class InternalRequest {
         if (!hasType()) {
           
           return false;
+        }
+        if (hasState()) {
+          if (!getState().isInitialized()) {
+            
+            return false;
+          }
         }
         return true;
       }
@@ -801,15 +886,131 @@ public final class InternalRequest {
         return this;
       }
 
-      private java.lang.Object server_ = "";
+      private ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer state_ = ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer, ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer.Builder, ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransferOrBuilder> stateBuilder_;
       /**
-       * <code>optional string server = 3;</code>
+       * <code>optional .StateTransfer state = 3;</code>
        */
-      public boolean hasServer() {
+      public boolean hasState() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional string server = 3;</code>
+       * <code>optional .StateTransfer state = 3;</code>
+       */
+      public ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer getState() {
+        if (stateBuilder_ == null) {
+          return state_;
+        } else {
+          return stateBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .StateTransfer state = 3;</code>
+       */
+      public Builder setState(ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer value) {
+        if (stateBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          state_ = value;
+          onChanged();
+        } else {
+          stateBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>optional .StateTransfer state = 3;</code>
+       */
+      public Builder setState(
+          ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer.Builder builderForValue) {
+        if (stateBuilder_ == null) {
+          state_ = builderForValue.build();
+          onChanged();
+        } else {
+          stateBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>optional .StateTransfer state = 3;</code>
+       */
+      public Builder mergeState(ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer value) {
+        if (stateBuilder_ == null) {
+          if (((bitField0_ & 0x00000004) == 0x00000004) &&
+              state_ != ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer.getDefaultInstance()) {
+            state_ =
+              ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer.newBuilder(state_).mergeFrom(value).buildPartial();
+          } else {
+            state_ = value;
+          }
+          onChanged();
+        } else {
+          stateBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>optional .StateTransfer state = 3;</code>
+       */
+      public Builder clearState() {
+        if (stateBuilder_ == null) {
+          state_ = ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer.getDefaultInstance();
+          onChanged();
+        } else {
+          stateBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+      /**
+       * <code>optional .StateTransfer state = 3;</code>
+       */
+      public ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer.Builder getStateBuilder() {
+        bitField0_ |= 0x00000004;
+        onChanged();
+        return getStateFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .StateTransfer state = 3;</code>
+       */
+      public ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransferOrBuilder getStateOrBuilder() {
+        if (stateBuilder_ != null) {
+          return stateBuilder_.getMessageOrBuilder();
+        } else {
+          return state_;
+        }
+      }
+      /**
+       * <code>optional .StateTransfer state = 3;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer, ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer.Builder, ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransferOrBuilder> 
+          getStateFieldBuilder() {
+        if (stateBuilder_ == null) {
+          stateBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer, ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer.Builder, ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransferOrBuilder>(
+                  getState(),
+                  getParentForChildren(),
+                  isClean());
+          state_ = null;
+        }
+        return stateBuilder_;
+      }
+
+      private java.lang.Object server_ = "";
+      /**
+       * <code>optional string server = 4;</code>
+       */
+      public boolean hasServer() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>optional string server = 4;</code>
        */
       public java.lang.String getServer() {
         java.lang.Object ref = server_;
@@ -826,7 +1027,7 @@ public final class InternalRequest {
         }
       }
       /**
-       * <code>optional string server = 3;</code>
+       * <code>optional string server = 4;</code>
        */
       public com.google.protobuf.ByteString
           getServerBytes() {
@@ -842,36 +1043,36 @@ public final class InternalRequest {
         }
       }
       /**
-       * <code>optional string server = 3;</code>
+       * <code>optional string server = 4;</code>
        */
       public Builder setServer(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000004;
+  bitField0_ |= 0x00000008;
         server_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string server = 3;</code>
+       * <code>optional string server = 4;</code>
        */
       public Builder clearServer() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000008);
         server_ = getDefaultInstance().getServer();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string server = 3;</code>
+       * <code>optional string server = 4;</code>
        */
       public Builder setServerBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000004;
+  bitField0_ |= 0x00000008;
         server_ = value;
         onChanged();
         return this;
@@ -879,31 +1080,31 @@ public final class InternalRequest {
 
       private int port_ ;
       /**
-       * <code>optional int32 port = 4;</code>
+       * <code>optional int32 port = 5;</code>
        */
       public boolean hasPort() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
+        return ((bitField0_ & 0x00000010) == 0x00000010);
       }
       /**
-       * <code>optional int32 port = 4;</code>
+       * <code>optional int32 port = 5;</code>
        */
       public int getPort() {
         return port_;
       }
       /**
-       * <code>optional int32 port = 4;</code>
+       * <code>optional int32 port = 5;</code>
        */
       public Builder setPort(int value) {
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000010;
         port_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional int32 port = 4;</code>
+       * <code>optional int32 port = 5;</code>
        */
       public Builder clearPort() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000010);
         port_ = 0;
         onChanged();
         return this;
@@ -911,31 +1112,31 @@ public final class InternalRequest {
 
       private int hashStart_ ;
       /**
-       * <code>optional int32 hashStart = 5;</code>
+       * <code>optional int32 hashStart = 6;</code>
        */
       public boolean hasHashStart() {
-        return ((bitField0_ & 0x00000010) == 0x00000010);
+        return ((bitField0_ & 0x00000020) == 0x00000020);
       }
       /**
-       * <code>optional int32 hashStart = 5;</code>
+       * <code>optional int32 hashStart = 6;</code>
        */
       public int getHashStart() {
         return hashStart_;
       }
       /**
-       * <code>optional int32 hashStart = 5;</code>
+       * <code>optional int32 hashStart = 6;</code>
        */
       public Builder setHashStart(int value) {
-        bitField0_ |= 0x00000010;
+        bitField0_ |= 0x00000020;
         hashStart_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional int32 hashStart = 5;</code>
+       * <code>optional int32 hashStart = 6;</code>
        */
       public Builder clearHashStart() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ = (bitField0_ & ~0x00000020);
         hashStart_ = 0;
         onChanged();
         return this;
@@ -943,31 +1144,31 @@ public final class InternalRequest {
 
       private int hashEnd_ ;
       /**
-       * <code>optional int32 hashEnd = 6;</code>
+       * <code>optional int32 hashEnd = 7;</code>
        */
       public boolean hasHashEnd() {
-        return ((bitField0_ & 0x00000020) == 0x00000020);
+        return ((bitField0_ & 0x00000040) == 0x00000040);
       }
       /**
-       * <code>optional int32 hashEnd = 6;</code>
+       * <code>optional int32 hashEnd = 7;</code>
        */
       public int getHashEnd() {
         return hashEnd_;
       }
       /**
-       * <code>optional int32 hashEnd = 6;</code>
+       * <code>optional int32 hashEnd = 7;</code>
        */
       public Builder setHashEnd(int value) {
-        bitField0_ |= 0x00000020;
+        bitField0_ |= 0x00000040;
         hashEnd_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional int32 hashEnd = 6;</code>
+       * <code>optional int32 hashEnd = 7;</code>
        */
       public Builder clearHashEnd() {
-        bitField0_ = (bitField0_ & ~0x00000020);
+        bitField0_ = (bitField0_ & ~0x00000040);
         hashEnd_ = 0;
         onChanged();
         return this;
@@ -1672,6 +1873,1446 @@ public final class InternalRequest {
     // @@protoc_insertion_point(class_scope:KVTransfer)
   }
 
+  public interface StateTransferOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:StateTransfer)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>repeated .NodeInfo nodes = 1;</code>
+     */
+    java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo> 
+        getNodesList();
+    /**
+     * <code>repeated .NodeInfo nodes = 1;</code>
+     */
+    ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo getNodes(int index);
+    /**
+     * <code>repeated .NodeInfo nodes = 1;</code>
+     */
+    int getNodesCount();
+    /**
+     * <code>repeated .NodeInfo nodes = 1;</code>
+     */
+    java.util.List<? extends ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfoOrBuilder> 
+        getNodesOrBuilderList();
+    /**
+     * <code>repeated .NodeInfo nodes = 1;</code>
+     */
+    ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfoOrBuilder getNodesOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code StateTransfer}
+   */
+  public static final class StateTransfer extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:StateTransfer)
+      StateTransferOrBuilder {
+    // Use StateTransfer.newBuilder() to construct.
+    private StateTransfer(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private StateTransfer(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final StateTransfer defaultInstance;
+    public static StateTransfer getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public StateTransfer getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private StateTransfer(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                nodes_ = new java.util.ArrayList<ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              nodes_.add(input.readMessage(ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          nodes_ = java.util.Collections.unmodifiableList(nodes_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return ca.NetSysLab.ProtocolBuffers.InternalRequest.internal_static_StateTransfer_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return ca.NetSysLab.ProtocolBuffers.InternalRequest.internal_static_StateTransfer_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer.class, ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<StateTransfer> PARSER =
+        new com.google.protobuf.AbstractParser<StateTransfer>() {
+      public StateTransfer parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new StateTransfer(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<StateTransfer> getParserForType() {
+      return PARSER;
+    }
+
+    public static final int NODES_FIELD_NUMBER = 1;
+    private java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo> nodes_;
+    /**
+     * <code>repeated .NodeInfo nodes = 1;</code>
+     */
+    public java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo> getNodesList() {
+      return nodes_;
+    }
+    /**
+     * <code>repeated .NodeInfo nodes = 1;</code>
+     */
+    public java.util.List<? extends ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfoOrBuilder> 
+        getNodesOrBuilderList() {
+      return nodes_;
+    }
+    /**
+     * <code>repeated .NodeInfo nodes = 1;</code>
+     */
+    public int getNodesCount() {
+      return nodes_.size();
+    }
+    /**
+     * <code>repeated .NodeInfo nodes = 1;</code>
+     */
+    public ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo getNodes(int index) {
+      return nodes_.get(index);
+    }
+    /**
+     * <code>repeated .NodeInfo nodes = 1;</code>
+     */
+    public ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfoOrBuilder getNodesOrBuilder(
+        int index) {
+      return nodes_.get(index);
+    }
+
+    private void initFields() {
+      nodes_ = java.util.Collections.emptyList();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      for (int i = 0; i < getNodesCount(); i++) {
+        if (!getNodes(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      for (int i = 0; i < nodes_.size(); i++) {
+        output.writeMessage(1, nodes_.get(i));
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (int i = 0; i < nodes_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, nodes_.get(i));
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code StateTransfer}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:StateTransfer)
+        ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransferOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return ca.NetSysLab.ProtocolBuffers.InternalRequest.internal_static_StateTransfer_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return ca.NetSysLab.ProtocolBuffers.InternalRequest.internal_static_StateTransfer_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer.class, ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer.Builder.class);
+      }
+
+      // Construct using ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getNodesFieldBuilder();
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        if (nodesBuilder_ == null) {
+          nodes_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          nodesBuilder_.clear();
+        }
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return ca.NetSysLab.ProtocolBuffers.InternalRequest.internal_static_StateTransfer_descriptor;
+      }
+
+      public ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer getDefaultInstanceForType() {
+        return ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer.getDefaultInstance();
+      }
+
+      public ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer build() {
+        ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer buildPartial() {
+        ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer result = new ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer(this);
+        int from_bitField0_ = bitField0_;
+        if (nodesBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            nodes_ = java.util.Collections.unmodifiableList(nodes_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.nodes_ = nodes_;
+        } else {
+          result.nodes_ = nodesBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer) {
+          return mergeFrom((ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer other) {
+        if (other == ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer.getDefaultInstance()) return this;
+        if (nodesBuilder_ == null) {
+          if (!other.nodes_.isEmpty()) {
+            if (nodes_.isEmpty()) {
+              nodes_ = other.nodes_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureNodesIsMutable();
+              nodes_.addAll(other.nodes_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.nodes_.isEmpty()) {
+            if (nodesBuilder_.isEmpty()) {
+              nodesBuilder_.dispose();
+              nodesBuilder_ = null;
+              nodes_ = other.nodes_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              nodesBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getNodesFieldBuilder() : null;
+            } else {
+              nodesBuilder_.addAllMessages(other.nodes_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        for (int i = 0; i < getNodesCount(); i++) {
+          if (!getNodes(i).isInitialized()) {
+            
+            return false;
+          }
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo> nodes_ =
+        java.util.Collections.emptyList();
+      private void ensureNodesIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          nodes_ = new java.util.ArrayList<ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo>(nodes_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilder<
+          ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo, ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo.Builder, ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfoOrBuilder> nodesBuilder_;
+
+      /**
+       * <code>repeated .NodeInfo nodes = 1;</code>
+       */
+      public java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo> getNodesList() {
+        if (nodesBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(nodes_);
+        } else {
+          return nodesBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .NodeInfo nodes = 1;</code>
+       */
+      public int getNodesCount() {
+        if (nodesBuilder_ == null) {
+          return nodes_.size();
+        } else {
+          return nodesBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .NodeInfo nodes = 1;</code>
+       */
+      public ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo getNodes(int index) {
+        if (nodesBuilder_ == null) {
+          return nodes_.get(index);
+        } else {
+          return nodesBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .NodeInfo nodes = 1;</code>
+       */
+      public Builder setNodes(
+          int index, ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo value) {
+        if (nodesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureNodesIsMutable();
+          nodes_.set(index, value);
+          onChanged();
+        } else {
+          nodesBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeInfo nodes = 1;</code>
+       */
+      public Builder setNodes(
+          int index, ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo.Builder builderForValue) {
+        if (nodesBuilder_ == null) {
+          ensureNodesIsMutable();
+          nodes_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          nodesBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeInfo nodes = 1;</code>
+       */
+      public Builder addNodes(ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo value) {
+        if (nodesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureNodesIsMutable();
+          nodes_.add(value);
+          onChanged();
+        } else {
+          nodesBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeInfo nodes = 1;</code>
+       */
+      public Builder addNodes(
+          int index, ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo value) {
+        if (nodesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureNodesIsMutable();
+          nodes_.add(index, value);
+          onChanged();
+        } else {
+          nodesBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeInfo nodes = 1;</code>
+       */
+      public Builder addNodes(
+          ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo.Builder builderForValue) {
+        if (nodesBuilder_ == null) {
+          ensureNodesIsMutable();
+          nodes_.add(builderForValue.build());
+          onChanged();
+        } else {
+          nodesBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeInfo nodes = 1;</code>
+       */
+      public Builder addNodes(
+          int index, ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo.Builder builderForValue) {
+        if (nodesBuilder_ == null) {
+          ensureNodesIsMutable();
+          nodes_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          nodesBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeInfo nodes = 1;</code>
+       */
+      public Builder addAllNodes(
+          java.lang.Iterable<? extends ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo> values) {
+        if (nodesBuilder_ == null) {
+          ensureNodesIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, nodes_);
+          onChanged();
+        } else {
+          nodesBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeInfo nodes = 1;</code>
+       */
+      public Builder clearNodes() {
+        if (nodesBuilder_ == null) {
+          nodes_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          nodesBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeInfo nodes = 1;</code>
+       */
+      public Builder removeNodes(int index) {
+        if (nodesBuilder_ == null) {
+          ensureNodesIsMutable();
+          nodes_.remove(index);
+          onChanged();
+        } else {
+          nodesBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeInfo nodes = 1;</code>
+       */
+      public ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo.Builder getNodesBuilder(
+          int index) {
+        return getNodesFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .NodeInfo nodes = 1;</code>
+       */
+      public ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfoOrBuilder getNodesOrBuilder(
+          int index) {
+        if (nodesBuilder_ == null) {
+          return nodes_.get(index);  } else {
+          return nodesBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .NodeInfo nodes = 1;</code>
+       */
+      public java.util.List<? extends ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfoOrBuilder> 
+           getNodesOrBuilderList() {
+        if (nodesBuilder_ != null) {
+          return nodesBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(nodes_);
+        }
+      }
+      /**
+       * <code>repeated .NodeInfo nodes = 1;</code>
+       */
+      public ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo.Builder addNodesBuilder() {
+        return getNodesFieldBuilder().addBuilder(
+            ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .NodeInfo nodes = 1;</code>
+       */
+      public ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo.Builder addNodesBuilder(
+          int index) {
+        return getNodesFieldBuilder().addBuilder(
+            index, ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .NodeInfo nodes = 1;</code>
+       */
+      public java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo.Builder> 
+           getNodesBuilderList() {
+        return getNodesFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo, ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo.Builder, ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfoOrBuilder> 
+          getNodesFieldBuilder() {
+        if (nodesBuilder_ == null) {
+          nodesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo, ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo.Builder, ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfoOrBuilder>(
+                  nodes_,
+                  ((bitField0_ & 0x00000001) == 0x00000001),
+                  getParentForChildren(),
+                  isClean());
+          nodes_ = null;
+        }
+        return nodesBuilder_;
+      }
+
+      // @@protoc_insertion_point(builder_scope:StateTransfer)
+    }
+
+    static {
+      defaultInstance = new StateTransfer(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:StateTransfer)
+  }
+
+  public interface NodeInfoOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:NodeInfo)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>required bytes address = 1;</code>
+     */
+    boolean hasAddress();
+    /**
+     * <code>required bytes address = 1;</code>
+     */
+    com.google.protobuf.ByteString getAddress();
+
+    /**
+     * <code>required int32 port = 2;</code>
+     */
+    boolean hasPort();
+    /**
+     * <code>required int32 port = 2;</code>
+     */
+    int getPort();
+
+    /**
+     * <code>required int32 hashStart = 3;</code>
+     */
+    boolean hasHashStart();
+    /**
+     * <code>required int32 hashStart = 3;</code>
+     */
+    int getHashStart();
+
+    /**
+     * <code>required int32 hashEnd = 4;</code>
+     */
+    boolean hasHashEnd();
+    /**
+     * <code>required int32 hashEnd = 4;</code>
+     */
+    int getHashEnd();
+
+    /**
+     * <code>required int64 timestamp = 5;</code>
+     */
+    boolean hasTimestamp();
+    /**
+     * <code>required int64 timestamp = 5;</code>
+     */
+    long getTimestamp();
+  }
+  /**
+   * Protobuf type {@code NodeInfo}
+   */
+  public static final class NodeInfo extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:NodeInfo)
+      NodeInfoOrBuilder {
+    // Use NodeInfo.newBuilder() to construct.
+    private NodeInfo(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private NodeInfo(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final NodeInfo defaultInstance;
+    public static NodeInfo getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public NodeInfo getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private NodeInfo(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              address_ = input.readBytes();
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              port_ = input.readInt32();
+              break;
+            }
+            case 24: {
+              bitField0_ |= 0x00000004;
+              hashStart_ = input.readInt32();
+              break;
+            }
+            case 32: {
+              bitField0_ |= 0x00000008;
+              hashEnd_ = input.readInt32();
+              break;
+            }
+            case 40: {
+              bitField0_ |= 0x00000010;
+              timestamp_ = input.readInt64();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return ca.NetSysLab.ProtocolBuffers.InternalRequest.internal_static_NodeInfo_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return ca.NetSysLab.ProtocolBuffers.InternalRequest.internal_static_NodeInfo_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo.class, ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<NodeInfo> PARSER =
+        new com.google.protobuf.AbstractParser<NodeInfo>() {
+      public NodeInfo parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new NodeInfo(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<NodeInfo> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    public static final int ADDRESS_FIELD_NUMBER = 1;
+    private com.google.protobuf.ByteString address_;
+    /**
+     * <code>required bytes address = 1;</code>
+     */
+    public boolean hasAddress() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required bytes address = 1;</code>
+     */
+    public com.google.protobuf.ByteString getAddress() {
+      return address_;
+    }
+
+    public static final int PORT_FIELD_NUMBER = 2;
+    private int port_;
+    /**
+     * <code>required int32 port = 2;</code>
+     */
+    public boolean hasPort() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required int32 port = 2;</code>
+     */
+    public int getPort() {
+      return port_;
+    }
+
+    public static final int HASHSTART_FIELD_NUMBER = 3;
+    private int hashStart_;
+    /**
+     * <code>required int32 hashStart = 3;</code>
+     */
+    public boolean hasHashStart() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>required int32 hashStart = 3;</code>
+     */
+    public int getHashStart() {
+      return hashStart_;
+    }
+
+    public static final int HASHEND_FIELD_NUMBER = 4;
+    private int hashEnd_;
+    /**
+     * <code>required int32 hashEnd = 4;</code>
+     */
+    public boolean hasHashEnd() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>required int32 hashEnd = 4;</code>
+     */
+    public int getHashEnd() {
+      return hashEnd_;
+    }
+
+    public static final int TIMESTAMP_FIELD_NUMBER = 5;
+    private long timestamp_;
+    /**
+     * <code>required int64 timestamp = 5;</code>
+     */
+    public boolean hasTimestamp() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    /**
+     * <code>required int64 timestamp = 5;</code>
+     */
+    public long getTimestamp() {
+      return timestamp_;
+    }
+
+    private void initFields() {
+      address_ = com.google.protobuf.ByteString.EMPTY;
+      port_ = 0;
+      hashStart_ = 0;
+      hashEnd_ = 0;
+      timestamp_ = 0L;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasAddress()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasPort()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasHashStart()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasHashEnd()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasTimestamp()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, address_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeInt32(2, port_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeInt32(3, hashStart_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeInt32(4, hashEnd_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeInt64(5, timestamp_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, address_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, port_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(3, hashStart_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(4, hashEnd_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(5, timestamp_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code NodeInfo}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:NodeInfo)
+        ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfoOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return ca.NetSysLab.ProtocolBuffers.InternalRequest.internal_static_NodeInfo_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return ca.NetSysLab.ProtocolBuffers.InternalRequest.internal_static_NodeInfo_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo.class, ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo.Builder.class);
+      }
+
+      // Construct using ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        address_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        port_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        hashStart_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        hashEnd_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        timestamp_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000010);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return ca.NetSysLab.ProtocolBuffers.InternalRequest.internal_static_NodeInfo_descriptor;
+      }
+
+      public ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo getDefaultInstanceForType() {
+        return ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo.getDefaultInstance();
+      }
+
+      public ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo build() {
+        ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo buildPartial() {
+        ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo result = new ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.address_ = address_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.port_ = port_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.hashStart_ = hashStart_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.hashEnd_ = hashEnd_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        result.timestamp_ = timestamp_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo) {
+          return mergeFrom((ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo other) {
+        if (other == ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo.getDefaultInstance()) return this;
+        if (other.hasAddress()) {
+          setAddress(other.getAddress());
+        }
+        if (other.hasPort()) {
+          setPort(other.getPort());
+        }
+        if (other.hasHashStart()) {
+          setHashStart(other.getHashStart());
+        }
+        if (other.hasHashEnd()) {
+          setHashEnd(other.getHashEnd());
+        }
+        if (other.hasTimestamp()) {
+          setTimestamp(other.getTimestamp());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasAddress()) {
+          
+          return false;
+        }
+        if (!hasPort()) {
+          
+          return false;
+        }
+        if (!hasHashStart()) {
+          
+          return false;
+        }
+        if (!hasHashEnd()) {
+          
+          return false;
+        }
+        if (!hasTimestamp()) {
+          
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (ca.NetSysLab.ProtocolBuffers.InternalRequest.NodeInfo) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private com.google.protobuf.ByteString address_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>required bytes address = 1;</code>
+       */
+      public boolean hasAddress() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required bytes address = 1;</code>
+       */
+      public com.google.protobuf.ByteString getAddress() {
+        return address_;
+      }
+      /**
+       * <code>required bytes address = 1;</code>
+       */
+      public Builder setAddress(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        address_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required bytes address = 1;</code>
+       */
+      public Builder clearAddress() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        address_ = getDefaultInstance().getAddress();
+        onChanged();
+        return this;
+      }
+
+      private int port_ ;
+      /**
+       * <code>required int32 port = 2;</code>
+       */
+      public boolean hasPort() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required int32 port = 2;</code>
+       */
+      public int getPort() {
+        return port_;
+      }
+      /**
+       * <code>required int32 port = 2;</code>
+       */
+      public Builder setPort(int value) {
+        bitField0_ |= 0x00000002;
+        port_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required int32 port = 2;</code>
+       */
+      public Builder clearPort() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        port_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private int hashStart_ ;
+      /**
+       * <code>required int32 hashStart = 3;</code>
+       */
+      public boolean hasHashStart() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>required int32 hashStart = 3;</code>
+       */
+      public int getHashStart() {
+        return hashStart_;
+      }
+      /**
+       * <code>required int32 hashStart = 3;</code>
+       */
+      public Builder setHashStart(int value) {
+        bitField0_ |= 0x00000004;
+        hashStart_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required int32 hashStart = 3;</code>
+       */
+      public Builder clearHashStart() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        hashStart_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private int hashEnd_ ;
+      /**
+       * <code>required int32 hashEnd = 4;</code>
+       */
+      public boolean hasHashEnd() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>required int32 hashEnd = 4;</code>
+       */
+      public int getHashEnd() {
+        return hashEnd_;
+      }
+      /**
+       * <code>required int32 hashEnd = 4;</code>
+       */
+      public Builder setHashEnd(int value) {
+        bitField0_ |= 0x00000008;
+        hashEnd_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required int32 hashEnd = 4;</code>
+       */
+      public Builder clearHashEnd() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        hashEnd_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private long timestamp_ ;
+      /**
+       * <code>required int64 timestamp = 5;</code>
+       */
+      public boolean hasTimestamp() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>required int64 timestamp = 5;</code>
+       */
+      public long getTimestamp() {
+        return timestamp_;
+      }
+      /**
+       * <code>required int64 timestamp = 5;</code>
+       */
+      public Builder setTimestamp(long value) {
+        bitField0_ |= 0x00000010;
+        timestamp_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required int64 timestamp = 5;</code>
+       */
+      public Builder clearTimestamp() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        timestamp_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:NodeInfo)
+    }
+
+    static {
+      defaultInstance = new NodeInfo(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:NodeInfo)
+  }
+
   public interface KVPairOrBuilder extends
       // @@protoc_insertion_point(interface_extends:KVPair)
       com.google.protobuf.MessageOrBuilder {
@@ -2266,6 +3907,16 @@ public final class InternalRequest {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_KVTransfer_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_StateTransfer_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_StateTransfer_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_NodeInfo_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_NodeInfo_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_KVPair_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -2279,15 +3930,19 @@ public final class InternalRequest {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\025InternalRequest.proto\"\263\001\n\017EpidemicRequ" +
+      "\n\025InternalRequest.proto\"\322\001\n\017EpidemicRequ" +
       "est\022\014\n\004epId\030\001 \002(\014\022+\n\004type\030\002 \002(\0162\035.Epidem" +
-      "icRequest.EpidemicType\022\016\n\006server\030\003 \001(\t\022\014" +
-      "\n\004port\030\004 \001(\005\022\021\n\thashStart\030\005 \001(\005\022\017\n\007hashE" +
-      "nd\030\006 \001(\005\"#\n\014EpidemicType\022\010\n\004DEAD\020\000\022\t\n\005AL" +
-      "IVE\020\001\"%\n\nKVTransfer\022\027\n\006kvlist\030\001 \003(\0132\007.KV" +
-      "Pair\"5\n\006KVPair\022\013\n\003key\030\001 \002(\014\022\r\n\005value\030\002 \002" +
-      "(\014\022\017\n\007version\030\003 \002(\005B/\n\034ca.NetSysLab.Prot" +
-      "ocolBuffersB\017InternalRequest"
+      "icRequest.EpidemicType\022\035\n\005state\030\003 \001(\0132\016." +
+      "StateTransfer\022\016\n\006server\030\004 \001(\t\022\014\n\004port\030\005 " +
+      "\001(\005\022\021\n\thashStart\030\006 \001(\005\022\017\n\007hashEnd\030\007 \001(\005\"" +
+      "#\n\014EpidemicType\022\010\n\004DEAD\020\000\022\t\n\005ALIVE\020\001\"%\n\n" +
+      "KVTransfer\022\027\n\006kvlist\030\001 \003(\0132\007.KVPair\")\n\rS" +
+      "tateTransfer\022\030\n\005nodes\030\001 \003(\0132\t.NodeInfo\"`" +
+      "\n\010NodeInfo\022\017\n\007address\030\001 \002(\014\022\014\n\004port\030\002 \002(" +
+      "\005\022\021\n\thashStart\030\003 \002(\005\022\017\n\007hashEnd\030\004 \002(\005\022\021\n",
+      "\ttimestamp\030\005 \002(\003\"5\n\006KVPair\022\013\n\003key\030\001 \002(\014\022" +
+      "\r\n\005value\030\002 \002(\014\022\017\n\007version\030\003 \002(\005B/\n\034ca.Ne" +
+      "tSysLab.ProtocolBuffersB\017InternalRequest"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -2306,15 +3961,27 @@ public final class InternalRequest {
     internal_static_EpidemicRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_EpidemicRequest_descriptor,
-        new java.lang.String[] { "EpId", "Type", "Server", "Port", "HashStart", "HashEnd", });
+        new java.lang.String[] { "EpId", "Type", "State", "Server", "Port", "HashStart", "HashEnd", });
     internal_static_KVTransfer_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_KVTransfer_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_KVTransfer_descriptor,
         new java.lang.String[] { "Kvlist", });
-    internal_static_KVPair_descriptor =
+    internal_static_StateTransfer_descriptor =
       getDescriptor().getMessageTypes().get(2);
+    internal_static_StateTransfer_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_StateTransfer_descriptor,
+        new java.lang.String[] { "Nodes", });
+    internal_static_NodeInfo_descriptor =
+      getDescriptor().getMessageTypes().get(3);
+    internal_static_NodeInfo_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_NodeInfo_descriptor,
+        new java.lang.String[] { "Address", "Port", "HashStart", "HashEnd", "Timestamp", });
+    internal_static_KVPair_descriptor =
+      getDescriptor().getMessageTypes().get(4);
     internal_static_KVPair_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_KVPair_descriptor,

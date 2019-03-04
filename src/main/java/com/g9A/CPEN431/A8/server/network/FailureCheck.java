@@ -51,7 +51,6 @@ public class FailureCheck implements Runnable {
         	node = Server.ServerNodes.get(r);
     	} while(node.equals(Server.selfNode));
 
-
     	try {
 			// Send isAlive to the node
 			ByteString uuid = Worker.GetUUID(socket);

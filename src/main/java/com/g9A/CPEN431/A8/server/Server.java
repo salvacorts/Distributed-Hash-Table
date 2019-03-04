@@ -107,6 +107,7 @@ public class Server {
     }
 
     public static void RemoveNode(String addr, int port) {
+
         // Remove the node from the nodes list
     	for (ListIterator<ServerNode> iter = ServerNodes.listIterator(); iter.hasNext(); ) {
     		ServerNode node = iter.next();
@@ -159,10 +160,10 @@ public class Server {
      */
     public static void RejoinNode(String addr, int port, HashSpace hashSpace) throws InvalidHashRangeException, IOException {
         // Add the node to the nodes list and remove from dead nodes list
-    	ServerNode node = null;
     	InetAddress address = InetAddress.getByName(addr);
+        ServerNode node = null;
 
-		for (Iterator<ServerNode> iter = DeadNodes.iterator(); iter.hasNext();) {
+        for (Iterator<ServerNode> iter = DeadNodes.iterator(); iter.hasNext();) {
 			ServerNode n = iter.next();
 
 			if (n.getAddress().equals(address) && n.getPort() == port) {
@@ -187,6 +188,7 @@ public class Server {
         		
             	// If new node is taking over this node's hashspace, transfer keys
             	if (n.equals(selfNode)) {
+            	    System.out.println("[Server] Transfering keys to " + addr + ":" + port);
             	    TransferKeys(addr, port, hashSpace);
             	    break;
                 }

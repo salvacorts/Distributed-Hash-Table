@@ -54,7 +54,6 @@ public class EpidemicServer implements Runnable {
         		Epidemic epi = new Epidemic(request);
         		this.add(epi);
 
-                
             } catch (Exception e) {
                 e.printStackTrace();
             }

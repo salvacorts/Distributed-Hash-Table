@@ -40,6 +40,7 @@ public class Main {
 			int start = i == 0 ? 0 : i*255/total + 1;
 			int end = (i+1)*255/total;
 			nodes.get(i).addHashSpace(start, end);
+           // nodes.get(i).setHashSpace(start, end);
 		}
 
 		return nodes;

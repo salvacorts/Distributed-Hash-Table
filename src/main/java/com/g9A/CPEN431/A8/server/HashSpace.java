@@ -23,6 +23,10 @@ public class HashSpace {
 	public boolean inSpace(int hash) {
 		return hashStart <= hash && hashEnd >= hash;
 	}
+
+	public boolean inSpace(HashSpace hs) {
+		return (hs.hashStart >= this.hashStart && hs.hashEnd <= this.hashEnd);
+	}
 	
 	@Override
 	public String toString() {

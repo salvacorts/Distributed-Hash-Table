@@ -111,13 +111,13 @@ public class Epidemic implements Runnable {
     	
     	switch (request.getType()) {
 			case DEAD:	// Remove the node that is down
-				Server.RemoveNode(request.getServer(), request.getPort());
+                System.out.println("Node down: " + request.getServer() + ":" + request.getPort());
+                Server.RemoveNode(request.getServer(), request.getPort());
 				break;
 			case ALIVE:	// Re-add the node that was down
 				try {
-					if(!Server.HasDeadNode(request.getServer(), request.getPort())) {
-						return;
-					}
+					if (!Server.HasDeadNode(request.getServer(), request.getPort())) return;
+
 				} catch (UnknownHostException e1) {
 					e1.printStackTrace();
 				}

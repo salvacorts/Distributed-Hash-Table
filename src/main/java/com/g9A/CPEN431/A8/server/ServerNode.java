@@ -30,9 +30,8 @@ public class ServerNode {
         this.port = Integer.parseInt(args[1]);
         this.epiPort = Integer.parseInt(args[2]);
         hashSpaces = new ArrayList<HashSpace>();
-        
 	}
-    
+
     public void addHashSpace(int start, int end) {
     	hashSpaces.add(new HashSpace(start, end));
     }
@@ -44,7 +43,7 @@ public class ServerNode {
     public List<HashSpace> getHashSpaces() {
     	return hashSpaces;
     }
-    
+
     public boolean hasHashSpace(HashSpace h) {
     	return this.hashSpaces.contains(h);
     }
