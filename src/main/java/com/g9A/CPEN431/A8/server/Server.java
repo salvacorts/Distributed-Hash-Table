@@ -6,6 +6,8 @@ import java.io.IOException;
 // TODO: Calc if PUT will be successful based on heap size and used size.
 
 import java.net.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -18,9 +20,9 @@ import com.g9A.CPEN431.A8.server.exceptions.InvalidHashRangeException;
 import com.g9A.CPEN431.A8.server.kvMap.KVMapKey;
 import com.g9A.CPEN431.A8.server.kvMap.KVMapValue;
 import com.g9A.CPEN431.A8.server.kvMap.RequestProcessor;
+import com.g9A.CPEN431.A8.server.network.Epidemic;
 import com.g9A.CPEN431.A8.server.network.EpidemicServer;
 import com.g9A.CPEN431.A8.server.network.FailureCheck;
-import com.g9A.CPEN431.A8.server.network.RejoinCheck;
 import com.g9A.CPEN431.A8.server.pools.SocketFactory;
 import com.g9A.CPEN431.A8.server.pools.SocketPool;
 import com.google.protobuf.ByteString;
@@ -28,6 +30,7 @@ import com.google.protobuf.ByteString;
 import ca.NetSysLab.ProtocolBuffers.InternalRequest;
 import ca.NetSysLab.ProtocolBuffers.Message;
 import ca.NetSysLab.ProtocolBuffers.InternalRequest.KVTransfer;
+import ca.NetSysLab.ProtocolBuffers.InternalRequest.EpidemicRequest.EpidemicType;
 
 public class Server {
     static boolean KEEP_RECEIVING = true;
@@ -40,9 +43,9 @@ public class Server {
     public static SocketPool socketPool = new SocketPool(new SocketFactory());
     public static ServerNode selfNode;
     public static List<ServerNode> ServerNodes;
+	private static List<ServerNode> DeadNodes;
     public static EpidemicServer EpidemicServer;
     public static FailureCheck FailureCheck;
-    public static RejoinCheck RejoinCheck;
     
     private static RequestProcessor requestProcessor = RequestProcessor.getInstance();
 
@@ -65,6 +68,7 @@ public class Server {
         socketPool.setMinIdle(poolSize);
 
         ServerNodes = otherNodes;
+        DeadNodes = Collections.synchronizedList(new ArrayList<ServerNode>());
 
         InetAddress local = InetAddress.getLocalHost();
 
@@ -83,6 +87,26 @@ public class Server {
         if (selfNode == null) {
         	throw new IllegalArgumentException("Current server not present in nodes-list");
         }
+        AlertOtherNodes();
+    }
+    
+    /**
+     * Notify other nodes this one is online (epidemic protocol)
+     * @throws SocketException 
+     */
+    public static void AlertOtherNodes() throws SocketException {
+		ByteString id = Epidemic.generateID(selfNode.getAddress(), selfNode.getEpiPort());
+		HashSpace space = selfNode.getHashSpaces().get(0);
+    	InternalRequest.EpidemicRequest epiRequest = InternalRequest.EpidemicRequest.newBuilder()
+				.setServer(selfNode.getAddress().getHostAddress())
+				.setPort(selfNode.getPort())
+				.setEpId(id)
+				.setType(EpidemicType.ALIVE)
+				.setHashStart(space.hashStart)
+				.setHashEnd(space.hashEnd)
+			.build();
+		Epidemic epi = new Epidemic(epiRequest.toByteString(), id);
+		epi.start();
     }
 
     public static void RemoveNode(String addr, int port) {
@@ -95,22 +119,24 @@ public class Server {
             	// Re-balance hash space
             	if (!iter.hasNext()) {
             		ServerNode lastNode = ServerNodes.get(ServerNodes.size()-2);
-            		lastNode.setHashRange(lastNode.getHashStart(), node.getHashEnd());
+            		lastNode.addHashSpaces(node.getHashSpaces());
             	} else {
         	        ServerNode nextNode = iter.next();
-            		nextNode.setHashRange(node.getHashStart(), nextNode.getHashEnd());
+            		nextNode.addHashSpaces(node.getHashSpaces());
             	}
 
-            	RejoinCheck.addDeadNode(node);
+            	DeadNodes.add(node);
     	        ServerNodes.remove(node);
     	        
 
-    	    	/*for (int i = 0; i < ServerNodes.size(); i++) {
+    	    	for (int i = 0; i < ServerNodes.size(); i++) {
 
-    	    		//ServerNodes.get(i).setHashRange(start, end);
     	    		node = ServerNodes.get(i);
-    	    		System.out.println(node.getAddress().getHostName() + ":" + node.getPort() + ", Range: " + node.getHashStart() + "-" + node.getHashEnd());
-    	    	}*/
+    	    		System.out.println(node.getAddress().getHostName() + ":" + node.getPort() + ", Range: " + node.getHashSpaces().get(0).toString());
+    	    		for(int j = 1; j < node.getHashSpaces().size(); j++) {
+    	    			System.out.println(node.getHashSpaces().get(j).toString());
+    	    		}
+    	    	}
     	        
     	        return;
     	    }
@@ -118,70 +144,58 @@ public class Server {
     }
     
     /**
-     * Re-adds a node into the ServerNodes list. New hash space undetermined
-     * @param node the node to rejoin
-     * @throws UnknownHostException
-     * @throws InvalidHashRangeException
-     */
-    public static void RejoinNode(ServerNode node) throws UnknownHostException, InvalidHashRangeException, IOException {
-    	ServerNode maxNode = null;
-        int maxSize = 0;
-
-        // Search the node owning th biggest hash space
-    	for (ServerNode n : ServerNodes) {
-    		int hashSize = n.getHashEnd() - n.getHashStart();
-
-    		if (hashSize > maxSize) {
-    			maxSize = hashSize;
-    			maxNode = node;
-    		}
-    	}
-
-    	// Take half of the biggest hashSpace
-    	int end = maxNode.getHashEnd();
-    	int hashSize = maxNode.getHashEnd() - maxNode.getHashStart();
-    	int start = end - hashSize/2;
-        node.setHashRange(start, end);
-
-        // Update the maxNode to half
-    	maxNode.setHashRange(maxNode.getHashStart(), start-1);
-
-    	// If this is the node, the new one is taking over, transfer your keys
-    	if (maxNode.equals(selfNode)) {
-    	    TransferKeys(node.getAddress().getHostName(), node.getPort(), node.getHashStart(), node.getHashEnd());
-        }
-
-    	ServerNodes.add(node);
-    }
-    
-    /**
      * Re-adds a node into the ServerNodes list. New hash space already defined
      * @throws InvalidHashRangeException
      * @throws IOException 
      */
-    public static void RejoinNode(String addr, int port, int hashStart, int hashEnd) throws InvalidHashRangeException, IOException {
+    public static void RejoinNode(String addr, int port, HashSpace hashSpace) throws InvalidHashRangeException, IOException {
         // Add the node to the nodes list and remove from dead nodes list
-    	ServerNode node = RejoinCheck.removeDeadNode(addr, port);
+    	ServerNode node = null;
+    	InetAddress address = InetAddress.getByName(addr);
+
+		for (Iterator<ServerNode> iter = DeadNodes.iterator(); iter.hasNext();) {
+			ServerNode n = iter.next();
+
+			if (n.getAddress().equals(address) && n.getPort() == port) {
+				iter.remove();
+				node = n;
+				break;
+			}
+		}
+		//Node was never in deadnodes in the first place
+		if(node == null) {
+			return;
+		}
+		
     	ServerNodes.add(node);
     	
     	// Transfer hash space
     	for (ServerNode n : ServerNodes) {
     	    // If the node in the over the current hashspace
-    		if (n.getHashEnd() >= hashStart && n.getHashStart() <= hashEnd ) {
+    		if (n.hasHashSpace(hashSpace)) {
 
     		    // Update its hashSpace
-        		n.setHashRange(n.getHashStart(), hashStart-1);
+    			n.removeHashSpace(hashSpace);
         		
             	// If new node is taking over this node's hashspace, transfer keys
             	if (n.equals(selfNode)) {
-            	    TransferKeys(addr, port, hashStart, hashEnd);
+            	    TransferKeys(addr, port, hashSpace);
             	    break;
                 }
         	}
     	}
+    	
+    	for (int i = 0; i < ServerNodes.size(); i++) {
+
+    		node = ServerNodes.get(i);
+    		System.out.println(node.getAddress().getHostName() + ":" + node.getPort() + ", Range: " + node.getHashSpaces().get(0).toString());
+    		for(int j = 1; j < node.getHashSpaces().size(); j++) {
+    			System.out.println(node.getHashSpaces().get(j).toString());
+    		}
+    	}
     }
     
-    private static void TransferKeys(String addr, int port, int hashStart, int hashEnd) throws UnknownHostException, IOException {
+    private static void TransferKeys(String addr, int port, HashSpace hashSpace) throws UnknownHostException, IOException {
         DatagramSocket socket = new DatagramSocket();
 
         for (Map.Entry<KVMapKey, KVMapValue> entry : requestProcessor.kvMap.entrySet()) {
@@ -189,7 +203,7 @@ public class Server {
             KVMapValue v = entry.getValue();
             int hash = k.getHash();
 
-            if (hash >= hashStart && hash <= hashEnd) {
+            if (hashSpace.inSpace(hash)) {
                 KeyValueRequest.KVRequest request = KeyValueRequest.KVRequest.newBuilder()
                         .setCommand(1)
                         .setKey(ByteString.copyFrom(k.getKey()))
@@ -206,7 +220,7 @@ public class Server {
         }
 
         requestProcessor.kvMap.keySet().removeIf(k ->
-                k.getHash() >= hashStart && k.getHash() <= hashEnd
+        	hashSpace.inSpace(k.getHash())
         );
 
         socket.close();
@@ -225,7 +239,6 @@ public class Server {
 
         // Launch the FailureCheck and RejoinCheck threads
         FailureCheck.start();
-        RejoinCheck.start();
 
         while (KEEP_RECEIVING) {
             byte[] receiveData = new byte[20000];
@@ -249,7 +262,6 @@ public class Server {
         socketPool.close();
         EpidemicServer.stop();
         FailureCheck.stop();
-        RejoinCheck.stop();
     }
 }
 

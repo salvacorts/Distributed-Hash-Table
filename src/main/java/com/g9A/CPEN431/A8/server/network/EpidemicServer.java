@@ -4,6 +4,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
+import com.g9A.CPEN431.A8.server.HashSpace;
 import com.g9A.CPEN431.A8.server.Server;
 import com.g9A.CPEN431.A8.server.Worker;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -51,8 +52,9 @@ public class EpidemicServer implements Runnable {
 					case DEAD:	// Remove the node that is down
 						Server.RemoveNode(request.getServer(), request.getPort());
 						break;
-					case ALIVE:	// Re-add the node that is down
-						Server.RejoinNode(request.getServer(), request.getPort(), request.getHashStart(), request.getHashEnd());
+					case ALIVE:	// Re-add the node that was down
+						
+						Server.RejoinNode(request.getServer(), request.getPort(), new HashSpace(request.getHashStart(), request.getHashEnd()));
 						break;
                 }
 

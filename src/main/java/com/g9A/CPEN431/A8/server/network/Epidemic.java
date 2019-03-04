@@ -84,7 +84,7 @@ public class Epidemic implements Runnable {
 		Message.Msg msg = PackInternalMessage(payload, socket);
 
 		// Send the payload to that node
-		System.out.println("[Epidemic] sending to " + node.getAddress().getHostName() + ":" + node.getEpiPort());
+		//System.out.println("[Epidemic] sending to " + node.getAddress().getHostName() + ":" + node.getEpiPort());
 		Worker.Send(socket, msg, node.getAddress(), node.getEpiPort());
 
     	iterations--;
