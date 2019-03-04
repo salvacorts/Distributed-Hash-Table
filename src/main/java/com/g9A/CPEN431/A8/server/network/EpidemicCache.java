@@ -18,7 +18,7 @@ public class EpidemicCache {
     private EpidemicCache() {
         this.epiCache = CacheBuilder.newBuilder()
                 .maximumSize(100)
-                .expireAfterWrite(30, TimeUnit.SECONDS)
+                .expireAfterWrite(120, TimeUnit.SECONDS)
                 .build();
     }
     

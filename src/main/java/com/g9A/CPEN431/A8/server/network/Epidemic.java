@@ -13,6 +13,7 @@ import com.g9A.CPEN431.A8.server.Server;
 import com.g9A.CPEN431.A8.server.ServerNode;
 import com.g9A.CPEN431.A8.server.Worker;
 import com.g9A.CPEN431.A8.utils.ByteOrder;
+import com.g9A.CPEN431.A8.utils.StringUtils;
 import com.google.protobuf.ByteString;
 
 public class Epidemic implements Runnable {
@@ -85,7 +86,7 @@ public class Epidemic implements Runnable {
 		Message.Msg msg = PackInternalMessage(payload, socket);
 
 		// Send the payload to that node
-		//System.out.println("[Epidemic] sending to " + node.getAddress().getHostName() + ":" + node.getEpiPort());
+		System.out.println("[Epidemic " + StringUtils.byteArrayToHexString(this.epId.toByteArray()) + "] sending to " + node.getAddress().getHostName() + ":" + node.getEpiPort());
 		Worker.Send(socket, msg, node.getAddress(), node.getEpiPort());
 
     	iterations--;
@@ -107,9 +108,10 @@ public class Epidemic implements Runnable {
     }
 
     public void start() {
-    	if(this.epId == null) {
+    	if (this.epId == null) {
     		System.err.println("Missing epidemic ID!");
     	}
+
 		STOP_FLAG = false;
 
         if (t == null) {

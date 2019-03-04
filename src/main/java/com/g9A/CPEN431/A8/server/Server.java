@@ -6,11 +6,7 @@ import java.io.IOException;
 // TODO: Calc if PUT will be successful based on heap size and used size.
 
 import java.net.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -87,7 +83,6 @@ public class Server {
         if (selfNode == null) {
         	throw new IllegalArgumentException("Current server not present in nodes-list");
         }
-        AlertOtherNodes();
     }
     
     /**
@@ -105,17 +100,21 @@ public class Server {
 				.setHashStart(space.hashStart)
 				.setHashEnd(space.hashEnd)
 			.build();
+
 		Epidemic epi = new Epidemic(epiRequest.toByteString(), id);
 		epi.start();
     }
 
     public static void RemoveNode(String addr, int port) {
         // Remove the node from the nodes list
-    	for (Iterator<ServerNode> iter = ServerNodes.listIterator(); iter.hasNext(); ) {
+    	for (ListIterator<ServerNode> iter = ServerNodes.listIterator(); iter.hasNext(); ) {
     		ServerNode node = iter.next();
 
-    	    if (addr.equals(node.getAddress().getHostAddress()) && node.getPort() == port) {
-    	    	
+      	    if (addr.equals(node.getAddress().getHostAddress()) && node.getPort() == port) {
+
+                DeadNodes.add(node);
+                iter.remove();
+
             	// Re-balance hash space
             	if (!iter.hasNext()) {
             		ServerNode lastNode = ServerNodes.get(ServerNodes.size()-2);
@@ -125,16 +124,12 @@ public class Server {
             		nextNode.addHashSpaces(node.getHashSpaces());
             	}
 
-            	DeadNodes.add(node);
-    	        ServerNodes.remove(node);
-    	        
+    	    	for (ServerNode n : ServerNodes) {
 
-    	    	for (int i = 0; i < ServerNodes.size(); i++) {
+    	    		System.out.println(n.getAddress().getHostName() + ":" + n.getPort() + ", Range: " + n.getHashSpaces().get(0).toString());
 
-    	    		node = ServerNodes.get(i);
-    	    		System.out.println(node.getAddress().getHostName() + ":" + node.getPort() + ", Range: " + node.getHashSpaces().get(0).toString());
-    	    		for(int j = 1; j < node.getHashSpaces().size(); j++) {
-    	    			System.out.println(node.getHashSpaces().get(j).toString());
+    	    		for (HashSpace hs : node.getHashSpaces()) {
+    	    			System.out.println(" &" + hs.toString());
     	    		}
     	    	}
     	        
@@ -175,11 +170,10 @@ public class Server {
 				break;
 			}
 		}
+
 		//Node was never in deadnodes in the first place
-		if(node == null) {
-			return;
-		}
-		
+		if (node == null) return;
+
     	ServerNodes.add(node);
     	
     	// Transfer hash space
@@ -201,10 +195,10 @@ public class Server {
     	for (int i = 0; i < ServerNodes.size(); i++) {
 
     		node = ServerNodes.get(i);
-    		System.out.println(node.getAddress().getHostName() + ":" + node.getPort() + ", Range: " + node.getHashSpaces().get(0).toString());
-    		for(int j = 1; j < node.getHashSpaces().size(); j++) {
-    			System.out.println(node.getHashSpaces().get(j).toString());
-    		}
+    		System.out.println("[In Rejoin]" + node.getAddress().getHostName() + ":" + node.getPort() + ", Range: " + node.getHashSpaces().get(0).toString());
+    		for (HashSpace hs : node.getHashSpaces()) {
+                System.out.println(hs.toString());
+            }
     	}
     }
     
@@ -243,7 +237,7 @@ public class Server {
         threadPool.execute(new Worker(packet, priority));
     }
 
-    public void StartServing() {
+    public void StartServing() throws SocketException  {
         System.out.println("Listening on: " + this.listeningSocket.getLocalPort());
         System.out.println("CPUs: " + this.availableCores);
 
@@ -252,6 +246,10 @@ public class Server {
 
         // Launch the FailureCheck and RejoinCheck threads
         FailureCheck.start();
+
+        // Send epidemic to other nodes
+        System.out.println("Alerting other nodes");
+        AlertOtherNodes();
 
         while (KEEP_RECEIVING) {
             byte[] receiveData = new byte[20000];

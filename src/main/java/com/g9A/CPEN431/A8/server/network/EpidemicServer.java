@@ -20,7 +20,7 @@ public class EpidemicServer implements Runnable {
 	private DatagramSocket listeningSocket;
 	private Thread t;
 
-	public EpidemicServer(int port) throws SocketException{
+	public EpidemicServer(int port) throws SocketException {
         this.listeningSocket = new DatagramSocket(port);
 	}
 
@@ -48,14 +48,15 @@ public class EpidemicServer implements Runnable {
                 Message.Msg rec_msg = Worker.UnpackMessage(rec_packet);
                 InternalRequest.EpidemicRequest request = EpidemicServer.UnpackEpidemicRequest(rec_msg);
 
+                // If this epidemic has already been processed
+                if (Cache.check(request.getEpId())) return;
+
                 switch (request.getType()) {
 					case DEAD:	// Remove the node that is down
 						Server.RemoveNode(request.getServer(), request.getPort());
 						break;
 					case ALIVE:	// Re-add the node that was down
-						if(!Server.HasDeadNode(request.getServer(), request.getPort())){
-							continue;
-						}
+						System.out.println("Node joined: " + request.getServer() + ":" + request.getPort());
 						Server.RejoinNode(request.getServer(), request.getPort(), new HashSpace(request.getHashStart(), request.getHashEnd()));
 						break;
                 }

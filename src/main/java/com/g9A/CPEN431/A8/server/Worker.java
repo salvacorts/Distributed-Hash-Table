@@ -282,16 +282,9 @@ public class Worker implements Runnable {
 
                 // Check if request is cached. If it is not process the request
                 if ((response = this.cache.Get(uuid))  == null) {
-                	try {
-                		InternalRequest.KVTransfer transfer = UnpackKVTransfer(rec_msg);
-                		response = requestProcessor.MassPut(transfer);
-                        this.cache.Put(uuid, response);
-                	}
-                	catch(InvalidProtocolBufferException e) {
-                        KeyValueRequest.KVRequest request = UnpackKVRequest(rec_msg);
-                        response = requestProcessor.ProcessRequest(request, uuid);
-                        this.cache.Put(uuid, response);
-                	}
+                    KeyValueRequest.KVRequest request = UnpackKVRequest(rec_msg);
+                    response = requestProcessor.ProcessRequest(request, uuid);
+                    this.cache.Put(uuid, response);
                 }
 
             } catch (ShutdownCommandException e) {

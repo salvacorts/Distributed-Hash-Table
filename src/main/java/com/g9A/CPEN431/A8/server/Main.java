@@ -25,7 +25,7 @@ public class Main {
 		while ((line = bufferedReader.readLine()) != null) {
 
 			try {
-				if(!line.trim().isEmpty()) {
+				if (!line.trim().isEmpty()) {
 					nodes.add(new ServerNode(line));
 				}
             } catch (Exception e) {
