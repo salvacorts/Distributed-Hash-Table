@@ -54,7 +54,6 @@ public class FailureCheck implements Runnable {
 			Message.Msg msg = Client.PackMessage(request, uuid.toByteArray(), 1);
 
 			// Serialize to packet
-			// TODO: Check if by using the normal port it still works well enough
 			DatagramPacket send_packet = new DatagramPacket(msg.toByteArray(), msg.getSerializedSize(), node.getAddress(), node.getPort());
 
 			// Send packet
@@ -75,7 +74,7 @@ public class FailureCheck implements Runnable {
 	 * @throws java.net.SocketException
 	 */
     public void removeNode(ServerNode node) throws java.net.SocketException {
-		Server.removeNode(node.getAddress().getHostAddress(), node.getPort());
+		Server.RemoveNode(node.getAddress().getHostAddress(), node.getPort());
 
 		ByteString id = Epidemic.generateID(node.getAddress(), node.getEpiPort());
 		

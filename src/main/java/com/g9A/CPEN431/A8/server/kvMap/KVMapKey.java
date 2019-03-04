@@ -3,6 +3,7 @@ package com.g9A.CPEN431.A8.server.kvMap;
 import java.util.Arrays;
 
 import com.g9A.CPEN431.A8.utils.StringUtils;
+import com.google.protobuf.ByteString;
 
 public class KVMapKey {
     private byte[] key;
@@ -17,6 +18,10 @@ public class KVMapKey {
 
     public byte[] getKey() {
         return key;
+    }
+
+    public int getHash() {
+        return Math.floorMod(ByteString.copyFrom(key).hashCode(), 256);
     }
 
     @Override

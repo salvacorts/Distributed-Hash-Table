@@ -7,6 +7,7 @@ message EpidemicRequest {
 		DEAD = 0;
 		ALIVE = 1;
 	}
+
 	required bytes epId = 1;
     required EpidemicType type = 2;
     optional string server = 3;

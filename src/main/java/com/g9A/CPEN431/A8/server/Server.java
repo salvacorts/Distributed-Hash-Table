@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import ca.NetSysLab.ProtocolBuffers.KeyValueRequest;
+import com.g9A.CPEN431.A8.client.Client;
 import com.g9A.CPEN431.A8.server.exceptions.InvalidHashRangeException;
 import com.g9A.CPEN431.A8.server.kvMap.KVMapKey;
 import com.g9A.CPEN431.A8.server.kvMap.KVMapValue;
@@ -83,7 +85,7 @@ public class Server {
         }
     }
 
-    public static void removeNode(String addr, int port) {
+    public static void RemoveNode(String addr, int port) {
         // Remove the node from the nodes list
     	for (Iterator<ServerNode> iter = ServerNodes.listIterator(); iter.hasNext(); ) {
     		ServerNode node = iter.next();
@@ -121,89 +123,93 @@ public class Server {
      * @throws UnknownHostException
      * @throws InvalidHashRangeException
      */
-    public static void rejoinNode(ServerNode node) throws UnknownHostException, InvalidHashRangeException {
-        // Add the node to the nodes list
-    	int maxSize = 0;
+    public static void RejoinNode(ServerNode node) throws UnknownHostException, InvalidHashRangeException, IOException {
     	ServerNode maxNode = null;
-    	for (Iterator<ServerNode> iter = ServerNodes.listIterator(); iter.hasNext(); ) {
-    		
-    		ServerNode n = iter.next();
+        int maxSize = 0;
+
+        // Search the node owning th biggest hash space
+    	for (ServerNode n : ServerNodes) {
     		int hashSize = n.getHashEnd() - n.getHashStart();
-    		if(hashSize > maxSize) {
+
+    		if (hashSize > maxSize) {
     			maxSize = hashSize;
     			maxNode = node;
     		}
-
-    	    //TODO: rebalance hash space
     	}
+
+    	// Take half of the biggest hashSpace
     	int end = maxNode.getHashEnd();
     	int hashSize = maxNode.getHashEnd() - maxNode.getHashStart();
     	int start = end - hashSize/2;
-    	maxNode.setHashRange(maxNode.getHashStart(), start-1);
-    	node.setHashRange(start, end);
-    	ServerNodes.add(node);
-    	
-    	/*for (int i = 0; i < ServerNodes.size(); i++) {
+        node.setHashRange(start, end);
 
-		//ServerNodes.get(i).setHashRange(start, end);
-		node = ServerNodes.get(i);
-		System.out.println(node.getAddress().getHostName() + ":" + node.getPort() + ", Range: " + node.getHashStart() + "-" + node.getHashEnd());
-		}*/
+        // Update the maxNode to half
+    	maxNode.setHashRange(maxNode.getHashStart(), start-1);
+
+    	// If this is the node, the new one is taking over, transfer your keys
+    	if (maxNode.equals(selfNode)) {
+    	    TransferKeys(node.getAddress().getHostName(), node.getPort(), node.getHashStart(), node.getHashEnd());
+        }
+
+    	ServerNodes.add(node);
     }
     
     /**
      * Re-adds a node into the ServerNodes list. New hash space already defined
-     * @param node the node to rejoin
      * @throws InvalidHashRangeException
      * @throws IOException 
      */
-    public static void rejoinNode(String addr, int port, int hashStart, int hashEnd) throws InvalidHashRangeException, IOException {
+    public static void RejoinNode(String addr, int port, int hashStart, int hashEnd) throws InvalidHashRangeException, IOException {
         // Add the node to the nodes list and remove from dead nodes list
     	ServerNode node = RejoinCheck.removeDeadNode(addr, port);
     	ServerNodes.add(node);
     	
-    	//Transfer hash space
-    	for (Iterator<ServerNode> iter = ServerNodes.listIterator(); iter.hasNext(); ) {
-    		ServerNode n = iter.next();
-    		if(n.getHashEnd() >= hashStart && n.getHashStart() <= hashEnd ) {
+    	// Transfer hash space
+    	for (ServerNode n : ServerNodes) {
+    	    // If the node in the over the current hashspace
+    		if (n.getHashEnd() >= hashStart && n.getHashStart() <= hashEnd ) {
+
+    		    // Update its hashSpace
         		n.setHashRange(n.getHashStart(), hashStart-1);
         		
-            	//If new node is taking over this node's hashspace, transfer keys
-            	if(n.equals(selfNode)) {
-            		TransferKeys(addr, port, hashStart, hashEnd);
-            	}
+            	// If new node is taking over this node's hashspace, transfer keys
+            	if (n.equals(selfNode)) {
+            	    TransferKeys(addr, port, hashStart, hashEnd);
+            	    break;
+                }
         	}
     	}
     }
     
     private static void TransferKeys(String addr, int port, int hashStart, int hashEnd) throws UnknownHostException, IOException {
-    	InternalRequest.KVTransfer.Builder builder = InternalRequest.KVTransfer.newBuilder();
-    	Map<ByteString, KVMapValue> map = requestProcessor.MassGet(hashStart, hashEnd);
-    	map.forEach((k,v) -> {
-    		ByteString value = ByteString.copyFrom(v.getValue());
-    		InternalRequest.KVPair pair = InternalRequest.KVPair.newBuilder()
-    				.setKey(k)
-    				.setValue(value)
-    				.setVersion(v.getVersion())
-    				.build();
-        	builder.addKvlist(pair);
-    	});
-    	InternalRequest.KVTransfer request = builder.build();
-    	DatagramSocket socket = new DatagramSocket();
-    	ByteString uuid = Worker.GetUUID(socket);
-    	Message.Msg msg = Worker.PackMessage(request, uuid);
-        DatagramPacket packet = new DatagramPacket(msg.toByteArray(), msg.getSerializedSize(), InetAddress.getByName(addr), port);
-    	try{
-    		Worker.SendAndReceive(socket, packet, uuid, 3);
-    	}
-    	catch(SocketTimeoutException e) {
-    		System.err.println("Transfer key error");
-    		e.printStackTrace();
-        	socket.close();
-        	return;
-    	}
-    	requestProcessor.MassDelete(hashStart, hashEnd);
-    	socket.close();
+        DatagramSocket socket = new DatagramSocket();
+
+        for (Map.Entry<KVMapKey, KVMapValue> entry : requestProcessor.kvMap.entrySet()) {
+            KVMapKey k = entry.getKey();
+            KVMapValue v = entry.getValue();
+            int hash = k.getHash();
+
+            if (hash >= hashStart && hash <= hashEnd) {
+                KeyValueRequest.KVRequest request = KeyValueRequest.KVRequest.newBuilder()
+                        .setCommand(1)
+                        .setKey(ByteString.copyFrom(k.getKey()))
+                        .setValue(ByteString.copyFrom(v.getValue()))
+                        .setVersion(v.getVersion())
+                        .build();
+
+                ByteString uuid = Worker.GetUUID(socket);
+                Message.Msg msg = Client.PackMessage(request, uuid.toByteArray(), 1);
+                DatagramPacket packet = new DatagramPacket(msg.toByteArray(), msg.getSerializedSize(), InetAddress.getByName(addr), port);
+
+                Worker.SendAndReceive(socket, packet, uuid, 3);
+            }
+        }
+
+        requestProcessor.kvMap.keySet().removeIf(k ->
+                k.getHash() >= hashStart && k.getHash() <= hashEnd
+        );
+
+        socket.close();
     }
 
     public static void LaunchWorkerWithPriority(DatagramPacket packet, int priority) {

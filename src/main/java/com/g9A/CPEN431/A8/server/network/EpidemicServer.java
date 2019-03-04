@@ -10,7 +10,6 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 import ca.NetSysLab.ProtocolBuffers.InternalRequest;
 import ca.NetSysLab.ProtocolBuffers.Message;
-import ca.NetSysLab.ProtocolBuffers.InternalRequest.EpidemicRequest.EpidemicType;
 
 public class EpidemicServer implements Runnable {
 	
@@ -29,10 +28,10 @@ public class EpidemicServer implements Runnable {
 	}
 	
 	public void add(Epidemic epi) {
-		if (!Cache.check(epi.getID())) {
-			Cache.put(epi.getID());
-			epi.start();
-		}
+		if (Cache.check(epi.getID())) return;
+
+		Cache.put(epi.getID());
+		epi.start();
 	}
 	
 	public void run() {
@@ -47,30 +46,18 @@ public class EpidemicServer implements Runnable {
                 // Deserialize packet
                 Message.Msg rec_msg = Worker.UnpackMessage(rec_packet);
                 InternalRequest.EpidemicRequest request = EpidemicServer.UnpackEpidemicRequest(rec_msg);
-                
-                InternalRequest.EpidemicRequest.Builder builder = InternalRequest.EpidemicRequest.newBuilder();
-                builder.setEpId(request.getEpId())
-					.setType(request.getType())
-					.setServer(request.getServer())
-					.setPort(request.getPort());
 
-                switch(request.getType()) {
-                case DEAD:
-                    // Remove the node that is down
-            		Server.removeNode(request.getServer(), request.getPort());
-                	break;
-                case ALIVE:
-                    // Readd the node that is down
-            		Server.rejoinNode(request.getServer(), request.getPort(), request.getHashStart(), request.getHashEnd());
-            		builder.setHashStart(request.getHashStart());
-            		builder.setHashEnd(request.getHashEnd());
-                	break;
+                switch (request.getType()) {
+					case DEAD:	// Remove the node that is down
+						Server.RemoveNode(request.getServer(), request.getPort());
+						break;
+					case ALIVE:	// Re-add the node that is down
+						Server.RejoinNode(request.getServer(), request.getPort(), request.getHashStart(), request.getHashEnd());
+						break;
                 }
 
                 // Spread the epidemic
-        		InternalRequest.EpidemicRequest newRequest = builder.build(); 
-        		
-        		Epidemic epi = new Epidemic(newRequest.toByteString(), request.getEpId());
+        		Epidemic epi = new Epidemic(request.toByteString(), request.getEpId());
         		this.add(epi);
 
             } catch (Exception e) {

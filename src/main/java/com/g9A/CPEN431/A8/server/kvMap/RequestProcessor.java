@@ -14,14 +14,15 @@ import java.lang.management.ManagementFactory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 public class RequestProcessor {
 	
     private static final RequestProcessor ourInstance = new RequestProcessor();
 
-    private ConcurrentHashMap<KVMapKey, KVMapValue> kvMap = new ConcurrentHashMap<KVMapKey, KVMapValue>();  // Key value map with mutex
     private final MetricsServer metrics = MetricsServer.getInstance();
+
+    public ConcurrentHashMap<KVMapKey, KVMapValue> kvMap = new ConcurrentHashMap<KVMapKey, KVMapValue>();  // Key value map with mutex
 
     /**
      * Indicates if the request's key places it in the current node
@@ -48,36 +49,6 @@ public class RequestProcessor {
     public static int getHash(KVMapKey key) {
     	return getHash(ByteString.copyFrom(key.getKey()));
     }
-    
-    /**
-     * Retrieves all values between the hash bounds
-     * @param hashStart
-     * @param hashEnd
-     * @return
-     */
-    public Map<ByteString, KVMapValue> MassGet(int hashStart, int hashEnd){
-    	Map<ByteString, KVMapValue> map = new HashMap<ByteString, KVMapValue>();
-		kvMap.forEach(100, (k,v) -> {
-			ByteString key = ByteString.copyFrom(k.getKey());
-			int hash = getHash(key);
-			if(hash >= hashStart && hash <= hashEnd) {
-				map.put(key,v);
-			}
-		});
-    	return map;
-    }
-
-    /**
-     * Deletes all keys between the hash bounds
-     * @param hashStart
-     * @param hashEnd
-     * @return
-     */
-	public void MassDelete(int hashStart, int hashEnd) {
-		kvMap.keySet().removeIf(k -> 
-			getHash(k) >= hashStart && getHash(k) <= hashEnd
-		);
-	}
 	
 	/**
      * Puts a new set of keys
