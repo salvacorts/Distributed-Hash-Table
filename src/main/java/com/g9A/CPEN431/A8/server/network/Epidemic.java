@@ -35,18 +35,27 @@ public class Epidemic implements Runnable {
     	if (iterations < 10) iterations = (10 - iterations) * 2;
     }
 
-	public static ByteString generateID(InetAddress svr, int port) {
+	public static ByteString generateID(InetAddress svr, int port, EpidemicType type) {
 		Random randomGen = new Random();
 		byte[] buffUuid = new byte[16];
 
 		byte[] addr = svr.getAddress();
-		short rnd = (short) randomGen.nextInt(Short.MAX_VALUE + 1);
-		long timestamp = System.nanoTime();
+		//short rnd = (short) randomGen.nextInt(Short.MAX_VALUE + 1);
+		//long timestamp = System.nanoTime();
 
 		System.arraycopy(addr, 0, buffUuid, 0, 4);
 		ByteOrder.int2leb(port, buffUuid, 4);
-		ByteOrder.short2leb(rnd, buffUuid, 6);
-		ByteOrder.long2leb(timestamp, buffUuid, 8);
+		
+		switch(type) {
+		case DEAD:
+			ByteOrder.int2leb(EpidemicType.DEAD_VALUE, buffUuid, 6);
+			break;
+		case ALIVE:
+			ByteOrder.int2leb(EpidemicType.ALIVE_VALUE, buffUuid, 6);
+			break;
+		}
+		//ByteOrder.short2leb(rnd, buffUuid, 6);
+		//ByteOrder.long2leb(timestamp, buffUuid, 8);
 
 		return ByteString.copyFrom(buffUuid);
 	}

@@ -6,8 +6,8 @@ planetlab2.pop-pa.rnp.br:10145
 plink.cs.uwaterloo.ca:10145
 node1.planetlab.albany.edu:10145
 pl1.eng.monash.edu.au:10145
-pl2.eng.monash.edu.au:10145
 planetlab2.inf.ethz.ch:10145
+planetlab01.cs.washington.edu:10145
 planetlab02.cs.washington.edu:10145
 planetlab04.cs.washington.edu:10145
 planetlab3.comp.nus.edu.sg:10145

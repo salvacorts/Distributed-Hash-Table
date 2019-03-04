@@ -90,7 +90,7 @@ public class Server {
      * @throws SocketException 
      */
     public static void AlertOtherNodes() throws SocketException {
-		ByteString id = Epidemic.generateID(selfNode.getAddress(), selfNode.getEpiPort());
+		ByteString id = Epidemic.generateID(selfNode.getAddress(), selfNode.getEpiPort(), EpidemicType.ALIVE);
 		HashSpace space = selfNode.getHashSpaces().get(0);
     	InternalRequest.EpidemicRequest epiRequest = InternalRequest.EpidemicRequest.newBuilder()
 				.setServer(selfNode.getAddress().getHostAddress())

@@ -65,7 +65,6 @@ public class FailureCheck implements Runnable {
 			// if sth went wrong
 			if (kvr.getErrCode() != 0) {
 				removeNode(node);
-				metrics.epidemics.inc();
 			}
 
 		} catch (IOException e) {	// If could not establish contact with the node, remove the node
@@ -82,7 +81,7 @@ public class FailureCheck implements Runnable {
     public void removeNode(ServerNode node) throws java.net.SocketException {
 		Server.RemoveNode(node.getAddress().getHostAddress(), node.getPort());
 
-		ByteString id = Epidemic.generateID(node.getAddress(), node.getEpiPort());
+		ByteString id = Epidemic.generateID(node.getAddress(), node.getEpiPort(), EpidemicType.DEAD);
 		
 		InternalRequest.EpidemicRequest epiRequest = InternalRequest.EpidemicRequest.newBuilder()
 				.setServer(node.getAddress().getHostName())
@@ -90,6 +89,8 @@ public class FailureCheck implements Runnable {
 				.setEpId(id)
 				.setType(EpidemicType.DEAD)
 				.build();
+		
+		metrics.epidemics.inc();
 
 		// Create epidemic containing epiRequest
 		Epidemic epi = new Epidemic(epiRequest.toByteString(), id);
