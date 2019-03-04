@@ -9,6 +9,7 @@ import com.g9A.CPEN431.A8.server.HashSpace;
 import com.g9A.CPEN431.A8.server.Server;
 import com.g9A.CPEN431.A8.server.Worker;
 import com.g9A.CPEN431.A8.server.exceptions.InvalidHashRangeException;
+import com.g9A.CPEN431.A8.server.metrics.MetricsServer;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import ca.NetSysLab.ProtocolBuffers.InternalRequest;
@@ -21,6 +22,7 @@ public class EpidemicServer implements Runnable {
 	private final EpidemicCache Cache = EpidemicCache.getInstance();
 	private DatagramSocket listeningSocket;
 	private Thread t;
+	private final MetricsServer metrics = MetricsServer.getInstance();
 
 	public EpidemicServer(int port) throws SocketException {
         this.listeningSocket = new DatagramSocket(port);
@@ -49,6 +51,8 @@ public class EpidemicServer implements Runnable {
                 // Deserialize packet
                 Message.Msg rec_msg = Worker.UnpackMessage(rec_packet);
                 InternalRequest.EpidemicRequest request = EpidemicServer.UnpackEpidemicRequest(rec_msg);
+
+                metrics.epidemicMessagesReceieved.inc();
 
                 // Spread the epidemic
         		Epidemic epi = new Epidemic(request);
