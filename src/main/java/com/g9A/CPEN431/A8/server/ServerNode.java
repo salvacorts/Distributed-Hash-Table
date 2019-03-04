@@ -4,6 +4,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.g9A.CPEN431.A8.server.exceptions.InvalidHashRangeException;
 
@@ -11,17 +12,15 @@ public class ServerNode {
     private InetAddress address;
     private int port;
     private int epiPort;
-    private List<HashSpace> hashSpaces;
+    private int[] hashValues;
 
-    public ServerNode(String host, int port, int epiPort, int hashStart, int hashEnd) throws InvalidHashRangeException,
+    public ServerNode(String host, int port, int epiPort, int [] hashes) throws InvalidHashRangeException,
                                                                                 java.net.UnknownHostException {
-        if (hashStart > hashEnd) throw new InvalidHashRangeException();
-        hashSpaces = new ArrayList<HashSpace>();
+        hashValues = hashes;
 
         this.address = InetAddress.getByName(host);
         this.port = port;
         this.epiPort = epiPort;
-        hashSpaces.add(new HashSpace(hashStart, hashEnd));
     }
     
     public ServerNode(String line) throws IllegalArgumentException, UnknownHostException {
@@ -29,27 +28,22 @@ public class ServerNode {
         this.address = InetAddress.getByName(args[0]);
         this.port = Integer.parseInt(args[1]);
         this.epiPort = Integer.parseInt(args[2]);
-        hashSpaces = new ArrayList<HashSpace>();
+
+        Random r = new Random();
+        if(args.length <= 3) {
+            hashValues = new int[2];
+            for(int i = 0; i < hashValues.length; i++) {
+            	hashValues[i] = r.nextInt(256);
+            }
+        }
+        hashValues = new int[args.length-3];
+        for(int i = 3; i < args.length; i++) {
+        	hashValues[i-3] = Integer.parseInt(args[i]);
+        }
 	}
 
-    public void addHashSpace(int start, int end) {
-    	hashSpaces.add(new HashSpace(start, end));
-    }
-    
-    public void addHashSpaces(List<HashSpace> spaces) {
-    	hashSpaces.addAll(spaces);
-    }
-    
-    public List<HashSpace> getHashSpaces() {
-    	return hashSpaces;
-    }
-
-    public boolean hasHashSpace(HashSpace h) {
-    	return this.hashSpaces.contains(h);
-    }
-    
-    public void removeHashSpace(HashSpace h) {
-    	this.hashSpaces.remove(h);
+    public int[] getHashValues() {
+    	return hashValues;
     }
 
     public boolean equals(Object o) {
@@ -59,15 +53,6 @@ public class ServerNode {
         ServerNode other = (ServerNode) o;
 
         return other.getAddress().equals(address) && (other.getPort() == port);
-    }
-
-    public boolean inSpace(int hashNum) {
-    	for(HashSpace h: hashSpaces) {
-    		if(h.inSpace(hashNum)) {
-    			return true;
-    		}
-    	}
-    	return false;
     }
 
     public InetAddress getAddress() {

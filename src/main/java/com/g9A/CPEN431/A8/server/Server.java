@@ -43,6 +43,8 @@ public class Server {
     public static EpidemicServer EpidemicServer;
     public static FailureCheck FailureCheck;
     
+    public static Map<Integer, ServerNode> HashCircle;
+    
     private static RequestProcessor requestProcessor = RequestProcessor.getInstance();
 
     static void UpdateProcessTime(long time) {
@@ -92,14 +94,11 @@ public class Server {
      */
     public static void AlertOtherNodes() throws InvalidHashRangeException, IOException {
 		ByteString id = Epidemic.generateID(selfNode.getAddress(), selfNode.getEpiPort(), EpidemicType.ALIVE);
-		HashSpace space = selfNode.getHashSpaces().get(0);
     	InternalRequest.EpidemicRequest epiRequest = InternalRequest.EpidemicRequest.newBuilder()
 				.setServer(selfNode.getAddress().getHostAddress())
 				.setPort(selfNode.getPort())
 				.setEpId(id)
 				.setType(EpidemicType.ALIVE)
-				.setHashStart(space.hashStart)
-				.setHashEnd(space.hashEnd)
 			.build();
 
 		Epidemic epi = new Epidemic(epiRequest);
@@ -115,16 +114,10 @@ public class Server {
       	    if (addr.equals(node.getAddress().getHostAddress()) && node.getPort() == port) {
 
                 DeadNodes.add(node);
+                for(int i: node.getHashValues()) {
+                	HashCircle.remove(i);
+                }
                 iter.remove();
-
-            	// Re-balance hash space
-            	if (!iter.hasNext()) {
-            		ServerNode lastNode = ServerNodes.get(ServerNodes.size()-2);
-            		lastNode.addHashSpaces(node.getHashSpaces());
-            	} else {
-        	        ServerNode nextNode = iter.next();
-            		nextNode.addHashSpaces(node.getHashSpaces());
-            	}
 
     	    	/*for (ServerNode n : ServerNodes) {
 
@@ -158,7 +151,7 @@ public class Server {
      * @throws InvalidHashRangeException
      * @throws IOException 
      */
-    public static void RejoinNode(String addr, int port, HashSpace hashSpace) throws InvalidHashRangeException, IOException {
+    public static void RejoinNode(String addr, int port) throws InvalidHashRangeException, IOException {
         // Add the node to the nodes list and remove from dead nodes list
     	InetAddress address = InetAddress.getByName(addr);
         ServerNode node = null;
@@ -178,31 +171,21 @@ public class Server {
 
     	ServerNodes.add(node);
     	
-    	// Transfer hash space
-    	for (ServerNode n : ServerNodes) {
-    	    // If the node in the over the current hashspace
-    		if (n.hasHashSpace(hashSpace)) {
-
-    		    // Update its hashSpace
-    			n.removeHashSpace(hashSpace);
-        		
-            	// If new node is taking over this node's hashspace, transfer keys
-            	if (n.equals(selfNode)) {
-            	    System.out.println("[Server] Transfering keys to " + addr + ":" + port);
-            	    TransferKeys(addr, port, hashSpace);
-            	    break;
-                }
-        	}
+    	// Reactivate hash values
+    	for(int i: node.getHashValues()) {
+    		HashCircle.put(i, node);
+    		
+    		//TODO: Transfer keys?
     	}
     	
-    	for (int i = 0; i < ServerNodes.size(); i++) {
+    	/*for (int i = 0; i < ServerNodes.size(); i++) {
 
     		node = ServerNodes.get(i);
     		System.out.println("[In Rejoin]" + node.getAddress().getHostName() + ":" + node.getPort() + ", Range: " + node.getHashSpaces().get(0).toString());
     		for (HashSpace hs : node.getHashSpaces()) {
                 System.out.println(hs.toString());
             }
-    	}
+    	}*/
     }
     
     private static void TransferKeys(String addr, int port, HashSpace hashSpace) throws UnknownHostException, IOException {

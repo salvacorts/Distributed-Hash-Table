@@ -23,20 +23,6 @@ public class RequestProcessor {
     private final MetricsServer metrics = MetricsServer.getInstance();
 
     public ConcurrentHashMap<KVMapKey, KVMapValue> kvMap = new ConcurrentHashMap<KVMapKey, KVMapValue>();  // Key value map with mutex
-
-    /**
-     * Indicates if the request's key places it in the current node
-     * @param request the given request
-     * @return whether the request's key is in this node's keyspace
-     * @throws MissingParameterException
-     */
-    private static boolean CorrectNode(KeyValueRequest.KVRequest request) throws MissingParameterException {
-    	if (!request.hasKey()) throw new MissingParameterException();
-
-        int hash = getHash(request.getKey());
-
-    	return Server.selfNode.inSpace(hash);
-    }
     
     /**
      * Generates a hash value of a ByteString in the range [0,255]
@@ -79,8 +65,6 @@ public class RequestProcessor {
                                                                                                WrongNodeException {
         if (!request.hasKey() || !request.hasValue() || !request.hasVersion()) throw new MissingParameterException();
 
-        if (!CorrectNode(request)) throw new WrongNodeException(Math.floorMod(request.getKey().hashCode(), 256));
-
         if (request.getKey().size() > 32) throw new KeyTooLargeException();
 
         if (request.getValue().size() > 10000) throw new ValueTooLargeException();
@@ -115,8 +99,6 @@ public class RequestProcessor {
                                                                                                WrongNodeException {
         if (!request.hasKey()) throw new MissingParameterException();
 
-        if (!CorrectNode(request)) throw new WrongNodeException(Math.floorMod(request.getKey().hashCode(), 256));
-
         if (request.getKey().size() > 32) throw new KeyTooLargeException();
 
         KVMapKey key = new KVMapKey(request.getKey().toByteArray());
@@ -142,9 +124,7 @@ public class RequestProcessor {
                                                                                                   UnexistingKey,
                                                                                                   WrongNodeException {
         if (!request.hasKey()) throw new MissingParameterException();
-
-        if (!CorrectNode(request)) throw new WrongNodeException(Math.floorMod(request.getKey().hashCode(), 256));
-
+        
         if (request.getKey().size() > 32) throw new KeyTooLargeException();
 
         KVMapKey key = new KVMapKey(request.getKey().toByteArray());

@@ -67,22 +67,17 @@ public final class InternalRequest {
     int getPort();
 
     /**
-     * <code>optional int32 hashStart = 6;</code>
+     * <code>repeated int32 hashValues = 6;</code>
      */
-    boolean hasHashStart();
+    java.util.List<java.lang.Integer> getHashValuesList();
     /**
-     * <code>optional int32 hashStart = 6;</code>
+     * <code>repeated int32 hashValues = 6;</code>
      */
-    int getHashStart();
-
+    int getHashValuesCount();
     /**
-     * <code>optional int32 hashEnd = 7;</code>
+     * <code>repeated int32 hashValues = 6;</code>
      */
-    boolean hasHashEnd();
-    /**
-     * <code>optional int32 hashEnd = 7;</code>
-     */
-    int getHashEnd();
+    int getHashValues(int index);
   }
   /**
    * Protobuf type {@code EpidemicRequest}
@@ -177,13 +172,24 @@ public final class InternalRequest {
               break;
             }
             case 48: {
-              bitField0_ |= 0x00000020;
-              hashStart_ = input.readInt32();
+              if (!((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
+                hashValues_ = new java.util.ArrayList<java.lang.Integer>();
+                mutable_bitField0_ |= 0x00000020;
+              }
+              hashValues_.add(input.readInt32());
               break;
             }
-            case 56: {
-              bitField0_ |= 0x00000040;
-              hashEnd_ = input.readInt32();
+            case 50: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000020) == 0x00000020) && input.getBytesUntilLimit() > 0) {
+                hashValues_ = new java.util.ArrayList<java.lang.Integer>();
+                mutable_bitField0_ |= 0x00000020;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                hashValues_.add(input.readInt32());
+              }
+              input.popLimit(limit);
               break;
             }
           }
@@ -194,6 +200,9 @@ public final class InternalRequest {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
+          hashValues_ = java.util.Collections.unmodifiableList(hashValues_);
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -416,34 +425,26 @@ public final class InternalRequest {
       return port_;
     }
 
-    public static final int HASHSTART_FIELD_NUMBER = 6;
-    private int hashStart_;
+    public static final int HASHVALUES_FIELD_NUMBER = 6;
+    private java.util.List<java.lang.Integer> hashValues_;
     /**
-     * <code>optional int32 hashStart = 6;</code>
+     * <code>repeated int32 hashValues = 6;</code>
      */
-    public boolean hasHashStart() {
-      return ((bitField0_ & 0x00000020) == 0x00000020);
+    public java.util.List<java.lang.Integer>
+        getHashValuesList() {
+      return hashValues_;
     }
     /**
-     * <code>optional int32 hashStart = 6;</code>
+     * <code>repeated int32 hashValues = 6;</code>
      */
-    public int getHashStart() {
-      return hashStart_;
-    }
-
-    public static final int HASHEND_FIELD_NUMBER = 7;
-    private int hashEnd_;
-    /**
-     * <code>optional int32 hashEnd = 7;</code>
-     */
-    public boolean hasHashEnd() {
-      return ((bitField0_ & 0x00000040) == 0x00000040);
+    public int getHashValuesCount() {
+      return hashValues_.size();
     }
     /**
-     * <code>optional int32 hashEnd = 7;</code>
+     * <code>repeated int32 hashValues = 6;</code>
      */
-    public int getHashEnd() {
-      return hashEnd_;
+    public int getHashValues(int index) {
+      return hashValues_.get(index);
     }
 
     private void initFields() {
@@ -452,8 +453,7 @@ public final class InternalRequest {
       state_ = ca.NetSysLab.ProtocolBuffers.InternalRequest.StateTransfer.getDefaultInstance();
       server_ = "";
       port_ = 0;
-      hashStart_ = 0;
-      hashEnd_ = 0;
+      hashValues_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -497,11 +497,8 @@ public final class InternalRequest {
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         output.writeInt32(5, port_);
       }
-      if (((bitField0_ & 0x00000020) == 0x00000020)) {
-        output.writeInt32(6, hashStart_);
-      }
-      if (((bitField0_ & 0x00000040) == 0x00000040)) {
-        output.writeInt32(7, hashEnd_);
+      for (int i = 0; i < hashValues_.size(); i++) {
+        output.writeInt32(6, hashValues_.get(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -532,13 +529,14 @@ public final class InternalRequest {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(5, port_);
       }
-      if (((bitField0_ & 0x00000020) == 0x00000020)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(6, hashStart_);
-      }
-      if (((bitField0_ & 0x00000040) == 0x00000040)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(7, hashEnd_);
+      {
+        int dataSize = 0;
+        for (int i = 0; i < hashValues_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeInt32SizeNoTag(hashValues_.get(i));
+        }
+        size += dataSize;
+        size += 1 * getHashValuesList().size();
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -672,10 +670,8 @@ public final class InternalRequest {
         bitField0_ = (bitField0_ & ~0x00000008);
         port_ = 0;
         bitField0_ = (bitField0_ & ~0x00000010);
-        hashStart_ = 0;
+        hashValues_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000020);
-        hashEnd_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000040);
         return this;
       }
 
@@ -728,14 +724,11 @@ public final class InternalRequest {
           to_bitField0_ |= 0x00000010;
         }
         result.port_ = port_;
-        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
-          to_bitField0_ |= 0x00000020;
+        if (((bitField0_ & 0x00000020) == 0x00000020)) {
+          hashValues_ = java.util.Collections.unmodifiableList(hashValues_);
+          bitField0_ = (bitField0_ & ~0x00000020);
         }
-        result.hashStart_ = hashStart_;
-        if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
-          to_bitField0_ |= 0x00000040;
-        }
-        result.hashEnd_ = hashEnd_;
+        result.hashValues_ = hashValues_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -769,11 +762,15 @@ public final class InternalRequest {
         if (other.hasPort()) {
           setPort(other.getPort());
         }
-        if (other.hasHashStart()) {
-          setHashStart(other.getHashStart());
-        }
-        if (other.hasHashEnd()) {
-          setHashEnd(other.getHashEnd());
+        if (!other.hashValues_.isEmpty()) {
+          if (hashValues_.isEmpty()) {
+            hashValues_ = other.hashValues_;
+            bitField0_ = (bitField0_ & ~0x00000020);
+          } else {
+            ensureHashValuesIsMutable();
+            hashValues_.addAll(other.hashValues_);
+          }
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -1110,66 +1107,68 @@ public final class InternalRequest {
         return this;
       }
 
-      private int hashStart_ ;
-      /**
-       * <code>optional int32 hashStart = 6;</code>
-       */
-      public boolean hasHashStart() {
-        return ((bitField0_ & 0x00000020) == 0x00000020);
+      private java.util.List<java.lang.Integer> hashValues_ = java.util.Collections.emptyList();
+      private void ensureHashValuesIsMutable() {
+        if (!((bitField0_ & 0x00000020) == 0x00000020)) {
+          hashValues_ = new java.util.ArrayList<java.lang.Integer>(hashValues_);
+          bitField0_ |= 0x00000020;
+         }
       }
       /**
-       * <code>optional int32 hashStart = 6;</code>
+       * <code>repeated int32 hashValues = 6;</code>
        */
-      public int getHashStart() {
-        return hashStart_;
+      public java.util.List<java.lang.Integer>
+          getHashValuesList() {
+        return java.util.Collections.unmodifiableList(hashValues_);
       }
       /**
-       * <code>optional int32 hashStart = 6;</code>
+       * <code>repeated int32 hashValues = 6;</code>
        */
-      public Builder setHashStart(int value) {
-        bitField0_ |= 0x00000020;
-        hashStart_ = value;
+      public int getHashValuesCount() {
+        return hashValues_.size();
+      }
+      /**
+       * <code>repeated int32 hashValues = 6;</code>
+       */
+      public int getHashValues(int index) {
+        return hashValues_.get(index);
+      }
+      /**
+       * <code>repeated int32 hashValues = 6;</code>
+       */
+      public Builder setHashValues(
+          int index, int value) {
+        ensureHashValuesIsMutable();
+        hashValues_.set(index, value);
         onChanged();
         return this;
       }
       /**
-       * <code>optional int32 hashStart = 6;</code>
+       * <code>repeated int32 hashValues = 6;</code>
        */
-      public Builder clearHashStart() {
+      public Builder addHashValues(int value) {
+        ensureHashValuesIsMutable();
+        hashValues_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated int32 hashValues = 6;</code>
+       */
+      public Builder addAllHashValues(
+          java.lang.Iterable<? extends java.lang.Integer> values) {
+        ensureHashValuesIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, hashValues_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated int32 hashValues = 6;</code>
+       */
+      public Builder clearHashValues() {
+        hashValues_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000020);
-        hashStart_ = 0;
-        onChanged();
-        return this;
-      }
-
-      private int hashEnd_ ;
-      /**
-       * <code>optional int32 hashEnd = 7;</code>
-       */
-      public boolean hasHashEnd() {
-        return ((bitField0_ & 0x00000040) == 0x00000040);
-      }
-      /**
-       * <code>optional int32 hashEnd = 7;</code>
-       */
-      public int getHashEnd() {
-        return hashEnd_;
-      }
-      /**
-       * <code>optional int32 hashEnd = 7;</code>
-       */
-      public Builder setHashEnd(int value) {
-        bitField0_ |= 0x00000040;
-        hashEnd_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional int32 hashEnd = 7;</code>
-       */
-      public Builder clearHashEnd() {
-        bitField0_ = (bitField0_ & ~0x00000040);
-        hashEnd_ = 0;
         onChanged();
         return this;
       }
@@ -3930,19 +3929,19 @@ public final class InternalRequest {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\025InternalRequest.proto\"\322\001\n\017EpidemicRequ" +
+      "\n\025InternalRequest.proto\"\302\001\n\017EpidemicRequ" +
       "est\022\014\n\004epId\030\001 \002(\014\022+\n\004type\030\002 \002(\0162\035.Epidem" +
       "icRequest.EpidemicType\022\035\n\005state\030\003 \001(\0132\016." +
       "StateTransfer\022\016\n\006server\030\004 \001(\t\022\014\n\004port\030\005 " +
-      "\001(\005\022\021\n\thashStart\030\006 \001(\005\022\017\n\007hashEnd\030\007 \001(\005\"" +
-      "#\n\014EpidemicType\022\010\n\004DEAD\020\000\022\t\n\005ALIVE\020\001\"%\n\n" +
-      "KVTransfer\022\027\n\006kvlist\030\001 \003(\0132\007.KVPair\")\n\rS" +
-      "tateTransfer\022\030\n\005nodes\030\001 \003(\0132\t.NodeInfo\"`" +
-      "\n\010NodeInfo\022\017\n\007address\030\001 \002(\014\022\014\n\004port\030\002 \002(" +
-      "\005\022\021\n\thashStart\030\003 \002(\005\022\017\n\007hashEnd\030\004 \002(\005\022\021\n",
-      "\ttimestamp\030\005 \002(\003\"5\n\006KVPair\022\013\n\003key\030\001 \002(\014\022" +
-      "\r\n\005value\030\002 \002(\014\022\017\n\007version\030\003 \002(\005B/\n\034ca.Ne" +
-      "tSysLab.ProtocolBuffersB\017InternalRequest"
+      "\001(\005\022\022\n\nhashValues\030\006 \003(\005\"#\n\014EpidemicType\022" +
+      "\010\n\004DEAD\020\000\022\t\n\005ALIVE\020\001\"%\n\nKVTransfer\022\027\n\006kv" +
+      "list\030\001 \003(\0132\007.KVPair\")\n\rStateTransfer\022\030\n\005" +
+      "nodes\030\001 \003(\0132\t.NodeInfo\"`\n\010NodeInfo\022\017\n\007ad" +
+      "dress\030\001 \002(\014\022\014\n\004port\030\002 \002(\005\022\021\n\thashStart\030\003" +
+      " \002(\005\022\017\n\007hashEnd\030\004 \002(\005\022\021\n\ttimestamp\030\005 \002(\003",
+      "\"5\n\006KVPair\022\013\n\003key\030\001 \002(\014\022\r\n\005value\030\002 \002(\014\022\017" +
+      "\n\007version\030\003 \002(\005B/\n\034ca.NetSysLab.Protocol" +
+      "BuffersB\017InternalRequest"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -3961,7 +3960,7 @@ public final class InternalRequest {
     internal_static_EpidemicRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_EpidemicRequest_descriptor,
-        new java.lang.String[] { "EpId", "Type", "State", "Server", "Port", "HashStart", "HashEnd", });
+        new java.lang.String[] { "EpId", "Type", "State", "Server", "Port", "HashValues", });
     internal_static_KVTransfer_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_KVTransfer_fieldAccessorTable = new

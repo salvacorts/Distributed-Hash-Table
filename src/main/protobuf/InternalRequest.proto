@@ -14,8 +14,6 @@ message EpidemicRequest {
 	optional StateTransfer state = 3;
     optional string server = 4;
 	optional int32 port = 5;
-	optional int32 hashStart = 6;
-	optional int32 hashEnd = 7;
 }
 
 message KVTransfer {

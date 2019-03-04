@@ -38,7 +38,7 @@ public class Epidemic implements Runnable {
     	this.epId = request.getEpId();
     	this.payload = request.toByteString();
 
-    	if (iterations < 10) iterations = (10 - iterations) * 2;
+    	if (iterations < 20) iterations = (20 - iterations) * 2;
     }
 
 	public static ByteString generateID(InetAddress svr, int port, EpidemicType type) {
@@ -123,7 +123,7 @@ public class Epidemic implements Runnable {
 				}
 					System.out.println("Node joined: " + request.getServer() + ":" + request.getPort());
 				try {
-					Server.RejoinNode(request.getServer(), request.getPort(), new HashSpace(request.getHashStart(), request.getHashEnd()));
+					Server.RejoinNode(request.getServer(), request.getPort());
 				} catch (InvalidHashRangeException e1) {
 					e1.printStackTrace();
 				} catch (IOException e1) {

@@ -31,7 +31,7 @@ public class ServerTest {
                 try {
                 	
                     Server server = new Server(10145, 4321, new ArrayList<ServerNode>(Arrays.asList(
-                            new ServerNode(addr, 10145, 4321, 0, 255)
+                            new ServerNode(addr, 10145, 4321, new int[] {0, 100})
                     )));
                     server.StartServing();
                 } catch (Exception e) {

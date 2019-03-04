@@ -35,14 +35,6 @@ public class Main {
 
         bufferedReader.close();
 
-        int total = nodes.size();
-		for (int i = 0; i < total; i++) {
-			int start = i == 0 ? 0 : i*255/total + 1;
-			int end = (i+1)*255/total;
-			nodes.get(i).addHashSpace(start, end);
-           // nodes.get(i).setHashSpace(start, end);
-		}
-
 		return nodes;
 	}
 

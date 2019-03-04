@@ -159,7 +159,7 @@ public class Worker implements Runnable {
      * @param hash hash of the key
      * @throws IOException
      */
-    private void Reroute(Message.Msg request, InetAddress clientAddr, int clientPort, int hash) throws IOException{
+    private boolean Reroute(Message.Msg request, InetAddress clientAddr, int clientPort, int hash) throws IOException{
     	ByteString addr = ByteString.copyFrom(clientAddr.getAddress());
 
     	Message.ClientInfo client = Message.ClientInfo.newBuilder()
@@ -173,24 +173,22 @@ public class Worker implements Runnable {
     			.setCheckSum(request.getCheckSum())
     			.setClient(client)
     			.build();
-
-    	for (ServerNode node : Server.ServerNodes) {
-    	    if (node.inSpace(hash)) {
-
-                try {
-                    // Send packet to correct node 
-                	Send(socket, newRequest, node.getAddress(), node.getPort());
-                    return;
-                } catch (SocketTimeoutException e) {
-                    // The correct node seems to be down, answer to the client
-                    // TODO A7: Handle node failure internally (update alive nodes list, and start storing keys if necessary)
-                    System.err.println("[!Down?] Could not contact " + node.getAddress().getHostName() + ":" + node.getPort());
-                    //FailureCheck.removeNode(node);
-                }
-
-                break;
-    	    }
-        }
+    	
+    	int original = hash;
+    	do {
+    		hash = (hash+1)%256;
+    		ServerNode node = Server.HashCircle.get(hash);
+    		if(node != null) {
+    			if(node.equals(Server.selfNode)){
+    				return false;
+    			}
+    			Send(socket,newRequest, node.getAddress(), node.getPort());
+    			return true;
+    		}
+    	}while(hash != original);
+    	
+    	System.err.println("No routed ServerNode found!");
+    	return false;
     }
 
     private static boolean CorrectChecksum(Message.Msg msg) {
@@ -283,8 +281,15 @@ public class Worker implements Runnable {
                 // Check if request is cached. If it is not process the request
                 if ((response = this.cache.Get(uuid))  == null) {
                     KeyValueRequest.KVRequest request = UnpackKVRequest(rec_msg);
-                    response = requestProcessor.ProcessRequest(request, uuid);
-                    this.cache.Put(uuid, response);
+                    int hash = RequestProcessor.getHash(request.getKey());
+                    boolean rerouted = Reroute(rec_msg, packet.getAddress(), packet.getPort(), hash);
+                    if(rerouted) {
+                        processing_messages.remove(uuid);
+                    }
+                    else {
+	                    response = requestProcessor.ProcessRequest(request, uuid);
+	                    this.cache.Put(uuid, response);
+                    }
                 }
 
             } catch (ShutdownCommandException e) {
@@ -300,8 +305,6 @@ public class Worker implements Runnable {
                         .setOverloadWaitTime((int) Server.avgProcessTime)
                         .build();
             } catch (WrongNodeException e) {
-                Reroute(rec_msg, packet.getAddress(), packet.getPort(), e.getHash());
-                processing_messages.remove(uuid);
                 return;
                 
             } catch (Exception e) {
