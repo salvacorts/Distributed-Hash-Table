@@ -75,10 +75,12 @@ public class Server {
         FailureCheck = new FailureCheck();
 
         for (ServerNode node : ServerNodes) {
+        	for(int i: node.getHashValues()) {
+        		HashCircle.put(i, node);
+        	}
             if (port == node.getPort() && (local.equals(node.getAddress())
                                             || node.getAddress().getHostAddress().equals("127.0.0.1"))) {
                 selfNode = node;
-                break;
             }
         }
 
