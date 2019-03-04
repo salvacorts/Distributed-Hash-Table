@@ -143,6 +143,19 @@ public class Server {
     	}
     }
     
+    // Determines if the server has a node currently in DeadNodes, to avoid unnecessary epidemics
+    public static boolean HasDeadNode(String addr, int port) throws UnknownHostException {
+    	InetAddress address = InetAddress.getByName(addr);
+    	for (Iterator<ServerNode> iter = DeadNodes.iterator(); iter.hasNext();) {
+			ServerNode n = iter.next();
+
+			if (n.getAddress().equals(address) && n.getPort() == port) {
+				return true;
+			}
+		}
+    	return false;
+    }
+    
     /**
      * Re-adds a node into the ServerNodes list. New hash space already defined
      * @throws InvalidHashRangeException

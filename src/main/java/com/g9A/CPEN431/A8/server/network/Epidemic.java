@@ -29,6 +29,7 @@ public class Epidemic implements Runnable {
     	this.socket = new DatagramSocket();
     	this.payload = payload;
     	iterations = Server.ServerNodes.size();
+    	this.epId = epId;
 
     	if (iterations < 10) iterations = (10 - iterations) * 2;
     }
@@ -57,7 +58,7 @@ public class Epidemic implements Runnable {
 		crc32.update(concat);
 
 		return Message.Msg.newBuilder()
-					.setMessageID(Worker.GetUUID(socket))
+					.setMessageID(uuid)
 					.setCheckSum(crc32.getValue())
 					.setPayload(payload)
 				.build();
@@ -106,6 +107,9 @@ public class Epidemic implements Runnable {
     }
 
     public void start() {
+    	if(this.epId == null) {
+    		System.err.println("Missing epidemic ID!");
+    	}
 		STOP_FLAG = false;
 
         if (t == null) {

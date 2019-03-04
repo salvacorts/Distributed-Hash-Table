@@ -23,7 +23,7 @@ public class EpidemicCache {
     }
     
     public boolean check(ByteString id) {
-    	return epiCache.getIfPresent(id) != null;
+   		return epiCache.getIfPresent(id) != null;
     }
     
     public void put(ByteString id) {
