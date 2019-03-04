@@ -1,5 +1,6 @@
 package com.g9A.CPEN431.A8.server.network;
 
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
@@ -7,6 +8,7 @@ import java.net.SocketException;
 import com.g9A.CPEN431.A8.server.HashSpace;
 import com.g9A.CPEN431.A8.server.Server;
 import com.g9A.CPEN431.A8.server.Worker;
+import com.g9A.CPEN431.A8.server.exceptions.InvalidHashRangeException;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import ca.NetSysLab.ProtocolBuffers.InternalRequest;
@@ -28,7 +30,7 @@ public class EpidemicServer implements Runnable {
 		return InternalRequest.EpidemicRequest.newBuilder().mergeFrom(msg.getPayload()).build();
 	}
 	
-	public void add(Epidemic epi) {
+	public void add(Epidemic epi) throws InvalidHashRangeException, IOException {
 		if (Cache.check(epi.getID())) return;
 
 		Cache.put(epi.getID());
@@ -48,26 +50,11 @@ public class EpidemicServer implements Runnable {
                 Message.Msg rec_msg = Worker.UnpackMessage(rec_packet);
                 InternalRequest.EpidemicRequest request = EpidemicServer.UnpackEpidemicRequest(rec_msg);
 
-                // If this epidemic has already been processed
-                if (Cache.check(request.getEpId())) return;
-
-                switch (request.getType()) {
-					case DEAD:	// Remove the node that is down
-						Server.RemoveNode(request.getServer(), request.getPort());
-						break;
-					case ALIVE:	// Re-add the node that was down
-						if(!Server.HasDeadNode(request.getServer(), request.getPort())) {
-							continue;
-						}
-						System.out.println("Node joined: " + request.getServer() + ":" + request.getPort());
-						Server.RejoinNode(request.getServer(), request.getPort(), new HashSpace(request.getHashStart(), request.getHashEnd()));
-						break;
-                }
-
                 // Spread the epidemic
-        		Epidemic epi = new Epidemic(request.toByteString(), request.getEpId());
+        		Epidemic epi = new Epidemic(request);
         		this.add(epi);
 
+                
             } catch (Exception e) {
                 e.printStackTrace();
             }

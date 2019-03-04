@@ -12,6 +12,7 @@ import com.g9A.CPEN431.A8.client.Client;
 import com.g9A.CPEN431.A8.server.Server;
 import com.g9A.CPEN431.A8.server.ServerNode;
 import com.g9A.CPEN431.A8.server.Worker;
+import com.g9A.CPEN431.A8.server.exceptions.InvalidHashRangeException;
 import com.g9A.CPEN431.A8.server.metrics.MetricsServer;
 import com.google.protobuf.ByteString;
 
@@ -34,9 +35,10 @@ public class FailureCheck implements Runnable {
 
 	/**
 	 * Check if a random node is dead
-	 * @throws SocketException
+	 * @throws InvalidHashRangeException 
+	 * @throws IOException 
 	 */
-	private void checkRandom() throws SocketException {
+	private void checkRandom() throws InvalidHashRangeException, IOException {
 		// If there is only one node (this one), return, there is nothing to check
     	if (Server.ServerNodes.size() < 2) return;
 
@@ -76,9 +78,10 @@ public class FailureCheck implements Runnable {
 	/**
 	 * Removes the dead node from the current Server and spreads a dead node epidemic
 	 * @param node the dead node
-	 * @throws java.net.SocketException
+	 * @throws IOException 
+	 * @throws InvalidHashRangeException 
 	 */
-    public void removeNode(ServerNode node) throws java.net.SocketException {
+    public void removeNode(ServerNode node) throws InvalidHashRangeException, IOException {
 		Server.RemoveNode(node.getAddress().getHostAddress(), node.getPort());
 
 		ByteString id = Epidemic.generateID(node.getAddress(), node.getEpiPort(), EpidemicType.DEAD);
@@ -93,7 +96,7 @@ public class FailureCheck implements Runnable {
 		metrics.epidemics.inc();
 
 		// Create epidemic containing epiRequest
-		Epidemic epi = new Epidemic(epiRequest.toByteString(), id);
+		Epidemic epi = new Epidemic(epiRequest);
 
 		//  Spread the epidemic across nodes
 		Server.EpidemicServer.add(epi);
@@ -114,7 +117,7 @@ public class FailureCheck implements Runnable {
 		while (!STOP_FLAG) {
 			try {
 				checkRandom();
-				Thread.sleep(5000);
+				Thread.sleep(1000);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

@@ -87,9 +87,10 @@ public class Server {
     
     /**
      * Notify other nodes this one is online (epidemic protocol)
-     * @throws SocketException 
+     * @throws IOException 
+     * @throws InvalidHashRangeException 
      */
-    public static void AlertOtherNodes() throws SocketException {
+    public static void AlertOtherNodes() throws InvalidHashRangeException, IOException {
 		ByteString id = Epidemic.generateID(selfNode.getAddress(), selfNode.getEpiPort(), EpidemicType.ALIVE);
 		HashSpace space = selfNode.getHashSpaces().get(0);
     	InternalRequest.EpidemicRequest epiRequest = InternalRequest.EpidemicRequest.newBuilder()
@@ -101,7 +102,7 @@ public class Server {
 				.setHashEnd(space.hashEnd)
 			.build();
 
-		Epidemic epi = new Epidemic(epiRequest.toByteString(), id);
+		Epidemic epi = new Epidemic(epiRequest);
 		epi.start();
     }
 
@@ -237,14 +238,14 @@ public class Server {
         threadPool.execute(new Worker(packet, priority));
     }
 
-    public void StartServing() throws SocketException  {
+    public void StartServing() throws InvalidHashRangeException, IOException  {
         System.out.println("Listening on: " + this.listeningSocket.getLocalPort());
         System.out.println("CPUs: " + this.availableCores);
 
         // Launch the epidemic service to update nodes state across the ring
         EpidemicServer.start();
 
-        // Launch the FailureCheck and RejoinCheck threads
+        // Launch the FailureCheck thread
         FailureCheck.start();
 
         // Send epidemic to other nodes

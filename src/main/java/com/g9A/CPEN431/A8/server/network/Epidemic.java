@@ -3,15 +3,19 @@ package com.g9A.CPEN431.A8.server.network;
 import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Random;
 import java.util.zip.CRC32;
 
+import ca.NetSysLab.ProtocolBuffers.InternalRequest.EpidemicRequest;
 import ca.NetSysLab.ProtocolBuffers.InternalRequest.EpidemicRequest.EpidemicType;
 import ca.NetSysLab.ProtocolBuffers.Message;
 
+import com.g9A.CPEN431.A8.server.HashSpace;
 import com.g9A.CPEN431.A8.server.Server;
 import com.g9A.CPEN431.A8.server.ServerNode;
 import com.g9A.CPEN431.A8.server.Worker;
+import com.g9A.CPEN431.A8.server.exceptions.InvalidHashRangeException;
 import com.g9A.CPEN431.A8.utils.ByteOrder;
 import com.g9A.CPEN431.A8.utils.StringUtils;
 import com.google.protobuf.ByteString;
@@ -22,15 +26,17 @@ public class Epidemic implements Runnable {
 
 	private ByteString epId = null;
 	private ByteString payload;
+	private EpidemicRequest request;
 	private DatagramSocket socket;
 	private int iterations;
 	private Thread t;
 
-    public Epidemic(ByteString payload, ByteString epId) throws java.net.SocketException {
+    public Epidemic(EpidemicRequest request) throws java.net.SocketException {
     	this.socket = new DatagramSocket();
-    	this.payload = payload;
+    	this.request = request;
     	iterations = Server.ServerNodes.size();
-    	this.epId = epId;
+    	this.epId = request.getEpId();
+    	this.payload = request.toByteString();
 
     	if (iterations < 10) iterations = (10 - iterations) * 2;
     }
@@ -102,11 +108,34 @@ public class Epidemic implements Runnable {
     }
     
     public void run() {
+    	
+    	switch (request.getType()) {
+			case DEAD:	// Remove the node that is down
+				Server.RemoveNode(request.getServer(), request.getPort());
+				break;
+			case ALIVE:	// Re-add the node that was down
+				try {
+					if(!Server.HasDeadNode(request.getServer(), request.getPort())) {
+						return;
+					}
+				} catch (UnknownHostException e1) {
+					e1.printStackTrace();
+				}
+					System.out.println("Node joined: " + request.getServer() + ":" + request.getPort());
+				try {
+					Server.RejoinNode(request.getServer(), request.getPort(), new HashSpace(request.getHashStart(), request.getHashEnd()));
+				} catch (InvalidHashRangeException e1) {
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				break;
+	    }
 
     	while (!STOP_FLAG && iterations > 0) {
 			try {
 				sendRandom();
-				Thread.sleep(5000);
+				Thread.sleep(100);
 			} catch (IOException e) {
 				System.out.println("Epidemic failure");
 				e.printStackTrace();
@@ -116,7 +145,8 @@ public class Epidemic implements Runnable {
 		}
     }
 
-    public void start() {
+    public void start() throws InvalidHashRangeException, IOException {
+    	
     	if (this.epId == null) {
     		System.err.println("Missing epidemic ID!");
     	}
