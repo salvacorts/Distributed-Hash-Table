@@ -6,6 +6,7 @@ import java.lang.management.MemoryMXBean;
 
 import com.sun.management.OperatingSystemMXBean;
 
+import io.prometheus.client.Counter;
 import io.prometheus.client.Gauge;
 
 public class MetricsServer implements Runnable {
@@ -26,6 +27,8 @@ public class MetricsServer implements Runnable {
 
     public final Gauge keysStored = Gauge.build()
             .name("keys").help("keys stored").register();
+    public final Counter epidemics = Counter.build()
+    		.name("epidemics").help("total epidemics started").register();
 
     private MetricsServer(){
         op = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();

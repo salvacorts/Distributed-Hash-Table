@@ -124,14 +124,14 @@ public class Server {
             		nextNode.addHashSpaces(node.getHashSpaces());
             	}
 
-    	    	for (ServerNode n : ServerNodes) {
+    	    	/*for (ServerNode n : ServerNodes) {
 
     	    		System.out.println(n.getAddress().getHostName() + ":" + n.getPort() + ", Range: " + n.getHashSpaces().get(0).toString());
 
-    	    		for (HashSpace hs : node.getHashSpaces()) {
-    	    			System.out.println(" &" + hs.toString());
+    	    		for (HashSpace hs : n.getHashSpaces()) {
+    	    			System.out.println("& " + hs.toString());
     	    		}
-    	    	}
+    	    	}*/
     	        
     	        return;
     	    }

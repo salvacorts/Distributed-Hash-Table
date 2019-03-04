@@ -12,6 +12,7 @@ import com.g9A.CPEN431.A8.client.Client;
 import com.g9A.CPEN431.A8.server.Server;
 import com.g9A.CPEN431.A8.server.ServerNode;
 import com.g9A.CPEN431.A8.server.Worker;
+import com.g9A.CPEN431.A8.server.metrics.MetricsServer;
 import com.google.protobuf.ByteString;
 
 import ca.NetSysLab.ProtocolBuffers.InternalRequest;
@@ -24,6 +25,8 @@ public class FailureCheck implements Runnable {
 	private static boolean STOP_FLAG = false;
     private DatagramSocket socket;
 	private Thread t;
+	
+    private final MetricsServer metrics = MetricsServer.getInstance();
 
     public FailureCheck() throws SocketException {
     	this.socket = new DatagramSocket();
@@ -57,10 +60,13 @@ public class FailureCheck implements Runnable {
 			DatagramPacket send_packet = new DatagramPacket(msg.toByteArray(), msg.getSerializedSize(), node.getAddress(), node.getPort());
 
 			// Send packet
-			KVResponse kvr = Worker.SendAndReceive(socket, send_packet, uuid, 5);
+			KVResponse kvr = Worker.SendAndReceive(socket, send_packet, uuid, 3);
 
 			// if sth went wrong
-			if (kvr.getErrCode() != 0) removeNode(node);
+			if (kvr.getErrCode() != 0) {
+				removeNode(node);
+				metrics.epidemics.inc();
+			}
 
 		} catch (IOException e) {	// If could not establish contact with the node, remove the node
 			System.out.println("[FailureCheck] Server " + node.getAddress().getHostName() + ":" + node.getPort() + " is down");
