@@ -56,6 +56,9 @@ public class EpidemicServer implements Runnable {
 						Server.RemoveNode(request.getServer(), request.getPort());
 						break;
 					case ALIVE:	// Re-add the node that was down
+						if(!Server.HasDeadNode(request.getServer(), request.getPort())) {
+							continue;
+						}
 						System.out.println("Node joined: " + request.getServer() + ":" + request.getPort());
 						Server.RejoinNode(request.getServer(), request.getPort(), new HashSpace(request.getHashStart(), request.getHashEnd()));
 						break;
