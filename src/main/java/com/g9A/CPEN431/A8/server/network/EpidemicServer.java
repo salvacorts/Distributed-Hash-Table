@@ -60,6 +60,7 @@ public class EpidemicServer implements Runnable {
 					Message.Msg msg = Worker.PackMessage(response, rec_msg.getMessageID());
 
 					Worker.Send(listeningSocket, msg, rec_packet.getAddress(), rec_packet.getPort());
+					return;
 				}
 
                 InternalRequest.EpidemicRequest request = EpidemicServer.UnpackEpidemicRequest(rec_msg);
