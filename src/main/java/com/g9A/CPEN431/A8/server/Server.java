@@ -5,6 +5,7 @@ import java.io.IOException;
 // TODO: CATCH com.google.protobuf.InvalidProtocolBufferException: While parsing a protocol message, the input ended unexpectedly in the middle of a field.  This could mean either than the input has been truncated or that an embedded message misreported its own length. PROPERLY
 // TODO: Calc if PUT will be successful based on heap size and used size.
 
+import java.lang.management.ManagementFactory;
 import java.net.*;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -27,6 +28,8 @@ import ca.NetSysLab.ProtocolBuffers.InternalRequest;
 import ca.NetSysLab.ProtocolBuffers.Message;
 import ca.NetSysLab.ProtocolBuffers.InternalRequest.KVTransfer;
 import ca.NetSysLab.ProtocolBuffers.InternalRequest.EpidemicRequest.EpidemicType;
+import sun.misc.Signal;
+import sun.misc.SignalHandler;
 
 public class Server {
     static boolean KEEP_RECEIVING = true;
@@ -44,6 +47,7 @@ public class Server {
     public static FailureCheck FailureCheck;
     
     private static RequestProcessor requestProcessor = RequestProcessor.getInstance();
+    private static boolean PAUSED = false;
 
     static void UpdateProcessTime(long time) {
         avgProcessTime = (avgProcessTime + time) / 2;
@@ -83,6 +87,32 @@ public class Server {
         if (selfNode == null) {
         	throw new IllegalArgumentException("Current server not present in nodes-list");
         }
+
+        // In case that the process is resumed
+        Signal.handle(new Signal("CONT"), new SignalHandler() {
+            @Override
+            public void handle(Signal signal) {
+                try {
+                    PAUSED = false;
+                    System.out.println("Resuming, notifying other nodes");
+                    AlertOtherNodes();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        /*// In case that the process is resumed
+        Signal.handle(new Signal("STOP"), new SignalHandler() {
+            @Override
+            public void handle(Signal signal) {
+                try {
+                    PAUSED = true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });*/
     }
     
     /**
@@ -244,6 +274,7 @@ public class Server {
     public void StartServing() throws InvalidHashRangeException, IOException  {
         System.out.println("Listening on: " + this.listeningSocket.getLocalPort());
         System.out.println("CPUs: " + this.availableCores);
+        System.out.println("PID: " + Integer.parseInt(ManagementFactory.getRuntimeMXBean().getName().split("@")[0]));
 
         // Launch the epidemic service to update nodes state across the ring
         EpidemicServer.start();
