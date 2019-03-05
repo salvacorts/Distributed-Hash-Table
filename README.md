@@ -1,4 +1,4 @@
-# CPEN 431 Assignment 7
+# CPEN 431 Assignment 8
 
 ## Group ID
 
@@ -14,48 +14,19 @@ Salvador Corts - 91291682
 
 ## Verification code
 
-0157315B3B4D4595D134D75941913B80
-
-## Shutdown protocol
-
-In src\main\java\com\g9A\CPEN431\A7\server\kvMap\RequestProcessor.java
-
-Line 243: System.exit(0)
+AD7929938415F0EA11BFA9DC699C2687
 
 ## Usage
 
-java -Xmx64m -jar A7.jar 10145 1234 4321 servers.txt
+java -Xmx64m -jar A8.jar 10145 1234 4321 nodes-list.txt
 
-The first argument is port number, the second is metrics port, the third is epidemic port
+The first argument is port number, the second is metrics port, the third is epidemic port.
+Note that nodes-list.txt is in a different format than servers.txt
 
 ## Description
 
-The epidemic protocol is implemented by two separate threads that run in the same process:
-
-FailureCheck (src\main\java\com\g9A\CPEN431\A7\server\network\FailureCheck.java)
-
-This thread periodically sends an "IsAlive" request to a random node, then sleeps for 5 seconds.
-If the request times out, it assumes the node is down and pushes a new Epidemic thread to EpidemicServer.
-Initially it waits 2 minutes to allow all servers to come online before pinging them.
-
-EpidemicServer (src\main\java\com\g9A\CPEN431\A7\server\network\EpidemicServer.java)
-
-This thread creates a separate port for receiving epidemic messages from other servers. 
-When it receives an epidemic message, or if FailureCheck thread creates a new epidemic, it checks the 
-cache to see if it has received the same epidemic before. If not, it spawns an epidemic thread.
-
-Epidemic (src\main\java\com\g9A\CPEN431\A7\server\network\Epidemic.java)
-
-An epidemic thread is created by EpidemicServer. It periodically sends a DeadNodeRequest 
-to other servers and then sleeps for 5 seconds. The number of iterations is equal to the 
-amount of alive nodes. It generates an ID based on the CRC32 hash of the server/port that is down,
-which is put into a cache and checked by EpidemicServer to avoid recursive epidemics.
-
-A new protocol buffer "DeadNodeRequest.proto" was created to send epidemic messages.
-It contains the server address/port of the dead node and an operation code,
-so it may possibly be used for other epidemic types in the future.
-
-Another optional field "epId" (epidemic ID) was added to Message.proto to avoid recursive epidemics
+The rejoin protocol is implemented by the program listening for a CONT signal. 
+Once received, a server will spread an epidemic to other servers to signal that it is back online.
 
 ## Servers
 
