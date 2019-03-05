@@ -282,10 +282,6 @@ public class Server {
         // Launch the FailureCheck thread
         FailureCheck.start();
 
-        // Send epidemic to other nodes
-        System.out.println("Alerting other nodes");
-        AlertOtherNodes();
-
         while (KEEP_RECEIVING) {
             byte[] receiveData = new byte[20000];
             DatagramPacket rec_packet = new DatagramPacket(receiveData, receiveData.length);
