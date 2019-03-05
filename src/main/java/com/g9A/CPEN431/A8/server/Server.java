@@ -282,8 +282,7 @@ public class Server {
         // Launch the FailureCheck thread
         FailureCheck.start();
 
-        // Send epidemic to other nodes
-        System.out.println("Alerting other nodes");
+        // Notify other nodes
         AlertOtherNodes();
 
         while (KEEP_RECEIVING) {
