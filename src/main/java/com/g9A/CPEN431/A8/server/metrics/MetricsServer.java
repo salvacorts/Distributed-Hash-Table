@@ -31,7 +31,7 @@ public class MetricsServer implements Runnable {
     		.name("epidemics").help("total epidemics started").register();
 
     public final Counter epidemicMessagesReceieved = Counter.build()
-            .name("epidemic-message").help("total epidemics started").register();
+            .name("epidemicmessage").help("total epidemic messages").register();
 
     private MetricsServer(){
         op = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();

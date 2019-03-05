@@ -86,7 +86,7 @@ public class FailureCheck implements Runnable {
 		ByteString id = Epidemic.generateID(node.getAddress(), node.getEpiPort(), EpidemicType.DEAD);
 		
 		InternalRequest.EpidemicRequest epiRequest = InternalRequest.EpidemicRequest.newBuilder()
-				.setServer(node.getAddress().getHostName())
+				.setServer(node.getAddress().getHostAddress())
 				.setPort(node.getPort())
 				.setEpId(id)
 				.setType(EpidemicType.DEAD)

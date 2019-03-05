@@ -114,6 +114,7 @@ public class Server {
 
       	    if (addr.equals(node.getAddress().getHostAddress()) && node.getPort() == port) {
 
+
                 DeadNodes.add(node);
                 iter.remove();
 
