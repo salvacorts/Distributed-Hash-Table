@@ -6,7 +6,7 @@ message Msg {
     required bytes payload = 2;
     required fixed64 checkSum = 3;
 
-	optional int32 type = 4;	// 1 = normal request, 2 = internal request
+	optional int32 type = 4;	// 1 = normal request, 2 = internal request, 3 = isAlive
 	
 	optional ClientInfo client = 5;
 }

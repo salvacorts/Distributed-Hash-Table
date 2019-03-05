@@ -5,6 +5,9 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
+import ca.NetSysLab.ProtocolBuffers.KeyValueRequest;
+import ca.NetSysLab.ProtocolBuffers.KeyValueResponse;
+import com.g9A.CPEN431.A8.client.Client;
 import com.g9A.CPEN431.A8.server.HashSpace;
 import com.g9A.CPEN431.A8.server.Server;
 import com.g9A.CPEN431.A8.server.Worker;
@@ -50,6 +53,16 @@ public class EpidemicServer implements Runnable {
 
                 // Deserialize packet
                 Message.Msg rec_msg = Worker.UnpackMessage(rec_packet);
+
+                // if internal isAlive, answer
+                if (rec_msg.getType() == 3) {
+					KeyValueResponse.KVResponse response = KeyValueResponse.KVResponse.newBuilder().setErrCode(0).build();
+					Message.Msg msg = Worker.PackMessage(response, rec_msg.getMessageID());
+
+					Worker.Send(listeningSocket, msg, rec_packet.getAddress(), rec_packet.getPort());
+					return;
+				}
+
                 InternalRequest.EpidemicRequest request = EpidemicServer.UnpackEpidemicRequest(rec_msg);
 
                 metrics.epidemicMessagesReceieved.inc();
