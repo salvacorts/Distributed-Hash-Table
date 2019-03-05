@@ -65,8 +65,6 @@ public class EpidemicServer implements Runnable {
 
                 InternalRequest.EpidemicRequest request = EpidemicServer.UnpackEpidemicRequest(rec_msg);
 
-                metrics.epidemicMessagesReceieved.inc();
-
                 // Spread the epidemic
         		Epidemic epi = new Epidemic(request);
         		this.add(epi);

@@ -17,6 +17,7 @@ import com.g9A.CPEN431.A8.server.exceptions.InvalidHashRangeException;
 import com.g9A.CPEN431.A8.server.kvMap.KVMapKey;
 import com.g9A.CPEN431.A8.server.kvMap.KVMapValue;
 import com.g9A.CPEN431.A8.server.kvMap.RequestProcessor;
+import com.g9A.CPEN431.A8.server.metrics.MetricsServer;
 import com.g9A.CPEN431.A8.server.network.Epidemic;
 import com.g9A.CPEN431.A8.server.network.EpidemicServer;
 import com.g9A.CPEN431.A8.server.network.FailureCheck;
@@ -46,6 +47,8 @@ public class Server {
     public static EpidemicServer EpidemicServer;
     public static FailureCheck FailureCheck;
     
+    private static MetricsServer metrics = MetricsServer.getInstance();
+    
     private static RequestProcessor requestProcessor = RequestProcessor.getInstance();
     private static boolean PAUSED = false;
 
@@ -53,7 +56,8 @@ public class Server {
         avgProcessTime = (avgProcessTime + time) / 2;
     }
 
-    public Server(int port, int epiPort, List<ServerNode> otherNodes) throws Exception {
+    @SuppressWarnings("restriction")
+	public Server(int port, int epiPort, List<ServerNode> otherNodes) throws Exception {
         this.listeningSocket = new DatagramSocket(port);
         this.availableCores = Runtime.getRuntime().availableProcessors();
 
@@ -85,22 +89,27 @@ public class Server {
         }
 
         if (selfNode == null) {
-        	throw new IllegalArgumentException("Current server not present in nodes-list");
+        	System.err.println("Current server not present in nodes-list");
+        	System.exit(1);
         }
+        System.out.println("Self Node: " + selfNode.getAddress().getHostName() + ":" + selfNode.getPort() + ", ID: " + selfNode.getId());
 
         // In case that the process is resumed
+        try {
         Signal.handle(new Signal("CONT"), new SignalHandler() {
             @Override
             public void handle(Signal signal) {
                 try {
                     PAUSED = false;
-                    System.out.println("Resuming, notifying other nodes");
                     AlertOtherNodes();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         });
+        }catch(IllegalArgumentException e) {
+        	e.printStackTrace();
+        }
 
         /*// In case that the process is resumed
         Signal.handle(new Signal("STOP"), new SignalHandler() {
@@ -127,26 +136,29 @@ public class Server {
 				.setServer(selfNode.getAddress().getHostAddress())
 				.setPort(selfNode.getPort())
 				.setEpId(id)
+				.setNodeId(selfNode.getId())
 				.setType(EpidemicType.ALIVE)
 				.setHashStart(space.hashStart)
 				.setHashEnd(space.hashEnd)
 			.build();
 
+    	metrics.aliveEpidemics.inc();
 		Epidemic epi = new Epidemic(epiRequest);
-		epi.start();
+		Server.EpidemicServer.add(epi);
     }
 
-    public static void RemoveNode(String addr, int port) {
+    public static void RemoveNode(int id) {
 
         // Remove the node from the nodes list
     	for (ListIterator<ServerNode> iter = ServerNodes.listIterator(); iter.hasNext(); ) {
     		ServerNode node = iter.next();
 
-      	    if (addr.equals(node.getAddress().getHostAddress()) && node.getPort() == port) {
+      	    if (id == node.getId()) {
 
 
                 DeadNodes.add(node);
                 iter.remove();
+                metrics.deadNodes.inc();
 
             	// Re-balance hash space
             	if (!iter.hasNext()) {
@@ -172,12 +184,11 @@ public class Server {
     }
     
     // Determines if the server has a node currently in DeadNodes, to avoid unnecessary epidemics
-    public static boolean HasDeadNode(String addr, int port) throws UnknownHostException {
-    	InetAddress address = InetAddress.getByName(addr);
+    public static boolean HasDeadNode(int id) throws UnknownHostException {
     	for (Iterator<ServerNode> iter = DeadNodes.iterator(); iter.hasNext();) {
 			ServerNode n = iter.next();
 
-			if (n.getAddress().equals(address) && n.getPort() == port) {
+			if (n.getId() == id) {
 				return true;
 			}
 		}
@@ -189,28 +200,31 @@ public class Server {
      * @throws InvalidHashRangeException
      * @throws IOException 
      */
-    public static void RejoinNode(String addr, int port, HashSpace hashSpace) throws InvalidHashRangeException, IOException {
+    public static void RejoinNode(int id, String addr, int port, HashSpace hashSpace) throws InvalidHashRangeException, IOException {
         // Add the node to the nodes list and remove from dead nodes list
-    	InetAddress address = InetAddress.getByName(addr);
-        ServerNode node = null;
-
+        ServerNode node = new ServerNode(addr, port, 4321, hashSpace.hashStart, hashSpace.hashEnd, id);
+       
+/*
         for (Iterator<ServerNode> iter = DeadNodes.iterator(); iter.hasNext();) {
 			ServerNode n = iter.next();
 
-			if (n.getAddress().equals(address) && n.getPort() == port) {
+			if (n.getId() == id) {
 				iter.remove();
 				node = n;
 				break;
 			}
-		}
+		}*/
 
 		//Node was never in deadnodes in the first place
-		if (node == null) return;
-
-    	ServerNodes.add(node);
+		//if (node == null) return;
+        
+        if(ServerNodes.contains(node)) return;
+        
+        ServerNodes.add(node);
+        metrics.deadNodes.dec();
     	
     	// Transfer hash space
-    	for (ServerNode n : ServerNodes) {
+    	/*for (ServerNode n : ServerNodes) {
     	    // If the node in the over the current hashspace
     		if (n.hasHashSpace(hashSpace)) {
 
@@ -233,7 +247,7 @@ public class Server {
     		for (HashSpace hs : node.getHashSpaces()) {
                 System.out.println(hs.toString());
             }
-    	}
+    	}*/
     }
     
     private static void TransferKeys(String addr, int port, HashSpace hashSpace) throws UnknownHostException, IOException {
@@ -281,9 +295,6 @@ public class Server {
 
         // Launch the FailureCheck thread
         FailureCheck.start();
-
-        // Notify other nodes
-        AlertOtherNodes();
 
         while (KEEP_RECEIVING) {
             byte[] receiveData = new byte[20000];

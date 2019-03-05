@@ -83,6 +83,15 @@ public final class InternalRequest {
      * <code>optional int32 hashEnd = 7;</code>
      */
     int getHashEnd();
+
+    /**
+     * <code>optional int32 nodeId = 8;</code>
+     */
+    boolean hasNodeId();
+    /**
+     * <code>optional int32 nodeId = 8;</code>
+     */
+    int getNodeId();
   }
   /**
    * Protobuf type {@code EpidemicRequest}
@@ -184,6 +193,11 @@ public final class InternalRequest {
             case 56: {
               bitField0_ |= 0x00000040;
               hashEnd_ = input.readInt32();
+              break;
+            }
+            case 64: {
+              bitField0_ |= 0x00000080;
+              nodeId_ = input.readInt32();
               break;
             }
           }
@@ -446,6 +460,21 @@ public final class InternalRequest {
       return hashEnd_;
     }
 
+    public static final int NODEID_FIELD_NUMBER = 8;
+    private int nodeId_;
+    /**
+     * <code>optional int32 nodeId = 8;</code>
+     */
+    public boolean hasNodeId() {
+      return ((bitField0_ & 0x00000080) == 0x00000080);
+    }
+    /**
+     * <code>optional int32 nodeId = 8;</code>
+     */
+    public int getNodeId() {
+      return nodeId_;
+    }
+
     private void initFields() {
       epId_ = com.google.protobuf.ByteString.EMPTY;
       type_ = ca.NetSysLab.ProtocolBuffers.InternalRequest.EpidemicRequest.EpidemicType.DEAD;
@@ -454,6 +483,7 @@ public final class InternalRequest {
       port_ = 0;
       hashStart_ = 0;
       hashEnd_ = 0;
+      nodeId_ = 0;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -503,6 +533,9 @@ public final class InternalRequest {
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
         output.writeInt32(7, hashEnd_);
       }
+      if (((bitField0_ & 0x00000080) == 0x00000080)) {
+        output.writeInt32(8, nodeId_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -539,6 +572,10 @@ public final class InternalRequest {
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(7, hashEnd_);
+      }
+      if (((bitField0_ & 0x00000080) == 0x00000080)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(8, nodeId_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -676,6 +713,8 @@ public final class InternalRequest {
         bitField0_ = (bitField0_ & ~0x00000020);
         hashEnd_ = 0;
         bitField0_ = (bitField0_ & ~0x00000040);
+        nodeId_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000080);
         return this;
       }
 
@@ -736,6 +775,10 @@ public final class InternalRequest {
           to_bitField0_ |= 0x00000040;
         }
         result.hashEnd_ = hashEnd_;
+        if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
+          to_bitField0_ |= 0x00000080;
+        }
+        result.nodeId_ = nodeId_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -774,6 +817,9 @@ public final class InternalRequest {
         }
         if (other.hasHashEnd()) {
           setHashEnd(other.getHashEnd());
+        }
+        if (other.hasNodeId()) {
+          setNodeId(other.getNodeId());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -1170,6 +1216,38 @@ public final class InternalRequest {
       public Builder clearHashEnd() {
         bitField0_ = (bitField0_ & ~0x00000040);
         hashEnd_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private int nodeId_ ;
+      /**
+       * <code>optional int32 nodeId = 8;</code>
+       */
+      public boolean hasNodeId() {
+        return ((bitField0_ & 0x00000080) == 0x00000080);
+      }
+      /**
+       * <code>optional int32 nodeId = 8;</code>
+       */
+      public int getNodeId() {
+        return nodeId_;
+      }
+      /**
+       * <code>optional int32 nodeId = 8;</code>
+       */
+      public Builder setNodeId(int value) {
+        bitField0_ |= 0x00000080;
+        nodeId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 nodeId = 8;</code>
+       */
+      public Builder clearNodeId() {
+        bitField0_ = (bitField0_ & ~0x00000080);
+        nodeId_ = 0;
         onChanged();
         return this;
       }
@@ -3930,19 +4008,20 @@ public final class InternalRequest {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\025InternalRequest.proto\"\322\001\n\017EpidemicRequ" +
+      "\n\025InternalRequest.proto\"\342\001\n\017EpidemicRequ" +
       "est\022\014\n\004epId\030\001 \002(\014\022+\n\004type\030\002 \002(\0162\035.Epidem" +
       "icRequest.EpidemicType\022\035\n\005state\030\003 \001(\0132\016." +
       "StateTransfer\022\016\n\006server\030\004 \001(\t\022\014\n\004port\030\005 " +
-      "\001(\005\022\021\n\thashStart\030\006 \001(\005\022\017\n\007hashEnd\030\007 \001(\005\"" +
-      "#\n\014EpidemicType\022\010\n\004DEAD\020\000\022\t\n\005ALIVE\020\001\"%\n\n" +
-      "KVTransfer\022\027\n\006kvlist\030\001 \003(\0132\007.KVPair\")\n\rS" +
-      "tateTransfer\022\030\n\005nodes\030\001 \003(\0132\t.NodeInfo\"`" +
-      "\n\010NodeInfo\022\017\n\007address\030\001 \002(\014\022\014\n\004port\030\002 \002(" +
-      "\005\022\021\n\thashStart\030\003 \002(\005\022\017\n\007hashEnd\030\004 \002(\005\022\021\n",
-      "\ttimestamp\030\005 \002(\003\"5\n\006KVPair\022\013\n\003key\030\001 \002(\014\022" +
-      "\r\n\005value\030\002 \002(\014\022\017\n\007version\030\003 \002(\005B/\n\034ca.Ne" +
-      "tSysLab.ProtocolBuffersB\017InternalRequest"
+      "\001(\005\022\021\n\thashStart\030\006 \001(\005\022\017\n\007hashEnd\030\007 \001(\005\022" +
+      "\016\n\006nodeId\030\010 \001(\005\"#\n\014EpidemicType\022\010\n\004DEAD\020" +
+      "\000\022\t\n\005ALIVE\020\001\"%\n\nKVTransfer\022\027\n\006kvlist\030\001 \003" +
+      "(\0132\007.KVPair\")\n\rStateTransfer\022\030\n\005nodes\030\001 " +
+      "\003(\0132\t.NodeInfo\"`\n\010NodeInfo\022\017\n\007address\030\001 " +
+      "\002(\014\022\014\n\004port\030\002 \002(\005\022\021\n\thashStart\030\003 \002(\005\022\017\n\007",
+      "hashEnd\030\004 \002(\005\022\021\n\ttimestamp\030\005 \002(\003\"5\n\006KVPa" +
+      "ir\022\013\n\003key\030\001 \002(\014\022\r\n\005value\030\002 \002(\014\022\017\n\007versio" +
+      "n\030\003 \002(\005B/\n\034ca.NetSysLab.ProtocolBuffersB" +
+      "\017InternalRequest"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -3961,7 +4040,7 @@ public final class InternalRequest {
     internal_static_EpidemicRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_EpidemicRequest_descriptor,
-        new java.lang.String[] { "EpId", "Type", "State", "Server", "Port", "HashStart", "HashEnd", });
+        new java.lang.String[] { "EpId", "Type", "State", "Server", "Port", "HashStart", "HashEnd", "NodeId", });
     internal_static_KVTransfer_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_KVTransfer_fieldAccessorTable = new

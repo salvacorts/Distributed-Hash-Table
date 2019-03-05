@@ -81,7 +81,7 @@ public class FailureCheck implements Runnable {
 	 * @throws InvalidHashRangeException 
 	 */
     public void removeNode(ServerNode node) throws InvalidHashRangeException, IOException {
-		Server.RemoveNode(node.getAddress().getHostAddress(), node.getPort());
+		Server.RemoveNode(node.getId());
 
 		ByteString id = Epidemic.generateID(node.getAddress(), node.getEpiPort(), EpidemicType.DEAD);
 		
@@ -89,10 +89,11 @@ public class FailureCheck implements Runnable {
 				.setServer(node.getAddress().getHostAddress())
 				.setPort(node.getPort())
 				.setEpId(id)
+				.setNodeId(node.getId())
 				.setType(EpidemicType.DEAD)
 				.build();
 		
-		metrics.epidemics.inc();
+		metrics.deadEpidemics.inc();
 
 		// Create epidemic containing epiRequest
 		Epidemic epi = new Epidemic(epiRequest);

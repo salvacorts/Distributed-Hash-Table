@@ -9,11 +9,12 @@ import com.g9A.CPEN431.A8.server.exceptions.InvalidHashRangeException;
 
 public class ServerNode {
     private InetAddress address;
+    private int id;
     private int port;
     private int epiPort;
     private List<HashSpace> hashSpaces;
 
-    public ServerNode(String host, int port, int epiPort, int hashStart, int hashEnd) throws InvalidHashRangeException,
+    public ServerNode(String host, int port, int epiPort, int hashStart, int hashEnd, int id) throws InvalidHashRangeException,
                                                                                 java.net.UnknownHostException {
         if (hashStart > hashEnd) throw new InvalidHashRangeException();
         hashSpaces = new ArrayList<HashSpace>();
@@ -22,14 +23,16 @@ public class ServerNode {
         this.port = port;
         this.epiPort = epiPort;
         hashSpaces.add(new HashSpace(hashStart, hashEnd));
+        this.id = id;
     }
     
-    public ServerNode(String line) throws IllegalArgumentException, UnknownHostException {
+    public ServerNode(String line, int id) throws IllegalArgumentException, UnknownHostException {
 		String[] args = line.split(":");
         this.address = InetAddress.getByName(args[0]);
         this.port = Integer.parseInt(args[1]);
         this.epiPort = Integer.parseInt(args[2]);
         hashSpaces = new ArrayList<HashSpace>();
+        this.id = id;
 	}
 
     public void addHashSpace(int start, int end) {
@@ -58,7 +61,12 @@ public class ServerNode {
 
         ServerNode other = (ServerNode) o;
 
-        return other.getAddress().equals(address) && (other.getPort() == port);
+        //return other.getAddress().equals(address) && (other.getPort() == port);
+        return other.getId() == this.id;
+    }
+    
+    public int getId() {
+    	return this.id;
     }
 
     public boolean inSpace(int hashNum) {

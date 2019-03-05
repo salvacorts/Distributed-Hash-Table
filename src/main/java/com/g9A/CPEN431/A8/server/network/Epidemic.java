@@ -16,6 +16,7 @@ import com.g9A.CPEN431.A8.server.Server;
 import com.g9A.CPEN431.A8.server.ServerNode;
 import com.g9A.CPEN431.A8.server.Worker;
 import com.g9A.CPEN431.A8.server.exceptions.InvalidHashRangeException;
+import com.g9A.CPEN431.A8.server.metrics.MetricsServer;
 import com.g9A.CPEN431.A8.utils.ByteOrder;
 import com.g9A.CPEN431.A8.utils.StringUtils;
 import com.google.protobuf.ByteString;
@@ -30,6 +31,8 @@ public class Epidemic implements Runnable {
 	private DatagramSocket socket;
 	private int iterations;
 	private Thread t;
+	
+	private MetricsServer metrics = MetricsServer.getInstance();
 
     public Epidemic(EpidemicRequest request) throws java.net.SocketException {
     	this.socket = new DatagramSocket();
@@ -47,7 +50,7 @@ public class Epidemic implements Runnable {
 
 		byte[] addr = svr.getAddress();
 		//short rnd = (short) randomGen.nextInt(Short.MAX_VALUE + 1);
-		//long timestamp = System.nanoTime();
+		long timestamp = System.nanoTime();
 
 		System.arraycopy(addr, 0, buffUuid, 0, 4);
 		ByteOrder.int2leb(port, buffUuid, 4);
@@ -61,7 +64,7 @@ public class Epidemic implements Runnable {
 			break;
 		}
 		//ByteOrder.short2leb(rnd, buffUuid, 6);
-		//ByteOrder.long2leb(timestamp, buffUuid, 8);
+		ByteOrder.long2leb(timestamp, buffUuid, 8);
 
 		return ByteString.copyFrom(buffUuid);
 	}
@@ -112,23 +115,25 @@ public class Epidemic implements Runnable {
     	switch (request.getType()) {
 			case DEAD:	// Remove the node that is down
                 System.out.println("Node down: " + request.getServer() + ":" + request.getPort());
-                Server.RemoveNode(request.getServer(), request.getPort());
+                Server.RemoveNode(request.getNodeId());
+				metrics.deadMessagesReceieved.inc();
 				break;
 			case ALIVE:	// Re-add the node that was down
-				try {
-					if (!Server.HasDeadNode(request.getServer(), request.getPort())) return;
+				/*try {
+					if (!Server.HasDeadNode(request.getNodeId())) return;
 
 				} catch (UnknownHostException e1) {
 					e1.printStackTrace();
-				}
-					System.out.println("Node joined: " + request.getServer() + ":" + request.getPort());
+				}*/
+				System.out.println("Node joined: " + request.getServer() + ":" + request.getPort());
 				try {
-					Server.RejoinNode(request.getServer(), request.getPort(), new HashSpace(request.getHashStart(), request.getHashEnd()));
+					Server.RejoinNode(request.getNodeId(), request.getServer(), request.getPort(), new HashSpace(request.getHashStart(), request.getHashEnd()));
 				} catch (InvalidHashRangeException e1) {
 					e1.printStackTrace();
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
+				metrics.aliveMessagesReceieved.inc();
 				break;
 	    }
 
