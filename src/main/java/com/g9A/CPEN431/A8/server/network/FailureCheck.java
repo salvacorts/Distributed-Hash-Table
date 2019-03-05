@@ -55,10 +55,10 @@ public class FailureCheck implements Runnable {
 			// Send isAlive to the node
 			ByteString uuid = Worker.GetUUID(socket);
 			KeyValueRequest.KVRequest request = KeyValueRequest.KVRequest.newBuilder().setCommand(6).build();
-			Message.Msg msg = Client.PackMessage(request, uuid.toByteArray(), 1);
+			Message.Msg msg = Client.PackMessage(request, uuid.toByteArray(), 3);
 
 			// Serialize to packet
-			DatagramPacket send_packet = new DatagramPacket(msg.toByteArray(), msg.getSerializedSize(), node.getAddress(), node.getPort());
+			DatagramPacket send_packet = new DatagramPacket(msg.toByteArray(), msg.getSerializedSize(), node.getAddress(), node.getEpiPort());
 
 			// Send packet
 			KVResponse kvr = Worker.SendAndReceive(socket, send_packet, uuid, 3);
