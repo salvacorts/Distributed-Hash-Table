@@ -10,24 +10,26 @@ import com.g9A.CPEN431.A8.server.exceptions.InvalidHashRangeException;
 
 public class ServerNode {
     private InetAddress address;
+    private int id;
     private int port;
     private int epiPort;
     private int[] hashValues;
 
-    public ServerNode(String host, int port, int epiPort, int [] hashes) throws InvalidHashRangeException,
-                                                                                java.net.UnknownHostException {
+    public ServerNode(String host, int port, int epiPort, int id, int [] hashes) throws InvalidHashRangeException, UnknownHostException {
         hashValues = hashes;
 
         this.address = InetAddress.getByName(host);
         this.port = port;
         this.epiPort = epiPort;
+        this.id = id;
     }
     
-    public ServerNode(String line) throws IllegalArgumentException, UnknownHostException {
+    public ServerNode(String line, int id) throws IllegalArgumentException, UnknownHostException {
 		String[] args = line.split(":");
         this.address = InetAddress.getByName(args[0]);
         this.port = Integer.parseInt(args[1]);
         this.epiPort = Integer.parseInt(args[2]);
+        this.id = id;
 
         Random r = new Random();
         if(args.length <= 3) {
@@ -52,7 +54,12 @@ public class ServerNode {
 
         ServerNode other = (ServerNode) o;
 
-        return other.getAddress().equals(address) && (other.getPort() == port);
+        //return other.getAddress().equals(address) && (other.getPort() == port);
+        return other.getId() == this.id;
+    }
+    
+    public int getId() {
+    	return this.id;
     }
 
     public InetAddress getAddress() {

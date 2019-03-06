@@ -55,10 +55,10 @@ public class FailureCheck implements Runnable {
 			// Send isAlive to the node
 			ByteString uuid = Worker.GetUUID(socket);
 			KeyValueRequest.KVRequest request = KeyValueRequest.KVRequest.newBuilder().setCommand(6).build();
-			Message.Msg msg = Client.PackMessage(request, uuid.toByteArray(), 1);
+			Message.Msg msg = Client.PackMessage(request, uuid.toByteArray(), 3);
 
 			// Serialize to packet
-			DatagramPacket send_packet = new DatagramPacket(msg.toByteArray(), msg.getSerializedSize(), node.getAddress(), node.getPort());
+			DatagramPacket send_packet = new DatagramPacket(msg.toByteArray(), msg.getSerializedSize(), node.getAddress(), node.getEpiPort());
 
 			// Send packet
 			KVResponse kvr = Worker.SendAndReceive(socket, send_packet, uuid, 3);
@@ -81,18 +81,19 @@ public class FailureCheck implements Runnable {
 	 * @throws InvalidHashRangeException 
 	 */
     public void removeNode(ServerNode node) throws InvalidHashRangeException, IOException {
-		Server.RemoveNode(node.getAddress().getHostAddress(), node.getPort());
+		Server.RemoveNode(node.getId());
 
 		ByteString id = Epidemic.generateID(node.getAddress(), node.getEpiPort(), EpidemicType.DEAD);
 		
 		InternalRequest.EpidemicRequest epiRequest = InternalRequest.EpidemicRequest.newBuilder()
-				.setServer(node.getAddress().getHostName())
+				.setServer(node.getAddress().getHostAddress())
 				.setPort(node.getPort())
 				.setEpId(id)
+				.setNodeId(node.getId())
 				.setType(EpidemicType.DEAD)
 				.build();
 		
-		metrics.epidemics.inc();
+		metrics.deadEpidemics.inc();
 
 		// Create epidemic containing epiRequest
 		Epidemic epi = new Epidemic(epiRequest);

@@ -27,8 +27,20 @@ public class MetricsServer implements Runnable {
 
     public final Gauge keysStored = Gauge.build()
             .name("keys").help("keys stored").register();
-    public final Counter epidemics = Counter.build()
-    		.name("epidemics").help("total epidemics started").register();
+    public final Counter deadEpidemics = Counter.build()
+    		.name("deadEpidemics").help("total epidemics started").register();
+
+    public final Counter deadMessagesReceieved = Counter.build()
+            .name("deadReceived").help("total epidemic messages").register();
+    
+    public final Counter aliveEpidemics = Counter.build()
+    		.name("aliveEpidemics").help("total epidemics started").register();
+
+    public final Counter aliveMessagesReceieved = Counter.build()
+            .name("aliveReceived").help("total epidemic messages").register();
+    
+    public final Gauge deadNodes = Gauge.build()
+    		.name("deadnodes").help("total number of dead nodes").register();
 
     private MetricsServer(){
         op = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();

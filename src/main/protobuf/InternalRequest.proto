@@ -11,25 +11,14 @@ message EpidemicRequest {
 	required bytes epId = 1;
 	required EpidemicType type = 2;
 
-	optional StateTransfer state = 3;
-    optional string server = 4;
-	optional int32 port = 5;
+    optional string server = 3;
+	optional int32 port = 4;
+	optional int32 nodeId = 5;
+	repeated int32 hashes = 6;
 }
 
 message KVTransfer {
 	repeated KVPair kvlist = 1;
-}
-
-message StateTransfer {
-	repeated NodeInfo nodes = 1;
-}
-
-message NodeInfo {
-	required bytes address = 1;
-	required int32 port = 2;
-	required int32 hashStart = 3;
-	required int32 hashEnd = 4;
-	required int64 timestamp = 5;
 }
 
 message KVPair {

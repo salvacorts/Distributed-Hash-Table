@@ -5,6 +5,7 @@ import java.io.IOException;
 // TODO: CATCH com.google.protobuf.InvalidProtocolBufferException: While parsing a protocol message, the input ended unexpectedly in the middle of a field.  This could mean either than the input has been truncated or that an embedded message misreported its own length. PROPERLY
 // TODO: Calc if PUT will be successful based on heap size and used size.
 
+import java.lang.management.ManagementFactory;
 import java.net.*;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -16,6 +17,7 @@ import com.g9A.CPEN431.A8.server.exceptions.InvalidHashRangeException;
 import com.g9A.CPEN431.A8.server.kvMap.KVMapKey;
 import com.g9A.CPEN431.A8.server.kvMap.KVMapValue;
 import com.g9A.CPEN431.A8.server.kvMap.RequestProcessor;
+import com.g9A.CPEN431.A8.server.metrics.MetricsServer;
 import com.g9A.CPEN431.A8.server.network.Epidemic;
 import com.g9A.CPEN431.A8.server.network.EpidemicServer;
 import com.g9A.CPEN431.A8.server.network.FailureCheck;
@@ -27,6 +29,8 @@ import ca.NetSysLab.ProtocolBuffers.InternalRequest;
 import ca.NetSysLab.ProtocolBuffers.Message;
 import ca.NetSysLab.ProtocolBuffers.InternalRequest.KVTransfer;
 import ca.NetSysLab.ProtocolBuffers.InternalRequest.EpidemicRequest.EpidemicType;
+import sun.misc.Signal;
+import sun.misc.SignalHandler;
 
 public class Server {
     static boolean KEEP_RECEIVING = true;
@@ -44,14 +48,18 @@ public class Server {
     public static FailureCheck FailureCheck;
     
     public static Map<Integer, ServerNode> HashCircle;
+
+    private static MetricsServer metrics = MetricsServer.getInstance();
     
     private static RequestProcessor requestProcessor = RequestProcessor.getInstance();
+    private static boolean PAUSED = false;
 
     static void UpdateProcessTime(long time) {
         avgProcessTime = (avgProcessTime + time) / 2;
     }
 
-    public Server(int port, int epiPort, List<ServerNode> otherNodes) throws Exception {
+    @SuppressWarnings("restriction")
+	public Server(int port, int epiPort, List<ServerNode> otherNodes) throws Exception {
         this.listeningSocket = new DatagramSocket(port);
         this.availableCores = Runtime.getRuntime().availableProcessors();
 
@@ -85,8 +93,39 @@ public class Server {
         }
 
         if (selfNode == null) {
-        	throw new IllegalArgumentException("Current server not present in nodes-list");
+        	System.err.println("Current server not present in nodes-list");
+        	System.exit(1);
         }
+        System.out.println("Self Node: " + selfNode.getAddress().getHostName() + ":" + selfNode.getPort() + ", ID: " + selfNode.getId());
+
+        // In case that the process is resumed
+        try {
+        Signal.handle(new Signal("CONT"), new SignalHandler() {
+            @Override
+            public void handle(Signal signal) {
+                try {
+                    PAUSED = false;
+                    AlertOtherNodes();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        }catch(IllegalArgumentException e) {
+        	e.printStackTrace();
+        }
+
+        /*// In case that the process is resumed
+        Signal.handle(new Signal("STOP"), new SignalHandler() {
+            @Override
+            public void handle(Signal signal) {
+                try {
+                    PAUSED = true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });*/
     }
     
     /**
@@ -100,26 +139,30 @@ public class Server {
 				.setServer(selfNode.getAddress().getHostAddress())
 				.setPort(selfNode.getPort())
 				.setEpId(id)
+				.setNodeId(selfNode.getId())
 				.setType(EpidemicType.ALIVE)
 			.build();
 
+    	metrics.aliveEpidemics.inc();
 		Epidemic epi = new Epidemic(epiRequest);
-		epi.start();
+		Server.EpidemicServer.add(epi);
     }
 
-    public static void RemoveNode(String addr, int port) {
+    public static void RemoveNode(int id) {
 
         // Remove the node from the nodes list
     	for (ListIterator<ServerNode> iter = ServerNodes.listIterator(); iter.hasNext(); ) {
     		ServerNode node = iter.next();
 
-      	    if (addr.equals(node.getAddress().getHostAddress()) && node.getPort() == port) {
+      	    if (id == node.getId()) {
+
 
                 DeadNodes.add(node);
                 for(int i: node.getHashValues()) {
                 	HashCircle.remove(i);
                 }
                 iter.remove();
+                metrics.deadNodes.inc();
 
     	    	/*for (ServerNode n : ServerNodes) {
 
@@ -136,12 +179,11 @@ public class Server {
     }
     
     // Determines if the server has a node currently in DeadNodes, to avoid unnecessary epidemics
-    public static boolean HasDeadNode(String addr, int port) throws UnknownHostException {
-    	InetAddress address = InetAddress.getByName(addr);
+    public static boolean HasDeadNode(int id) throws UnknownHostException {
     	for (Iterator<ServerNode> iter = DeadNodes.iterator(); iter.hasNext();) {
 			ServerNode n = iter.next();
 
-			if (n.getAddress().equals(address) && n.getPort() == port) {
+			if (n.getId() == id) {
 				return true;
 			}
 		}
@@ -153,31 +195,51 @@ public class Server {
      * @throws InvalidHashRangeException
      * @throws IOException 
      */
-    public static void RejoinNode(String addr, int port) throws InvalidHashRangeException, IOException {
+    public static void RejoinNode(int id, String addr, int port, int[] hashValues) throws InvalidHashRangeException, IOException {
         // Add the node to the nodes list and remove from dead nodes list
-    	InetAddress address = InetAddress.getByName(addr);
-        ServerNode node = null;
-
+        ServerNode node = new ServerNode(addr, port, 4321, id, hashValues);
+       
+/*
         for (Iterator<ServerNode> iter = DeadNodes.iterator(); iter.hasNext();) {
 			ServerNode n = iter.next();
 
-			if (n.getAddress().equals(address) && n.getPort() == port) {
+			if (n.getId() == id) {
 				iter.remove();
 				node = n;
 				break;
 			}
-		}
+		}*/
 
 		//Node was never in deadnodes in the first place
-		if (node == null) return;
-
-    	ServerNodes.add(node);
+		//if (node == null) return;
+        
+        if(ServerNodes.contains(node)) return;
+        
+        ServerNodes.add(node);
+        metrics.deadNodes.dec();
     	
     	// Reactivate hash values
     	for(int i: node.getHashValues()) {
     		HashCircle.put(i, node);
     		
     		//TODO: Transfer keys?
+    	}
+    	// Transfer hash space
+    	/*for (ServerNode n : ServerNodes) {
+    	    // If the node in the over the current hashspace
+    		if (n.hasHashSpace(hashSpace)) {
+
+    		    // Update its hashSpace
+    			n.removeHashSpace(hashSpace);
+        		
+            	// If new node is taking over this node's hashspace, transfer keys
+            	if (n.equals(selfNode)) {
+            	    System.out.println("[Server] Transfering keys to " + addr + ":" + port);
+            	    TransferKeys(addr, port, hashSpace);
+            	    break;
+                }
+        	}
+>>>>>>> .merge_file_a14980
     	}
     	
     	/*for (int i = 0; i < ServerNodes.size(); i++) {
@@ -228,16 +290,13 @@ public class Server {
     public void StartServing() throws InvalidHashRangeException, IOException  {
         System.out.println("Listening on: " + this.listeningSocket.getLocalPort());
         System.out.println("CPUs: " + this.availableCores);
+        System.out.println("PID: " + Integer.parseInt(ManagementFactory.getRuntimeMXBean().getName().split("@")[0]));
 
         // Launch the epidemic service to update nodes state across the ring
         EpidemicServer.start();
 
         // Launch the FailureCheck thread
         FailureCheck.start();
-
-        // Send epidemic to other nodes
-        System.out.println("Alerting other nodes");
-        AlertOtherNodes();
 
         while (KEEP_RECEIVING) {
             byte[] receiveData = new byte[20000];

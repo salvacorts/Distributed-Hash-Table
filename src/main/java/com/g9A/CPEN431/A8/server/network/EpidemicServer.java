@@ -5,10 +5,14 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
+import ca.NetSysLab.ProtocolBuffers.KeyValueRequest;
+import ca.NetSysLab.ProtocolBuffers.KeyValueResponse;
+import com.g9A.CPEN431.A8.client.Client;
 import com.g9A.CPEN431.A8.server.HashSpace;
 import com.g9A.CPEN431.A8.server.Server;
 import com.g9A.CPEN431.A8.server.Worker;
 import com.g9A.CPEN431.A8.server.exceptions.InvalidHashRangeException;
+import com.g9A.CPEN431.A8.server.metrics.MetricsServer;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import ca.NetSysLab.ProtocolBuffers.InternalRequest;
@@ -21,6 +25,7 @@ public class EpidemicServer implements Runnable {
 	private final EpidemicCache Cache = EpidemicCache.getInstance();
 	private DatagramSocket listeningSocket;
 	private Thread t;
+	private final MetricsServer metrics = MetricsServer.getInstance();
 
 	public EpidemicServer(int port) throws SocketException {
         this.listeningSocket = new DatagramSocket(port);
@@ -48,6 +53,16 @@ public class EpidemicServer implements Runnable {
 
                 // Deserialize packet
                 Message.Msg rec_msg = Worker.UnpackMessage(rec_packet);
+
+                // if internal isAlive, answer
+                if (rec_msg.getType() == 3) {
+					KeyValueResponse.KVResponse response = KeyValueResponse.KVResponse.newBuilder().setErrCode(0).build();
+					Message.Msg msg = Worker.PackMessage(response, rec_msg.getMessageID());
+
+					Worker.Send(listeningSocket, msg, rec_packet.getAddress(), rec_packet.getPort());
+					continue;
+				}
+
                 InternalRequest.EpidemicRequest request = EpidemicServer.UnpackEpidemicRequest(rec_msg);
 
                 // Spread the epidemic

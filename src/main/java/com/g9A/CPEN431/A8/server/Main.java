@@ -21,12 +21,14 @@ public class Main {
 		FileReader fileReader = new FileReader(filename);
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
 		String line;
+		int id = 0;
 
 		while ((line = bufferedReader.readLine()) != null) {
 
 			try {
 				if (!line.trim().isEmpty()) {
-					nodes.add(new ServerNode(line));
+					nodes.add(new ServerNode(line,id));
+					id++;
 				}
             } catch (Exception e) {
 			    e.printStackTrace();

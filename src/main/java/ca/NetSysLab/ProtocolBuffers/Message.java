@@ -43,7 +43,7 @@ public final class Message {
      * <code>optional int32 type = 4;</code>
      *
      * <pre>
-     * 1 = normal request, 2 = internal request
+     * 1 = normal request, 2 = internal request, 3 = isAlive
      * </pre>
      */
     boolean hasType();
@@ -51,7 +51,7 @@ public final class Message {
      * <code>optional int32 type = 4;</code>
      *
      * <pre>
-     * 1 = normal request, 2 = internal request
+     * 1 = normal request, 2 = internal request, 3 = isAlive
      * </pre>
      */
     int getType();
@@ -245,7 +245,7 @@ public final class Message {
      * <code>optional int32 type = 4;</code>
      *
      * <pre>
-     * 1 = normal request, 2 = internal request
+     * 1 = normal request, 2 = internal request, 3 = isAlive
      * </pre>
      */
     public boolean hasType() {
@@ -255,7 +255,7 @@ public final class Message {
      * <code>optional int32 type = 4;</code>
      *
      * <pre>
-     * 1 = normal request, 2 = internal request
+     * 1 = normal request, 2 = internal request, 3 = isAlive
      * </pre>
      */
     public int getType() {
@@ -732,7 +732,7 @@ public final class Message {
        * <code>optional int32 type = 4;</code>
        *
        * <pre>
-       * 1 = normal request, 2 = internal request
+       * 1 = normal request, 2 = internal request, 3 = isAlive
        * </pre>
        */
       public boolean hasType() {
@@ -742,7 +742,7 @@ public final class Message {
        * <code>optional int32 type = 4;</code>
        *
        * <pre>
-       * 1 = normal request, 2 = internal request
+       * 1 = normal request, 2 = internal request, 3 = isAlive
        * </pre>
        */
       public int getType() {
@@ -752,7 +752,7 @@ public final class Message {
        * <code>optional int32 type = 4;</code>
        *
        * <pre>
-       * 1 = normal request, 2 = internal request
+       * 1 = normal request, 2 = internal request, 3 = isAlive
        * </pre>
        */
       public Builder setType(int value) {
@@ -765,7 +765,7 @@ public final class Message {
        * <code>optional int32 type = 4;</code>
        *
        * <pre>
-       * 1 = normal request, 2 = internal request
+       * 1 = normal request, 2 = internal request, 3 = isAlive
        * </pre>
        */
       public Builder clearType() {
