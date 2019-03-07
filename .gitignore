@@ -7,4 +7,5 @@ target/*
 .classpath
 .project
 singlenode.txt
+pom.xml
 /target/
