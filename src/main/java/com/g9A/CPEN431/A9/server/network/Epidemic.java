@@ -125,14 +125,14 @@ public class Epidemic implements Runnable {
 				} catch (UnknownHostException e1) {
 					e1.printStackTrace();
 				}*/
-				System.out.println("Node joined: " + request.getServer() + ":" + request.getPort());
-				/*try {
-					Server.RejoinNode(request.getNodeId(), request.getServer(), request.getPort(), request.getHashes());
+				try {
+					int[] hashes = request.getHashesList().stream().mapToInt(Integer::intValue).toArray();;
+					Server.RejoinNode(request.getNodeId(), request.getServer(), request.getPort(), hashes);
 				} catch (InvalidHashRangeException e1) {
 					e1.printStackTrace();
 				} catch (IOException e1) {
 					e1.printStackTrace();
-				}*/
+				}
 				metrics.aliveMessagesReceieved.inc();
 				break;
 	    }

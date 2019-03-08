@@ -87,7 +87,6 @@ public class Server {
         HashCircle = new ConcurrentHashMap<Integer, ServerNode>();
         for (ServerNode node : ServerNodes) {
         	for(int i: node.getHashValues()) {
-        		System.out.println("HashCircle " + i + " in " + node.getAddress() + ":" + node.getPort());
         		HashCircle.put(i, node);
         	}
             if (port == node.getPort() && (local.equals(node.getAddress())
@@ -243,7 +242,6 @@ public class Server {
             	    break;
                 }
         	}
->>>>>>> .merge_file_a14980
     	}
     	
     	/*for (int i = 0; i < ServerNodes.size(); i++) {
