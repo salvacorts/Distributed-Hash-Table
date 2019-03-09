@@ -31,47 +31,56 @@ public final class InternalRequest {
     ca.NetSysLab.ProtocolBuffers.InternalRequest.EpidemicRequest.EpidemicType getType();
 
     /**
-     * <code>optional string server = 3;</code>
+     * <code>required int64 timestamp = 3;</code>
+     */
+    boolean hasTimestamp();
+    /**
+     * <code>required int64 timestamp = 3;</code>
+     */
+    long getTimestamp();
+
+    /**
+     * <code>optional string server = 4;</code>
      */
     boolean hasServer();
     /**
-     * <code>optional string server = 3;</code>
+     * <code>optional string server = 4;</code>
      */
     java.lang.String getServer();
     /**
-     * <code>optional string server = 3;</code>
+     * <code>optional string server = 4;</code>
      */
     com.google.protobuf.ByteString
         getServerBytes();
 
     /**
-     * <code>optional int32 port = 4;</code>
+     * <code>optional int32 port = 5;</code>
      */
     boolean hasPort();
     /**
-     * <code>optional int32 port = 4;</code>
+     * <code>optional int32 port = 5;</code>
      */
     int getPort();
 
     /**
-     * <code>optional int32 nodeId = 5;</code>
+     * <code>optional int32 nodeId = 6;</code>
      */
     boolean hasNodeId();
     /**
-     * <code>optional int32 nodeId = 5;</code>
+     * <code>optional int32 nodeId = 6;</code>
      */
     int getNodeId();
 
     /**
-     * <code>repeated int32 hashes = 6;</code>
+     * <code>repeated int32 hashes = 7;</code>
      */
     java.util.List<java.lang.Integer> getHashesList();
     /**
-     * <code>repeated int32 hashes = 6;</code>
+     * <code>repeated int32 hashes = 7;</code>
      */
     int getHashesCount();
     /**
-     * <code>repeated int32 hashes = 6;</code>
+     * <code>repeated int32 hashes = 7;</code>
      */
     int getHashes(int index);
   }
@@ -143,36 +152,41 @@ public final class InternalRequest {
               }
               break;
             }
-            case 26: {
-              com.google.protobuf.ByteString bs = input.readBytes();
+            case 24: {
               bitField0_ |= 0x00000004;
-              server_ = bs;
+              timestamp_ = input.readInt64();
               break;
             }
-            case 32: {
+            case 34: {
+              com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000008;
-              port_ = input.readInt32();
+              server_ = bs;
               break;
             }
             case 40: {
               bitField0_ |= 0x00000010;
-              nodeId_ = input.readInt32();
+              port_ = input.readInt32();
               break;
             }
             case 48: {
-              if (!((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
+              bitField0_ |= 0x00000020;
+              nodeId_ = input.readInt32();
+              break;
+            }
+            case 56: {
+              if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
                 hashes_ = new java.util.ArrayList<java.lang.Integer>();
-                mutable_bitField0_ |= 0x00000020;
+                mutable_bitField0_ |= 0x00000040;
               }
               hashes_.add(input.readInt32());
               break;
             }
-            case 50: {
+            case 58: {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
-              if (!((mutable_bitField0_ & 0x00000020) == 0x00000020) && input.getBytesUntilLimit() > 0) {
+              if (!((mutable_bitField0_ & 0x00000040) == 0x00000040) && input.getBytesUntilLimit() > 0) {
                 hashes_ = new java.util.ArrayList<java.lang.Integer>();
-                mutable_bitField0_ |= 0x00000020;
+                mutable_bitField0_ |= 0x00000040;
               }
               while (input.getBytesUntilLimit() > 0) {
                 hashes_.add(input.readInt32());
@@ -188,7 +202,7 @@ public final class InternalRequest {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
-        if (((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
+        if (((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
           hashes_ = java.util.Collections.unmodifiableList(hashes_);
         }
         this.unknownFields = unknownFields.build();
@@ -335,16 +349,31 @@ public final class InternalRequest {
       return type_;
     }
 
-    public static final int SERVER_FIELD_NUMBER = 3;
-    private java.lang.Object server_;
+    public static final int TIMESTAMP_FIELD_NUMBER = 3;
+    private long timestamp_;
     /**
-     * <code>optional string server = 3;</code>
+     * <code>required int64 timestamp = 3;</code>
      */
-    public boolean hasServer() {
+    public boolean hasTimestamp() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>optional string server = 3;</code>
+     * <code>required int64 timestamp = 3;</code>
+     */
+    public long getTimestamp() {
+      return timestamp_;
+    }
+
+    public static final int SERVER_FIELD_NUMBER = 4;
+    private java.lang.Object server_;
+    /**
+     * <code>optional string server = 4;</code>
+     */
+    public boolean hasServer() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional string server = 4;</code>
      */
     public java.lang.String getServer() {
       java.lang.Object ref = server_;
@@ -361,7 +390,7 @@ public final class InternalRequest {
       }
     }
     /**
-     * <code>optional string server = 3;</code>
+     * <code>optional string server = 4;</code>
      */
     public com.google.protobuf.ByteString
         getServerBytes() {
@@ -377,53 +406,53 @@ public final class InternalRequest {
       }
     }
 
-    public static final int PORT_FIELD_NUMBER = 4;
+    public static final int PORT_FIELD_NUMBER = 5;
     private int port_;
     /**
-     * <code>optional int32 port = 4;</code>
+     * <code>optional int32 port = 5;</code>
      */
     public boolean hasPort() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
+      return ((bitField0_ & 0x00000010) == 0x00000010);
     }
     /**
-     * <code>optional int32 port = 4;</code>
+     * <code>optional int32 port = 5;</code>
      */
     public int getPort() {
       return port_;
     }
 
-    public static final int NODEID_FIELD_NUMBER = 5;
+    public static final int NODEID_FIELD_NUMBER = 6;
     private int nodeId_;
     /**
-     * <code>optional int32 nodeId = 5;</code>
+     * <code>optional int32 nodeId = 6;</code>
      */
     public boolean hasNodeId() {
-      return ((bitField0_ & 0x00000010) == 0x00000010);
+      return ((bitField0_ & 0x00000020) == 0x00000020);
     }
     /**
-     * <code>optional int32 nodeId = 5;</code>
+     * <code>optional int32 nodeId = 6;</code>
      */
     public int getNodeId() {
       return nodeId_;
     }
 
-    public static final int HASHES_FIELD_NUMBER = 6;
+    public static final int HASHES_FIELD_NUMBER = 7;
     private java.util.List<java.lang.Integer> hashes_;
     /**
-     * <code>repeated int32 hashes = 6;</code>
+     * <code>repeated int32 hashes = 7;</code>
      */
     public java.util.List<java.lang.Integer>
         getHashesList() {
       return hashes_;
     }
     /**
-     * <code>repeated int32 hashes = 6;</code>
+     * <code>repeated int32 hashes = 7;</code>
      */
     public int getHashesCount() {
       return hashes_.size();
     }
     /**
-     * <code>repeated int32 hashes = 6;</code>
+     * <code>repeated int32 hashes = 7;</code>
      */
     public int getHashes(int index) {
       return hashes_.get(index);
@@ -432,6 +461,7 @@ public final class InternalRequest {
     private void initFields() {
       epId_ = com.google.protobuf.ByteString.EMPTY;
       type_ = ca.NetSysLab.ProtocolBuffers.InternalRequest.EpidemicRequest.EpidemicType.DEAD;
+      timestamp_ = 0L;
       server_ = "";
       port_ = 0;
       nodeId_ = 0;
@@ -451,6 +481,10 @@ public final class InternalRequest {
         memoizedIsInitialized = 0;
         return false;
       }
+      if (!hasTimestamp()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -465,16 +499,19 @@ public final class InternalRequest {
         output.writeEnum(2, type_.getNumber());
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeBytes(3, getServerBytes());
+        output.writeInt64(3, timestamp_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeInt32(4, port_);
+        output.writeBytes(4, getServerBytes());
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        output.writeInt32(5, nodeId_);
+        output.writeInt32(5, port_);
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        output.writeInt32(6, nodeId_);
       }
       for (int i = 0; i < hashes_.size(); i++) {
-        output.writeInt32(6, hashes_.get(i));
+        output.writeInt32(7, hashes_.get(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -495,15 +532,19 @@ public final class InternalRequest {
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(3, getServerBytes());
+          .computeInt64Size(3, timestamp_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(4, port_);
+          .computeBytesSize(4, getServerBytes());
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(5, nodeId_);
+          .computeInt32Size(5, port_);
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(6, nodeId_);
       }
       {
         int dataSize = 0;
@@ -635,14 +676,16 @@ public final class InternalRequest {
         bitField0_ = (bitField0_ & ~0x00000001);
         type_ = ca.NetSysLab.ProtocolBuffers.InternalRequest.EpidemicRequest.EpidemicType.DEAD;
         bitField0_ = (bitField0_ & ~0x00000002);
-        server_ = "";
+        timestamp_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000004);
-        port_ = 0;
+        server_ = "";
         bitField0_ = (bitField0_ & ~0x00000008);
-        nodeId_ = 0;
+        port_ = 0;
         bitField0_ = (bitField0_ & ~0x00000010);
-        hashes_ = java.util.Collections.emptyList();
+        nodeId_ = 0;
         bitField0_ = (bitField0_ & ~0x00000020);
+        hashes_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000040);
         return this;
       }
 
@@ -682,18 +725,22 @@ public final class InternalRequest {
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
         }
-        result.server_ = server_;
+        result.timestamp_ = timestamp_;
         if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
           to_bitField0_ |= 0x00000008;
         }
-        result.port_ = port_;
+        result.server_ = server_;
         if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
           to_bitField0_ |= 0x00000010;
         }
+        result.port_ = port_;
+        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+          to_bitField0_ |= 0x00000020;
+        }
         result.nodeId_ = nodeId_;
-        if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        if (((bitField0_ & 0x00000040) == 0x00000040)) {
           hashes_ = java.util.Collections.unmodifiableList(hashes_);
-          bitField0_ = (bitField0_ & ~0x00000020);
+          bitField0_ = (bitField0_ & ~0x00000040);
         }
         result.hashes_ = hashes_;
         result.bitField0_ = to_bitField0_;
@@ -718,8 +765,11 @@ public final class InternalRequest {
         if (other.hasType()) {
           setType(other.getType());
         }
+        if (other.hasTimestamp()) {
+          setTimestamp(other.getTimestamp());
+        }
         if (other.hasServer()) {
-          bitField0_ |= 0x00000004;
+          bitField0_ |= 0x00000008;
           server_ = other.server_;
           onChanged();
         }
@@ -732,7 +782,7 @@ public final class InternalRequest {
         if (!other.hashes_.isEmpty()) {
           if (hashes_.isEmpty()) {
             hashes_ = other.hashes_;
-            bitField0_ = (bitField0_ & ~0x00000020);
+            bitField0_ = (bitField0_ & ~0x00000040);
           } else {
             ensureHashesIsMutable();
             hashes_.addAll(other.hashes_);
@@ -749,6 +799,10 @@ public final class InternalRequest {
           return false;
         }
         if (!hasType()) {
+          
+          return false;
+        }
+        if (!hasTimestamp()) {
           
           return false;
         }
@@ -844,15 +898,47 @@ public final class InternalRequest {
         return this;
       }
 
-      private java.lang.Object server_ = "";
+      private long timestamp_ ;
       /**
-       * <code>optional string server = 3;</code>
+       * <code>required int64 timestamp = 3;</code>
        */
-      public boolean hasServer() {
+      public boolean hasTimestamp() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional string server = 3;</code>
+       * <code>required int64 timestamp = 3;</code>
+       */
+      public long getTimestamp() {
+        return timestamp_;
+      }
+      /**
+       * <code>required int64 timestamp = 3;</code>
+       */
+      public Builder setTimestamp(long value) {
+        bitField0_ |= 0x00000004;
+        timestamp_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required int64 timestamp = 3;</code>
+       */
+      public Builder clearTimestamp() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        timestamp_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object server_ = "";
+      /**
+       * <code>optional string server = 4;</code>
+       */
+      public boolean hasServer() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>optional string server = 4;</code>
        */
       public java.lang.String getServer() {
         java.lang.Object ref = server_;
@@ -869,7 +955,7 @@ public final class InternalRequest {
         }
       }
       /**
-       * <code>optional string server = 3;</code>
+       * <code>optional string server = 4;</code>
        */
       public com.google.protobuf.ByteString
           getServerBytes() {
@@ -885,36 +971,36 @@ public final class InternalRequest {
         }
       }
       /**
-       * <code>optional string server = 3;</code>
+       * <code>optional string server = 4;</code>
        */
       public Builder setServer(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000004;
+  bitField0_ |= 0x00000008;
         server_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string server = 3;</code>
+       * <code>optional string server = 4;</code>
        */
       public Builder clearServer() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000008);
         server_ = getDefaultInstance().getServer();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string server = 3;</code>
+       * <code>optional string server = 4;</code>
        */
       public Builder setServerBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000004;
+  bitField0_ |= 0x00000008;
         server_ = value;
         onChanged();
         return this;
@@ -922,31 +1008,31 @@ public final class InternalRequest {
 
       private int port_ ;
       /**
-       * <code>optional int32 port = 4;</code>
+       * <code>optional int32 port = 5;</code>
        */
       public boolean hasPort() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
+        return ((bitField0_ & 0x00000010) == 0x00000010);
       }
       /**
-       * <code>optional int32 port = 4;</code>
+       * <code>optional int32 port = 5;</code>
        */
       public int getPort() {
         return port_;
       }
       /**
-       * <code>optional int32 port = 4;</code>
+       * <code>optional int32 port = 5;</code>
        */
       public Builder setPort(int value) {
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000010;
         port_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional int32 port = 4;</code>
+       * <code>optional int32 port = 5;</code>
        */
       public Builder clearPort() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000010);
         port_ = 0;
         onChanged();
         return this;
@@ -954,31 +1040,31 @@ public final class InternalRequest {
 
       private int nodeId_ ;
       /**
-       * <code>optional int32 nodeId = 5;</code>
+       * <code>optional int32 nodeId = 6;</code>
        */
       public boolean hasNodeId() {
-        return ((bitField0_ & 0x00000010) == 0x00000010);
+        return ((bitField0_ & 0x00000020) == 0x00000020);
       }
       /**
-       * <code>optional int32 nodeId = 5;</code>
+       * <code>optional int32 nodeId = 6;</code>
        */
       public int getNodeId() {
         return nodeId_;
       }
       /**
-       * <code>optional int32 nodeId = 5;</code>
+       * <code>optional int32 nodeId = 6;</code>
        */
       public Builder setNodeId(int value) {
-        bitField0_ |= 0x00000010;
+        bitField0_ |= 0x00000020;
         nodeId_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional int32 nodeId = 5;</code>
+       * <code>optional int32 nodeId = 6;</code>
        */
       public Builder clearNodeId() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ = (bitField0_ & ~0x00000020);
         nodeId_ = 0;
         onChanged();
         return this;
@@ -986,32 +1072,32 @@ public final class InternalRequest {
 
       private java.util.List<java.lang.Integer> hashes_ = java.util.Collections.emptyList();
       private void ensureHashesIsMutable() {
-        if (!((bitField0_ & 0x00000020) == 0x00000020)) {
+        if (!((bitField0_ & 0x00000040) == 0x00000040)) {
           hashes_ = new java.util.ArrayList<java.lang.Integer>(hashes_);
-          bitField0_ |= 0x00000020;
+          bitField0_ |= 0x00000040;
          }
       }
       /**
-       * <code>repeated int32 hashes = 6;</code>
+       * <code>repeated int32 hashes = 7;</code>
        */
       public java.util.List<java.lang.Integer>
           getHashesList() {
         return java.util.Collections.unmodifiableList(hashes_);
       }
       /**
-       * <code>repeated int32 hashes = 6;</code>
+       * <code>repeated int32 hashes = 7;</code>
        */
       public int getHashesCount() {
         return hashes_.size();
       }
       /**
-       * <code>repeated int32 hashes = 6;</code>
+       * <code>repeated int32 hashes = 7;</code>
        */
       public int getHashes(int index) {
         return hashes_.get(index);
       }
       /**
-       * <code>repeated int32 hashes = 6;</code>
+       * <code>repeated int32 hashes = 7;</code>
        */
       public Builder setHashes(
           int index, int value) {
@@ -1021,7 +1107,7 @@ public final class InternalRequest {
         return this;
       }
       /**
-       * <code>repeated int32 hashes = 6;</code>
+       * <code>repeated int32 hashes = 7;</code>
        */
       public Builder addHashes(int value) {
         ensureHashesIsMutable();
@@ -1030,7 +1116,7 @@ public final class InternalRequest {
         return this;
       }
       /**
-       * <code>repeated int32 hashes = 6;</code>
+       * <code>repeated int32 hashes = 7;</code>
        */
       public Builder addAllHashes(
           java.lang.Iterable<? extends java.lang.Integer> values) {
@@ -1041,11 +1127,11 @@ public final class InternalRequest {
         return this;
       }
       /**
-       * <code>repeated int32 hashes = 6;</code>
+       * <code>repeated int32 hashes = 7;</code>
        */
       public Builder clearHashes() {
         hashes_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000020);
+        bitField0_ = (bitField0_ & ~0x00000040);
         onChanged();
         return this;
       }
@@ -2356,15 +2442,16 @@ public final class InternalRequest {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\025InternalRequest.proto\"\257\001\n\017EpidemicRequ" +
+      "\n\025InternalRequest.proto\"\302\001\n\017EpidemicRequ" +
       "est\022\014\n\004epId\030\001 \002(\014\022+\n\004type\030\002 \002(\0162\035.Epidem" +
-      "icRequest.EpidemicType\022\016\n\006server\030\003 \001(\t\022\014" +
-      "\n\004port\030\004 \001(\005\022\016\n\006nodeId\030\005 \001(\005\022\016\n\006hashes\030\006" +
-      " \003(\005\"#\n\014EpidemicType\022\010\n\004DEAD\020\000\022\t\n\005ALIVE\020" +
-      "\001\"%\n\nKVTransfer\022\027\n\006kvlist\030\001 \003(\0132\007.KVPair" +
-      "\"5\n\006KVPair\022\013\n\003key\030\001 \002(\014\022\r\n\005value\030\002 \002(\014\022\017" +
-      "\n\007version\030\003 \002(\005B/\n\034ca.NetSysLab.Protocol" +
-      "BuffersB\017InternalRequest"
+      "icRequest.EpidemicType\022\021\n\ttimestamp\030\003 \002(" +
+      "\003\022\016\n\006server\030\004 \001(\t\022\014\n\004port\030\005 \001(\005\022\016\n\006nodeI" +
+      "d\030\006 \001(\005\022\016\n\006hashes\030\007 \003(\005\"#\n\014EpidemicType\022" +
+      "\010\n\004DEAD\020\000\022\t\n\005ALIVE\020\001\"%\n\nKVTransfer\022\027\n\006kv" +
+      "list\030\001 \003(\0132\007.KVPair\"5\n\006KVPair\022\013\n\003key\030\001 \002" +
+      "(\014\022\r\n\005value\030\002 \002(\014\022\017\n\007version\030\003 \002(\005B/\n\034ca" +
+      ".NetSysLab.ProtocolBuffersB\017InternalRequ" +
+      "est"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -2383,7 +2470,7 @@ public final class InternalRequest {
     internal_static_EpidemicRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_EpidemicRequest_descriptor,
-        new java.lang.String[] { "EpId", "Type", "Server", "Port", "NodeId", "Hashes", });
+        new java.lang.String[] { "EpId", "Type", "Timestamp", "Server", "Port", "NodeId", "Hashes", });
     internal_static_KVTransfer_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_KVTransfer_fieldAccessorTable = new

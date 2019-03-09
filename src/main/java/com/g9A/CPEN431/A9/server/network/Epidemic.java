@@ -41,7 +41,8 @@ public class Epidemic implements Runnable {
     	this.epId = request.getEpId();
     	this.payload = request.toByteString();
 
-    	if (iterations < 20) iterations += 5;
+    	//if (iterations < 100) iterations += 5;
+    	iterations *= 2;
     }
 
 	public static ByteString generateID(InetAddress svr, int port, EpidemicType type) {
@@ -119,8 +120,7 @@ public class Epidemic implements Runnable {
 				break;
 			case ALIVE:	// Re-add the node that was down
 				try {
-					int[] hashes = request.getHashesList().stream().mapToInt(Integer::intValue).toArray();
-					Server.RejoinNode(request.getNodeId(), request.getServer(), request.getPort(), hashes);
+					Server.RejoinNode(request.getNodeId(), request.getServer(), request.getPort(), request.getHashesList());
 				} catch (InvalidHashRangeException e1) {
 					e1.printStackTrace();
 				} catch (IOException e1) {

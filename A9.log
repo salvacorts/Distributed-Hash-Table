@@ -1,0 +1,2668 @@
+CPEN 431 EVALUATION test Client
+Time: Sat Mar 09 10:37:40 UTC 2019
+Build Date: Fri Mar 08 07:43:18 UTC 2019
+Java process ID: 9158
+Assignment ID: 9
+Client Version: 1
+
+[Info] A9 client running in SUBMIT mode.
+
+[Info] Starting A9 Tests
+
+[Info] Correct submission information.
+[Info] Checking if the test client is running on AWS
+[Info] Detected instance type: c5.large
+
+[Info] Done building nodes' list.
+
+Checking that the used nodes are not duplicated
+
+Checking that the used nodes are on planet Lab
+[Test isAlive] for 127.0.0.1:43100
+Sending GETPID to all servers... 
+[Info] Server node 127.0.0.1 has process ID 9141.
+[ ... Completed in 0.005 seconds ]
+[OK]
+Sending GetMembershipCount to all servers... 
+[Info] Server 127.0.0.1:43100 replied with membership count = 1 (expected count = 1)
+[ ... Completed in 0.002 seconds ]
+[Ok] All servers returned the expected membership count (1)
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.017 seconds ]
+[OK]
+
+[ TEST Basic PUT/GET (PUT -> GET). Value Length = 8 Bytes ]
+TEST_PASSED
+
+[ TEST Basic PUT/GET (PUT -> GET). Value Length = 32 Bytes ]
+TEST_PASSED
+
+[ TEST Basic PUT/GET (PUT -> GET). Value Length = 2048 Bytes ]
+TEST_PASSED
+
+[ TEST Basic PUT/GET (PUT -> GET). Value Length = 10000 Bytes ]
+TEST_PASSED
+
+
+[ TEST Basic KVS with message version (PUT Version 1 -> GET -> PUT Version 2 -> GET). Value Length = 8 Bytes ]
+TEST_PASSED
+
+
+[ TEST Basic KVS with message version (PUT Version 1 -> GET -> PUT Version 2 -> GET). Value Length = 32 Bytes ]
+TEST_PASSED
+
+
+[ TEST Basic KVS with message version (PUT Version 1 -> GET -> PUT Version 2 -> GET). Value Length = 2048 Bytes ]
+TEST_PASSED
+
+
+[ TEST Basic KVS with message version (PUT Version 1 -> GET -> PUT Version 2 -> GET). Value Length = 10000 Bytes ]
+TEST_PASSED
+
+[ TEST Basic REMOVE (PUT -> GET -> REM -> GET). Value Length = 32 Bytes. ]
+TEST_PASSED
+
+[ TEST Double remove (PUT -> REM -> REM). Value Length = 32 Bytes. ]
+TEST_PASSED
+
+[ TEST Invalid Command. ]
+TEST_PASSED
+
+[ TEST At-Most-Once Client Policy (PUT -> REM -> REM). Value length =  32 Bytes ]
+TEST_PASSED
+
+[ TEST At-Most-Once Client Policy Empty REMs (EMPTY -> REM -> REM) ]
+TEST_PASSED
+
+[ TEST At-Most-Once Client Policy Error Return Code (REM -> PUT -> REM) ]
+TEST_PASSED
+
+[TEST Invalid Key ]
+TEST_PASSED
+
+[TEST Invalid Value ]
+TEST_PASSED
+
+[ TEST Single Front-End Performance (1 clients, 60.0 seconds): PUT -> GET (closed loop) ]
+Test time limit reached: 60.0s.
+Test completed after 431722 closed loops.
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+[Test isAlive] for 127.0.0.1:43100
+[ ... Completed in 0.001 seconds ]
+Local Single node: Test Status: TEST_PASSED
+Clients: 1
+Total Requests (without replies): 863398
+Total Requests (including replies): 863398
+Successful Responses: 863353
+Timeout Responses: 0
+Total Failed Responses: 45
+% Success: 99.99478803518193
+% Timeout: 0.0
+% Failed: 0.0052119648180792635
+Response Time (Successful requests):
+[max] 16ms, [min] 0ms
+[avg] 0.032139808398187066 ms, [stdev] 0.1852187788461532ms
+Throughput: 14389.726837886035 requests per second
+Goodput: 14388.976850385827 requests per second
+Retry Rate (Successful requests): 1.0
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.016 seconds ]
+[OK]
+[ ... TEST Completed in 60.475 seconds ]
+
+[ TEST Single Front-End Performance (16 clients, 60.0 seconds): PUT -> GET (closed loop) ]
+Test time limit reached: 60.0s.
+Test time limit reached: 60.0s.
+Test completed after 36250 closed loops.
+Test completed after 36340 closed loops.
+Test time limit reached: 60.0s.
+Test time limit reached: 60.0s.
+Test completed after 36379 closed loops.
+Test completed after 36756 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 36129 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 36452 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 36351 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 35979 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 36334 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 36531 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 36272 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 36568 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 36323 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 36216 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 36492 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 36651 closed loops.
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+[Test isAlive] for 127.0.0.1:43100
+[ ... Completed in 0.0 seconds ]
+Local Single node: Test Status: TEST_PASSED
+Clients: 16
+Total Requests (without replies): 1163986
+Total Requests (including replies): 1163986
+Successful Responses: 1163929
+Timeout Responses: 0
+Total Failed Responses: 57
+% Success: 99.99510303388529
+% Timeout: 0.0
+% Failed: 0.00489696611471272
+Response Time (Successful requests):
+[max] 664ms, [min] 0ms
+[avg] 0.7630602897599424 ms, [stdev] 6.877860928117842ms
+Throughput: 19398.473435104326 requests per second
+Goodput: 19397.52349843344 requests per second
+Retry Rate (Successful requests): 1.0
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.014 seconds ]
+[OK]
+[ ... TEST Completed in 60.499 seconds ]
+
+[ TEST Single Front-End Performance (64 clients, 60.0 seconds): PUT -> GET (closed loop) ]
+Test time limit reached: 60.0s.
+Test completed after 8960 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 9013 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8899 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8909 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8928 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8949 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8892 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8920 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 9013 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8933 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8934 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8926 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8997 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8932 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8921 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8923 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8936 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8886 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8980 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8939 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 9147 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8985 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8941 closed loops.
+Test time limit reached: 60.0s.
+Test time limit reached: 60.0s.
+Test completed after 8940 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 9000 closed loops.
+Test completed after 8963 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8989 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8975 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8967 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8925 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8910 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8976 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8952 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 9064 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8913 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8999 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8902 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8917 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8988 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8942 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8905 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 9012 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8983 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8971 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8948 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8927 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8931 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8917 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8954 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8960 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8984 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8938 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8998 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8912 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8959 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8960 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 9105 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8906 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8921 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8937 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8944 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8924 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 8918 closed loops.
+Test time limit reached: 60.0s.
+Test completed after 9016 closed loops.
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+Warning: PUT failed!
+Status: ERROR_KVS
+Error Code: ERROR_OUT_OF_SPACE
+[Test isAlive] for 127.0.0.1:43100
+[ ... Completed in 0.0 seconds ]
+Local Single node: Test Status: TEST_PASSED
+Clients: 64
+Total Requests (without replies): 1146136
+Total Requests (including replies): 1146136
+Successful Responses: 1146080
+Timeout Responses: 0
+Total Failed Responses: 56
+% Success: 99.9951140178827
+% Timeout: 0.0
+% Failed: 0.004885982117305451
+Response Time (Successful requests):
+[max] 380ms, [min] 0ms
+[avg] 3.287793173251431 ms, [stdev] 13.036265113527229ms
+Throughput: 19086.04352966645 requests per second
+Goodput: 19085.11098899269 requests per second
+Retry Rate (Successful requests): 1.0
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.012 seconds ]
+[OK]
+[ ... TEST Completed in 60.37 seconds ]
+
+[ TEST Single Client Capacity (Value Size = 500 bytes, Limit = 146800 PUTs, ~69.99969482421875 MiB) : PUT -> GET (closed loop) ]
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.007 seconds ]
+[OK]
+ERROR_OUT_OF_SPACE
+Received error code after 49739 closed loops (~23.717403411865234 MiB).
+PUTs sent = 49739(~23.717403411865234 MiB) , Limit = 146800
+[Test isAlive]
+Test Passed. Server is ok.
+TEST_PASSED
+[Info] Shutting down local server(s)!
+[Test isAlive] for 127.0.0.1:43100
+[ ... Completed in 64.571 seconds ]
+[Info] Local tests completed in 269.172 seconds
+[Info] Finished tests for the local deployment!
+
+[Info] The deployment has 20 server nodes.
+Sending GET PID to all servers (v2) ... 
+>>> Server node planetlab1.cs.ubc.ca has process ID 4978.
+>>> Server node planetlab2.cs.ubc.ca has process ID 30721.
+>>> Server node planetlab2.cs.unc.edu has process ID 11015.
+>>> Server node planetlab4.mini.pw.edu.pl has process ID 10728.
+>>> Server node planetlab2.pop-pa.rnp.br has process ID 6992.
+>>> Server node plink.cs.uwaterloo.ca has process ID 4587.
+>>> Server node node1.planetlab.albany.edu has process ID 20629.
+>>> Server node pl1.eng.monash.edu.au has process ID 20198.
+>>> Server node planetlab2.inf.ethz.ch has process ID 32054.
+>>> Server node planetlab01.cs.washington.edu has process ID 10889.
+>>> Server node planetlab02.cs.washington.edu has process ID 16906.
+>>> Server node planetlab2.pop-mg.rnp.br has process ID 18467.
+>>> Server node planetlab3.comp.nus.edu.sg has process ID 21176.
+>>> Server node pl1.sos.info.hiroshima-cu.ac.jp has process ID 24851.
+>>> Server node planetlab1.dtc.umn.edu has process ID 11957.
+>>> Server node pl1.rcc.uottawa.ca has process ID 10626.
+>>> Server node planetlab3.cesnet.cz has process ID 14587.
+>>> Server node node1.planetlab.mathcs.emory.edu has process ID 22588.
+>>> Server node plab1.cs.msu.ru has process ID 890.
+>>> Server node planetlab1.cs.uoregon.edu has process ID 32580.
+[ ... Completed in 65.717 seconds ]
+[OK]
+
+Sending GetMembershipCount to all servers... 
+[Info] Server planetlab01.cs.washington.edu:10145 replied with membership count = 20 (expected count = 20)
+[Info] Server planetlab2.cs.ubc.ca:10145 replied with membership count = 20 (expected count = 20)
+[Info] Server planetlab02.cs.washington.edu:10145 replied with membership count = 20 (expected count = 20)
+[Info] Server planetlab1.cs.ubc.ca:10145 replied with membership count = 20 (expected count = 20)
+[Info] Server planetlab1.cs.uoregon.edu:10145 replied with membership count = 20 (expected count = 20)
+[Info] Server planetlab1.dtc.umn.edu:10145 replied with membership count = 20 (expected count = 20)
+[Info] Server node1.planetlab.mathcs.emory.edu:10145 replied with membership count = 20 (expected count = 20)
+[Info] Server pl1.rcc.uottawa.ca:10145 replied with membership count = 20 (expected count = 20)
+[Info] Server pl1.sos.info.hiroshima-cu.ac.jp:10145 replied with membership count = 20 (expected count = 20)
+[Info] Server node1.planetlab.albany.edu:10145 replied with membership count = 20 (expected count = 20)
+[Info] Server planetlab2.cs.unc.edu:10145 replied with membership count = 20 (expected count = 20)
+[Info] Server pl1.eng.monash.edu.au:10145 replied with membership count = 20 (expected count = 20)
+[Info] Server plink.cs.uwaterloo.ca:10145 replied with membership count = 20 (expected count = 20)
+[Info] Server planetlab3.cesnet.cz:10145 replied with membership count = 20 (expected count = 20)
+[Info] Server planetlab3.comp.nus.edu.sg:10145 replied with membership count = 20 (expected count = 20)
+[Info] Server planetlab2.pop-mg.rnp.br:10145 replied with membership count = 20 (expected count = 20)
+[Info] Server plab1.cs.msu.ru:10145 replied with membership count = 20 (expected count = 20)
+[Info] Server planetlab4.mini.pw.edu.pl:10145 replied with membership count = 20 (expected count = 20)
+[Info] Server planetlab2.pop-pa.rnp.br:10145 replied with membership count = 20 (expected count = 20)
+[Info] Server planetlab2.inf.ethz.ch:10145 replied with membership count = 20 (expected count = 20)
+[ ... Completed in 0.536 seconds ]
+[Ok] All servers returned the expected membership count (20)
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.376 seconds ]
+[OK]
+[Test isAlive] for planetlab1.cs.ubc.ca:10145
+
+[ TEST Basic PUT/GET (PUT -> GET). Value Length = 8 Bytes ]
+TEST_PASSED
+
+[ TEST Basic PUT/GET (PUT -> GET). Value Length = 32 Bytes ]
+TEST_PASSED
+
+[ TEST Basic PUT/GET (PUT -> GET). Value Length = 512 Bytes ]
+TEST_PASSED
+
+[ TEST Basic PUT/GET (PUT -> GET). Value Length = 1024 Bytes ]
+TEST_PASSED
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.265 seconds ]
+[OK]
+
+
+[ TEST Basic KVS with message version (PUT Version 1 -> GET -> PUT Version 2 -> GET). Value Length = 8 Bytes ]
+TEST_PASSED
+
+
+[ TEST Basic KVS with message version (PUT Version 1 -> GET -> PUT Version 2 -> GET). Value Length = 32 Bytes ]
+TEST_PASSED
+
+
+[ TEST Basic KVS with message version (PUT Version 1 -> GET -> PUT Version 2 -> GET). Value Length = 512 Bytes ]
+TEST_PASSED
+
+
+[ TEST Basic KVS with message version (PUT Version 1 -> GET -> PUT Version 2 -> GET). Value Length = 1024 Bytes ]
+TEST_PASSED
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.282 seconds ]
+[OK]
+
+[ TEST Basic REMOVE (PUT -> GET -> REM -> GET). Value Length = 32 Bytes. ]
+TEST_PASSED
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.236 seconds ]
+[OK]
+
+[ TEST Double remove (PUT -> REM -> REM). Value Length = 32 Bytes. ]
+TEST_PASSED
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.268 seconds ]
+[OK]
+
+[ TEST Invalid Command. ]
+TEST_PASSED
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.241 seconds ]
+[OK]
+
+[ TEST At-Most-Once Client Policy (PUT -> REM -> REM). Value length =  32 Bytes ]
+TEST_PASSED
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.247 seconds ]
+[OK]
+
+[ TEST At-Most-Once Client Policy Empty REMs (EMPTY -> REM -> REM) ]
+TEST_PASSED
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.229 seconds ]
+[OK]
+
+[ TEST At-Most-Once Client Policy Error Return Code (REM -> PUT -> REM) ]
+TEST_PASSED
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.239 seconds ]
+[OK]
+
+[TEST Invalid Key ]
+TEST_PASSED
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.231 seconds ]
+[OK]
+
+[TEST Invalid Value ]
+TEST_PASSED
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.238 seconds ]
+[OK]
+
+[ TEST Single Front-End Performance (1 clients, 60.0 seconds): PUT -> GET (closed loop) ]
+[Test isAlive] for planetlab1.cs.ubc.ca:10145
+[ ... Completed in 0.013 seconds ]
+Single Front-End: Test Status: TEST_PASSED
+Clients: 1
+Total Requests (without replies): 537
+Total Requests (including replies): 747
+Successful Responses: 537
+Timeout Responses: 0
+Total Failed Responses: 0
+% Success: 100.0
+% Timeout: 0.0
+% Failed: 0.0
+Response Time (Successful requests):
+[max] 235ms, [min] 12ms
+[avg] 111.73929236499069 ms, [stdev] 73.72048853635796ms
+Throughput: 8.946123346549829 requests per second
+Goodput: 8.946123346549829 requests per second
+Retry Rate (Successful requests): 1.3910614525139664
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.751 seconds ]
+[OK]
+[ ... TEST Completed in 60.793 seconds ]
+[Info] Pausing for 10 seconds to wait for the cache to be cleared!
+
+[ TEST Single Front-End Performance (16 clients, 60.0 seconds): PUT -> GET (closed loop) ]
+[Test isAlive] for planetlab1.cs.ubc.ca:10145
+[ ... Completed in 0.014 seconds ]
+Single Front-End: Test Status: TEST_PASSED
+Clients: 16
+Total Requests (without replies): 8437
+Total Requests (including replies): 11904
+Successful Responses: 8437
+Timeout Responses: 0
+Total Failed Responses: 0
+% Success: 100.0
+% Timeout: 0.0
+% Failed: 0.0
+Response Time (Successful requests):
+[max] 516ms, [min] 11ms
+[avg] 113.95436766623207 ms, [stdev] 75.77251894599482ms
+Throughput: 140.11226252158895 requests per second
+Goodput: 140.11226252158895 requests per second
+Retry Rate (Successful requests): 1.4109280549958516
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.47 seconds ]
+[OK]
+[ ... TEST Completed in 60.714 seconds ]
+[Info] Pausing for 10 seconds to wait for the cache to be cleared!
+
+[ TEST Single Front-End Performance (32 clients, 60.0 seconds): PUT -> GET (closed loop) ]
+[Test isAlive] for planetlab1.cs.ubc.ca:10145
+[ ... Completed in 0.013 seconds ]
+Single Front-End: Test Status: TEST_PASSED
+Clients: 32
+Total Requests (without replies): 16853
+Total Requests (including replies): 23776
+Successful Responses: 16853
+Timeout Responses: 0
+Total Failed Responses: 0
+% Success: 100.0
+% Timeout: 0.0
+% Failed: 0.0
+Response Time (Successful requests):
+[max] 363ms, [min] 11ms
+[avg] 114.03963685990625 ms, [stdev] 74.94053875133342ms
+Throughput: 279.97807090407684 requests per second
+Goodput: 279.97807090407684 requests per second
+Retry Rate (Successful requests): 1.4107873969026286
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.564 seconds ]
+[OK]
+[ ... TEST Completed in 60.778 seconds ]
+[Info] Pausing for 10 seconds to wait for the cache to be cleared!
+
+[ TEST Single Front-End Performance (64 clients, 60.0 seconds): PUT -> GET (closed loop) ]
+[Test isAlive] for planetlab1.cs.ubc.ca:10145
+[ ... Completed in 0.014 seconds ]
+Single Front-End: Test Status: TEST_PASSED
+Clients: 64
+Total Requests (without replies): 32584
+Total Requests (including replies): 46049
+Successful Responses: 32583
+Timeout Responses: 1
+Total Failed Responses: 0
+% Success: 99.99693100908421
+% Timeout: 0.003068990915786889
+% Failed: 0.0
+Response Time (Successful requests):
+[max] 332ms, [min] 11ms
+[avg] 117.77344013749502 ms, [stdev] 75.18690570522907ms
+Throughput: 541.2354866036576 requests per second
+Goodput: 541.2188761357407 requests per second
+Retry Rate (Successful requests): 1.4132396268107046
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.53 seconds ]
+[OK]
+[ ... TEST Completed in 60.762 seconds ]
+[Info] Pausing for 10 seconds to wait for the cache to be cleared!
+
+[ TEST Single Front-End Performance (128 clients, 60.0 seconds): PUT -> GET (closed loop) ]
+[Test isAlive] for planetlab1.cs.ubc.ca:10145
+[ ... Completed in 0.014 seconds ]
+Single Front-End: Test Status: TEST_PASSED
+Clients: 128
+Total Requests (without replies): 59374
+Total Requests (including replies): 85137
+Successful Responses: 59374
+Timeout Responses: 0
+Total Failed Responses: 0
+% Success: 100.0
+% Timeout: 0.0
+% Failed: 0.0
+Response Time (Successful requests):
+[max] 407ms, [min] 13ms
+[avg] 129.49577256037998 ms, [stdev] 75.50006613578476ms
+Throughput: 985.8205485820548 requests per second
+Goodput: 985.8205485820548 requests per second
+Retry Rate (Successful requests): 1.4339104658604775
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.715 seconds ]
+[OK]
+[ ... TEST Completed in 60.978 seconds ]
+[Info] Pausing for 10 seconds to wait for the cache to be cleared!
+
+[ TEST Single Front-End Performance (256 clients, 60.0 seconds): PUT -> GET (closed loop) ]
+[Test isAlive] for planetlab1.cs.ubc.ca:10145
+[ ... Completed in 0.015 seconds ]
+Single Front-End: Test Status: TEST_PASSED
+Clients: 256
+Total Requests (without replies): 57134
+Total Requests (including replies): 102524
+Successful Responses: 57079
+Timeout Responses: 55
+Total Failed Responses: 0
+% Success: 99.90373507893723
+% Timeout: 0.09626492106276473
+% Failed: 0.0
+Response Time (Successful requests):
+[max] 4779ms, [min] 14ms
+[avg] 263.7461413129172 ms, [stdev] 298.78542233012365ms
+Throughput: 924.8575498575499 requests per second
+Goodput: 923.9672364672365 requests per second
+Retry Rate (Successful requests): 1.7944481394616165
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.27 seconds ]
+[OK]
+[ ... TEST Completed in 62.127 seconds ]
+[Info] Pausing for 10 seconds to wait for the cache to be cleared!
+
+[ TEST Multi Client Crash: PUT -> GET (closed loop) + REM -> WIPEOUT (closed loop) ]
+[Test isAlive]
+Test Passed. Server is ok.
+TEST_PASSED
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.254 seconds ]
+[OK]
+[ ... TEST Completed in 79.865 seconds ]
+
+[ TEST Random Front-End Basic (PUT -> GET -> REM -> REM -> GET). Value Length = 8 Bytes ]
+TEST_PASSED
+
+[ TEST Random Front-End Basic (PUT -> GET -> REM -> REM -> GET). Value Length = 32 Bytes ]
+TEST_PASSED
+
+[ TEST Random Front-End Basic (PUT -> GET -> REM -> REM -> GET). Value Length = 512 Bytes ]
+TEST_PASSED
+
+[ TEST Random Front-End Basic (PUT -> GET -> REM -> REM -> GET). Value Length = 1024 Bytes ]
+TEST_PASSED
+[ ... TEST Completed in 2.774 seconds ]
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.255 seconds ]
+[OK]
+[Info] Pausing for 10 seconds to wait for the cache to be cleared!
+
+[ TEST Random Front-End Performance (1 clients, 60.0 seconds): PUT -> GET (closed loop) ]
+[Test isAlive] for planetlab1.cs.ubc.ca:10145
+[Test isAlive] for planetlab2.cs.ubc.ca:10145
+[Test isAlive] for planetlab4.mini.pw.edu.pl:10145
+[Test isAlive] for planetlab2.cs.unc.edu:10145
+[Test isAlive] for planetlab2.pop-pa.rnp.br:10145
+[Test isAlive] for plink.cs.uwaterloo.ca:10145
+[Test isAlive] for node1.planetlab.albany.edu:10145
+[Test isAlive] for planetlab01.cs.washington.edu:10145
+[Test isAlive] for planetlab2.inf.ethz.ch:10145
+[Test isAlive] for planetlab02.cs.washington.edu:10145
+[Test isAlive] for pl1.eng.monash.edu.au:10145
+[Test isAlive] for planetlab2.pop-mg.rnp.br:10145
+[Test isAlive] for planetlab3.comp.nus.edu.sg:10145
+[Test isAlive] for pl1.sos.info.hiroshima-cu.ac.jp:10145
+[Test isAlive] for planetlab1.dtc.umn.edu:10145
+[Test isAlive] for pl1.rcc.uottawa.ca:10145
+[Test isAlive] for node1.planetlab.mathcs.emory.edu:10145
+[Test isAlive] for planetlab3.cesnet.cz:10145
+[Test isAlive] for plab1.cs.msu.ru:10145
+[Test isAlive] for planetlab1.cs.uoregon.edu:10145
+[ ... Completed in 0.208 seconds ]
+TEST_PASSED
+Stage 1 Random Front-End Performance: Test Status: TEST_PASSED
+Clients: 1
+Total Requests (without replies): 328
+Total Requests (including replies): 557
+Successful Responses: 328
+Timeout Responses: 0
+Total Failed Responses: 0
+% Success: 100.0
+% Timeout: 0.0
+% Failed: 0.0
+Response Time (Successful requests):
+[max] 391ms, [min] 8ms
+[avg] 179.73170731707316 ms, [stdev] 84.58947475039953ms
+Throughput: 5.448867034354442 requests per second
+Goodput: 5.448867034354442 requests per second
+Retry Rate (Successful requests): 1.6981707317073171
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.263 seconds ]
+[OK]
+[ ... TEST Completed in 60.668 seconds ]
+[Info] Pausing for 10 seconds to wait for the cache to be cleared!
+
+[ TEST Random Front-End Performance (16 clients, 60.0 seconds): PUT -> GET (closed loop) ]
+[Test isAlive] for planetlab1.cs.ubc.ca:10145
+[Test isAlive] for planetlab2.cs.ubc.ca:10145
+[Test isAlive] for planetlab2.cs.unc.edu:10145
+[Test isAlive] for planetlab4.mini.pw.edu.pl:10145
+[Test isAlive] for planetlab2.pop-pa.rnp.br:10145
+[Test isAlive] for plink.cs.uwaterloo.ca:10145
+[Test isAlive] for node1.planetlab.albany.edu:10145
+[Test isAlive] for pl1.eng.monash.edu.au:10145
+[Test isAlive] for planetlab2.inf.ethz.ch:10145
+[Test isAlive] for planetlab01.cs.washington.edu:10145
+[Test isAlive] for planetlab02.cs.washington.edu:10145
+[Test isAlive] for planetlab2.pop-mg.rnp.br:10145
+[Test isAlive] for planetlab1.dtc.umn.edu:10145
+[Test isAlive] for planetlab3.cesnet.cz:10145
+[Test isAlive] for planetlab3.comp.nus.edu.sg:10145
+[Test isAlive] for planetlab1.cs.uoregon.edu:10145
+[Test isAlive] for pl1.sos.info.hiroshima-cu.ac.jp:10145
+[Test isAlive] for pl1.rcc.uottawa.ca:10145
+[Test isAlive] for node1.planetlab.mathcs.emory.edu:10145
+[Test isAlive] for plab1.cs.msu.ru:10145
+[ ... Completed in 0.212 seconds ]
+TEST_PASSED
+Stage 1 Random Front-End Performance: Test Status: TEST_PASSED
+Clients: 16
+Total Requests (without replies): 5405
+Total Requests (including replies): 9102
+Successful Responses: 5405
+Timeout Responses: 0
+Total Failed Responses: 0
+% Success: 100.0
+% Timeout: 0.0
+% Failed: 0.0
+Response Time (Successful requests):
+[max] 545ms, [min] 7ms
+[avg] 177.48917668825163 ms, [stdev] 89.7486062568048ms
+Throughput: 89.74529273071431 requests per second
+Goodput: 89.74529273071431 requests per second
+Retry Rate (Successful requests): 1.683996299722479
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.407 seconds ]
+[OK]
+[ ... TEST Completed in 60.847 seconds ]
+[Info] Pausing for 10 seconds to wait for the cache to be cleared!
+
+[ TEST Random Front-End Performance (32 clients, 60.0 seconds): PUT -> GET (closed loop) ]
+[Test isAlive] for planetlab1.cs.ubc.ca:10145
+[Test isAlive] for planetlab2.cs.ubc.ca:10145
+[Test isAlive] for planetlab2.cs.unc.edu:10145
+[Test isAlive] for planetlab4.mini.pw.edu.pl:10145
+[Test isAlive] for planetlab2.pop-pa.rnp.br:10145
+[Test isAlive] for plink.cs.uwaterloo.ca:10145
+[Test isAlive] for node1.planetlab.albany.edu:10145
+[Test isAlive] for pl1.eng.monash.edu.au:10145
+[Test isAlive] for planetlab2.inf.ethz.ch:10145
+[Test isAlive] for planetlab01.cs.washington.edu:10145
+[Test isAlive] for planetlab02.cs.washington.edu:10145
+[Test isAlive] for planetlab2.pop-mg.rnp.br:10145
+[Test isAlive] for planetlab3.comp.nus.edu.sg:10145
+[Test isAlive] for pl1.sos.info.hiroshima-cu.ac.jp:10145
+[Test isAlive] for planetlab1.dtc.umn.edu:10145
+[Test isAlive] for pl1.rcc.uottawa.ca:10145
+[Test isAlive] for planetlab3.cesnet.cz:10145
+[Test isAlive] for node1.planetlab.mathcs.emory.edu:10145
+[Test isAlive] for plab1.cs.msu.ru:10145
+[Test isAlive] for planetlab1.cs.uoregon.edu:10145
+[ ... Completed in 0.218 seconds ]
+TEST_PASSED
+[ CPU load (loadavg, last one minute) 0.00 ]
+Stage 1 Random Front-End Performance: Test Status: TEST_PASSED
+Clients: 32
+Total Requests (without replies): 10774
+Total Requests (including replies): 17961
+Successful Responses: 10774
+Timeout Responses: 0
+Total Failed Responses: 0
+% Success: 100.0
+% Timeout: 0.0
+% Failed: 0.0
+Response Time (Successful requests):
+[max] 4746ms, [min] 7ms
+[avg] 178.2353814739187 ms, [stdev] 121.08246965681657ms
+Throughput: 178.83048118578517 requests per second
+Goodput: 178.83048118578517 requests per second
+Retry Rate (Successful requests): 1.6670688695006497
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.235 seconds ]
+[OK]
+[ ... TEST Completed in 60.719 seconds ]
+[Info] Pausing for 10 seconds to wait for the cache to be cleared!
+
+[ TEST Random Front-End Performance (64 clients, 60.0 seconds): PUT -> GET (closed loop) ]
+[Test isAlive] for planetlab1.cs.ubc.ca:10145
+[Test isAlive] for planetlab2.cs.ubc.ca:10145
+[Test isAlive] for planetlab2.cs.unc.edu:10145
+[Test isAlive] for planetlab4.mini.pw.edu.pl:10145
+[Test isAlive] for planetlab2.pop-pa.rnp.br:10145
+[Test isAlive] for plink.cs.uwaterloo.ca:10145
+[Test isAlive] for node1.planetlab.albany.edu:10145
+[Test isAlive] for pl1.eng.monash.edu.au:10145
+[Test isAlive] for planetlab2.inf.ethz.ch:10145
+[Test isAlive] for planetlab01.cs.washington.edu:10145
+[Test isAlive] for planetlab02.cs.washington.edu:10145
+[Test isAlive] for planetlab2.pop-mg.rnp.br:10145
+[Test isAlive] for planetlab3.comp.nus.edu.sg:10145
+[Test isAlive] for pl1.sos.info.hiroshima-cu.ac.jp:10145
+[Test isAlive] for planetlab1.dtc.umn.edu:10145
+[Test isAlive] for pl1.rcc.uottawa.ca:10145
+[Test isAlive] for planetlab3.cesnet.cz:10145
+[Test isAlive] for node1.planetlab.mathcs.emory.edu:10145
+[Test isAlive] for plab1.cs.msu.ru:10145
+[Test isAlive] for planetlab1.cs.uoregon.edu:10145
+[ ... Completed in 0.53 seconds ]
+TEST_PASSED
+[ CPU load (loadavg, last one minute) 0.00 ]
+Stage 1 Random Front-End Performance: Test Status: TEST_PASSED
+Clients: 64
+Total Requests (without replies): 22059
+Total Requests (including replies): 36670
+Successful Responses: 22059
+Timeout Responses: 0
+Total Failed Responses: 0
+% Success: 100.0
+% Timeout: 0.0
+% Failed: 0.0
+Response Time (Successful requests):
+[max] 418ms, [min] 7ms
+[avg] 174.35681581214018 ms, [stdev] 88.10496680802345ms
+Throughput: 365.3725113459436 requests per second
+Goodput: 365.3725113459436 requests per second
+Retry Rate (Successful requests): 1.6623600344530578
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.245 seconds ]
+[OK]
+[ ... TEST Completed in 61.162 seconds ]
+[Info] Pausing for 10 seconds to wait for the cache to be cleared!
+
+[ TEST Random Front-End Performance (128 clients, 60.0 seconds): PUT -> GET (closed loop) ]
+[Test isAlive] for planetlab1.cs.ubc.ca:10145
+[Test isAlive] for planetlab2.cs.ubc.ca:10145
+[Test isAlive] for planetlab2.cs.unc.edu:10145
+[Test isAlive] for planetlab4.mini.pw.edu.pl:10145
+[Test isAlive] for planetlab2.pop-pa.rnp.br:10145
+[Test isAlive] for plink.cs.uwaterloo.ca:10145
+[Test isAlive] for node1.planetlab.albany.edu:10145
+[Test isAlive] for pl1.eng.monash.edu.au:10145
+[Test isAlive] for planetlab2.inf.ethz.ch:10145
+[Test isAlive] for planetlab01.cs.washington.edu:10145
+[Test isAlive] for planetlab02.cs.washington.edu:10145
+[Test isAlive] for planetlab2.pop-mg.rnp.br:10145
+[Test isAlive] for planetlab3.comp.nus.edu.sg:10145
+[Test isAlive] for pl1.sos.info.hiroshima-cu.ac.jp:10145
+[Test isAlive] for planetlab1.dtc.umn.edu:10145
+[Test isAlive] for pl1.rcc.uottawa.ca:10145
+[Test isAlive] for planetlab3.cesnet.cz:10145
+[Test isAlive] for node1.planetlab.mathcs.emory.edu:10145
+[Test isAlive] for plab1.cs.msu.ru:10145
+[Test isAlive] for planetlab1.cs.uoregon.edu:10145
+[ ... Completed in 0.208 seconds ]
+TEST_PASSED
+[ CPU load (loadavg, last one minute) 0.10 ]
+Stage 1 Random Front-End Performance: Test Status: TEST_PASSED
+Clients: 128
+Total Requests (without replies): 43364
+Total Requests (including replies): 72526
+Successful Responses: 43364
+Timeout Responses: 0
+Total Failed Responses: 0
+% Success: 100.0
+% Timeout: 0.0
+% Failed: 0.0
+Response Time (Successful requests):
+[max] 528ms, [min] 7ms
+[avg] 177.27654275435845 ms, [stdev] 88.67821539426122ms
+Throughput: 718.482312981526 requests per second
+Goodput: 718.482312981526 requests per second
+Retry Rate (Successful requests): 1.672493312425053
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.301 seconds ]
+[OK]
+[ ... TEST Completed in 60.882 seconds ]
+[Info] Pausing for 10 seconds to wait for the cache to be cleared!
+
+[ TEST Random Front-End Performance (256 clients, 60.0 seconds): PUT -> GET (closed loop) ]
+[Test isAlive] for planetlab1.cs.ubc.ca:10145
+[Test isAlive] for planetlab2.pop-pa.rnp.br:10145
+[Test isAlive] for planetlab4.mini.pw.edu.pl:10145
+[Test isAlive] for planetlab2.cs.unc.edu:10145
+[Test isAlive] for planetlab2.cs.ubc.ca:10145
+[Test isAlive] for plink.cs.uwaterloo.ca:10145
+[Test isAlive] for node1.planetlab.albany.edu:10145
+[Test isAlive] for pl1.eng.monash.edu.au:10145
+[Test isAlive] for planetlab2.inf.ethz.ch:10145
+[Test isAlive] for planetlab01.cs.washington.edu:10145
+[Test isAlive] for planetlab02.cs.washington.edu:10145
+[Test isAlive] for planetlab2.pop-mg.rnp.br:10145
+[Test isAlive] for pl1.sos.info.hiroshima-cu.ac.jp:10145
+[Test isAlive] for pl1.rcc.uottawa.ca:10145
+[Test isAlive] for planetlab3.comp.nus.edu.sg:10145
+[Test isAlive] for planetlab3.cesnet.cz:10145
+[Test isAlive] for planetlab1.dtc.umn.edu:10145
+[Test isAlive] for node1.planetlab.mathcs.emory.edu:10145
+[Test isAlive] for planetlab1.cs.uoregon.edu:10145
+[Test isAlive] for plab1.cs.msu.ru:10145
+[ ... Completed in 0.43 seconds ]
+TEST_PASSED
+[ CPU load (loadavg, last one minute) 0.02 ]
+Stage 1 Random Front-End Performance: Test Status: TEST_PASSED
+Clients: 256
+Total Requests (without replies): 87152
+Total Requests (including replies): 145665
+Successful Responses: 87151
+Timeout Responses: 1
+Total Failed Responses: 0
+% Success: 99.9988525794015
+% Timeout: 0.001147420598494584
+% Failed: 0.0
+Response Time (Successful requests):
+[max] 545ms, [min] 6ms
+[avg] 176.23695654668333 ms, [stdev] 88.19232671486822ms
+Throughput: 1443.6070298653326 requests per second
+Goodput: 1443.5904656209107 requests per second
+Retry Rate (Successful requests): 1.671390214797136
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.238 seconds ]
+[OK]
+[ ... TEST Completed in 61.082 seconds ]
+[Info] Pausing for 10 seconds to wait for the cache to be cleared!
+
+[ TEST Concurrent Store/Load v2; Stage 0; (Clients = 32, Limit = 40000 PUTs) ]
+Issuing PUTS ... 
+[DONE in 224.141s]
+[Info] Concurrent Store/Load v2; Stage 0; PUT Phase; Of 40000 stored keys: 40000 SUCCESS, 0 TIMEOUT, 0 KEY-NOT-FOUND, 0 ERROR-UID, 0 ERROR-INVALID-GET (value or version), 0 ERROR-OTHER.
+[Info] Concurrent Store/Load v2; Stage 0; PUT Phase; Expected Key Loss: 0.0%. Actual Key Loss: 0.0%
+[Info] Concurrent Store/Load v2; Stage 0; PUT Phase; Total Value Size (MiB): 19.15686321258545 MiB.
+[Info] Concurrent Store/Load v2; Stage 0; PUT Phase; SUCCESS Response Count: 40000.0.
+[Info] Concurrent Store/Load v2; Stage 0; PUT Phase; % SUCCESS: 100.0%.
+[Info] Concurrent Store/Load v2; Stage 0; PUT Phase; % FAILED (Not SUCCESS): 0.0%.
+[Info] Concurrent Store/Load v2; Stage 0; PUT Phase; % TIMEOUT: 0.0%.
+[Info] Concurrent Store/Load v2; Stage 0; PUT Phase; % KEY-NOT-FOUND: 0.0%.
+[Info] Concurrent Store/Load v2; Stage 0; PUT Phase; % ERROR-UID: 0.0%.
+[Info] Concurrent Store/Load v2; Stage 0; PUT Phase; % ERROR-INVALID-GET (value or version): 0.0%.
+[Info] Concurrent Store/Load v2; Stage 0; PUT Phase; % ERROR-OTHER: 0.0%.
+[Info] PUTs % SUCCESS Ok: 100.0% Success.(90.0% minimum required).
+Confirming keys were stored correctly.
+Issuing GETs ... 
+[DONE in 223.736s]
+[Info] Concurrent Store/Load v2; Stage 0; GET Phase; Of 40000 stored keys: 40000 SUCCESS, 0 TIMEOUT, 0 KEY-NOT-FOUND, 0 ERROR-UID, 0 ERROR-INVALID-GET (value or version), 0 ERROR-OTHER.
+[Info] Concurrent Store/Load v2; Stage 0; GET Phase; Expected Key Loss: 0.0%. Actual Key Loss: 0.0%
+[Info] Concurrent Store/Load v2; Stage 0; GET Phase; Total Value Size (MiB): 19.15686321258545 MiB.
+[Info] Concurrent Store/Load v2; Stage 0; GET Phase; SUCCESS Response Count: 40000.0.
+[Info] Concurrent Store/Load v2; Stage 0; GET Phase; % SUCCESS: 100.0%.
+[Info] Concurrent Store/Load v2; Stage 0; GET Phase; % FAILED (Not SUCCESS): 0.0%.
+[Info] Concurrent Store/Load v2; Stage 0; GET Phase; % TIMEOUT: 0.0%.
+[Info] Concurrent Store/Load v2; Stage 0; GET Phase; % KEY-NOT-FOUND: 0.0%.
+[Info] Concurrent Store/Load v2; Stage 0; GET Phase; % ERROR-UID: 0.0%.
+[Info] Concurrent Store/Load v2; Stage 0; GET Phase; % ERROR-INVALID-GET (value or version): 0.0%.
+[Info] Concurrent Store/Load v2; Stage 0; GET Phase; % ERROR-OTHER: 0.0%.
+[Info] GETs % SUCCESS Ok: 100.0% Success.(90.0% minimum required).
+Checking that 20 nodes are alive
+[Test isAlive] for planetlab1.cs.ubc.ca:10145
+[Test isAlive] for planetlab2.cs.ubc.ca:10145
+[Test isAlive] for planetlab4.mini.pw.edu.pl:10145
+[Test isAlive] for planetlab2.cs.unc.edu:10145
+[Test isAlive] for planetlab2.pop-pa.rnp.br:10145
+[Test isAlive] for plink.cs.uwaterloo.ca:10145
+[Test isAlive] for node1.planetlab.albany.edu:10145
+[Test isAlive] for pl1.eng.monash.edu.au:10145
+[Test isAlive] for planetlab2.inf.ethz.ch:10145
+[Test isAlive] for planetlab01.cs.washington.edu:10145
+[Test isAlive] for planetlab02.cs.washington.edu:10145
+[Test isAlive] for planetlab2.pop-mg.rnp.br:10145
+[Test isAlive] for planetlab3.comp.nus.edu.sg:10145
+[Test isAlive] for pl1.sos.info.hiroshima-cu.ac.jp:10145
+[Test isAlive] for planetlab1.dtc.umn.edu:10145
+[Test isAlive] for pl1.rcc.uottawa.ca:10145
+[Test isAlive] for planetlab3.cesnet.cz:10145
+[Test isAlive] for node1.planetlab.mathcs.emory.edu:10145
+[Test isAlive] for plab1.cs.msu.ru:10145
+[Test isAlive] for planetlab1.cs.uoregon.edu:10145
+[ ... Completed in 0.216 seconds ]
+TEST_PASSED
+[ ... TEST Completed in 448.094 seconds ]
+
+[Info] Preparing for Stage 1 of the Suspend Test
+[Info] To suspend 5 node(s) in Stage 1.
+[Info] Will suspend planetlab3.comp.nus.edu.sg:10145
+[Info] Will suspend planetlab2.pop-pa.rnp.br:10145
+[Info] Will suspend node1.planetlab.albany.edu:10145
+[Info] Will suspend pl1.eng.monash.edu.au:10145
+[Info] Will suspend planetlab2.cs.unc.edu:10145
+[Info] Will keep alive plab1.cs.msu.ru:10145
+[Info] Will keep alive planetlab1.cs.ubc.ca:10145
+[Info] Will keep alive node1.planetlab.mathcs.emory.edu:10145
+[Info] Will keep alive pl1.rcc.uottawa.ca:10145
+[Info] Will keep alive planetlab3.cesnet.cz:10145
+[Info] Will keep alive planetlab1.dtc.umn.edu:10145
+[Info] Will keep alive planetlab2.inf.ethz.ch:10145
+[Info] Will keep alive planetlab1.cs.uoregon.edu:10145
+[Info] Will keep alive planetlab02.cs.washington.edu:10145
+[Info] Will keep alive planetlab01.cs.washington.edu:10145
+[Info] Will keep alive plink.cs.uwaterloo.ca:10145
+[Info] Will keep alive planetlab2.pop-mg.rnp.br:10145
+[Info] Will keep alive planetlab2.cs.ubc.ca:10145
+[Info] Will keep alive planetlab4.mini.pw.edu.pl:10145
+[Info] Will keep alive pl1.sos.info.hiroshima-cu.ac.jp:10145
+Waiting 10 seconds before suspending nodes
+[Info] Suspending 5 servers.
+Server node1.planetlab.albany.edu:10145 suspended
+Server pl1.eng.monash.edu.au:10145 suspended
+Server planetlab2.cs.unc.edu:10145 suspended
+Server planetlab2.pop-pa.rnp.br:10145 suspended
+Server planetlab3.comp.nus.edu.sg:10145 suspended
+[ ... Completed in 11.656 seconds ]
+Waiting 60 seconds after suspending nodes
+[Info] Stage 1 Scenario: Alive Nodes: 15. Dead Nodes: 5
+
+
+[ TEST Suspend Verify v2; Stage 1; Key Recovery; ]
+Checking that 5 nodes are suspended
+[Test isAlive] for planetlab3.comp.nus.edu.sg:10145
+[Test isAlive] for planetlab2.pop-pa.rnp.br:10145
+[Test isAlive] for node1.planetlab.albany.edu:10145
+[Test isAlive] for pl1.eng.monash.edu.au:10145
+[Test isAlive] for planetlab2.cs.unc.edu:10145
+[ ... Completed in 64.64 seconds ]
+Checking that 15 nodes are alive
+[Test isAlive] for plab1.cs.msu.ru:10145
+[Test isAlive] for planetlab1.cs.ubc.ca:10145
+[Test isAlive] for node1.planetlab.mathcs.emory.edu:10145
+[Test isAlive] for pl1.rcc.uottawa.ca:10145
+[Test isAlive] for planetlab3.cesnet.cz:10145
+[Test isAlive] for planetlab1.dtc.umn.edu:10145
+[Test isAlive] for planetlab2.inf.ethz.ch:10145
+[Test isAlive] for planetlab1.cs.uoregon.edu:10145
+[Test isAlive] for planetlab02.cs.washington.edu:10145
+[Test isAlive] for planetlab01.cs.washington.edu:10145
+[Test isAlive] for plink.cs.uwaterloo.ca:10145
+[Test isAlive] for planetlab2.pop-mg.rnp.br:10145
+[Test isAlive] for planetlab2.cs.ubc.ca:10145
+[Test isAlive] for pl1.sos.info.hiroshima-cu.ac.jp:10145
+[Test isAlive] for planetlab4.mini.pw.edu.pl:10145
+[ ... Completed in 0.709 seconds ]
+Sending GetMembershipCount to all servers... 
+[Info] Server planetlab01.cs.washington.edu:10145 replied with membership count = 15 (expected count = 15)
+[Info] Server planetlab02.cs.washington.edu:10145 replied with membership count = 15 (expected count = 15)
+[Info] Server planetlab1.cs.ubc.ca:10145 replied with membership count = 15 (expected count = 15)
+[Info] Server planetlab2.cs.ubc.ca:10145 replied with membership count = 15 (expected count = 15)
+[Info] Server planetlab1.cs.uoregon.edu:10145 replied with membership count = 15 (expected count = 15)
+[Info] Server planetlab1.dtc.umn.edu:10145 replied with membership count = 15 (expected count = 15)
+[Info] Server node1.planetlab.mathcs.emory.edu:10145 replied with membership count = 15 (expected count = 15)
+[Info] Server pl1.rcc.uottawa.ca:10145 replied with membership count = 15 (expected count = 15)
+[Info] Server plink.cs.uwaterloo.ca:10145 replied with membership count = 15 (expected count = 15)
+[Info] Server pl1.sos.info.hiroshima-cu.ac.jp:10145 replied with membership count = 15 (expected count = 15)
+[Info] Server planetlab2.inf.ethz.ch:10145 replied with membership count = 15 (expected count = 15)
+[Info] Server planetlab4.mini.pw.edu.pl:10145 replied with membership count = 15 (expected count = 15)
+[Info] Server planetlab2.pop-mg.rnp.br:10145 replied with membership count = 15 (expected count = 15)
+[Info] Server planetlab3.cesnet.cz:10145 replied with membership count = 15 (expected count = 15)
+[Info] Server plab1.cs.msu.ru:10145 replied with membership count = 15 (expected count = 15)
+[ ... Completed in 0.209 seconds ]
+[Ok] All servers returned the expected membership count (15)
+Attempting retrieval of keys... 
+Issuing GETs ... 
+[DONE in 186.385s]
+[Info] Suspend Verify v2; Stage 1; Key Recovery; Of 40000 stored keys: 30000 SUCCESS, 1 TIMEOUT, 9999 KEY-NOT-FOUND, 0 ERROR-UID, 0 ERROR-INVALID-GET (value or version), 0 ERROR-OTHER.
+[Info] Suspend Verify v2; Stage 1; Key Recovery; Expected Key Loss: 25.0%. Actual Key Loss: 25.0%
+[Info] Suspend Verify v2; Stage 1; Key Recovery; Total Value Size (MiB): 14.365445137023926 MiB.
+[Info] Suspend Verify v2; Stage 1; Key Recovery; SUCCESS Response Count: 30000.0.
+[Info] Suspend Verify v2; Stage 1; Key Recovery; % SUCCESS: 75.0%.
+[Info] Suspend Verify v2; Stage 1; Key Recovery; % FAILED (Not SUCCESS): 25.0%.
+[Info] Suspend Verify v2; Stage 1; Key Recovery; % TIMEOUT: 0.0025%.
+[Info] Suspend Verify v2; Stage 1; Key Recovery; % KEY-NOT-FOUND: 24.9975%.
+[Info] Suspend Verify v2; Stage 1; Key Recovery; % ERROR-UID: 0.0%.
+[Info] Suspend Verify v2; Stage 1; Key Recovery; % ERROR-INVALID-GET (value or version): 0.0%.
+[Info] Suspend Verify v2; Stage 1; Key Recovery; % ERROR-OTHER: 0.0%.
+[Info] Minimum GET SUCCESS % Ok: 75.0% Success.(75.0% SUCCESS expected, 37.5% minimum required).
+TEST_PASSED
+[ ... TEST Completed in 251.943 seconds ]
+
+[Info] Preparing for Stage 2a of the Suspend/Resume Test
+[Info] Stage 2a Scenario: Alive Nodes: 15. Dead Nodes: 5
+
+[ TEST Concurrent Store/Load v2; Stage 2a; (Clients = 32, Limit = 20000 PUTs) ]
+Issuing PUTS ... 
+[DONE in 98.025s]
+[Info] Concurrent Store/Load v2; Stage 2a; PUT Phase; Of 20000 stored keys: 19999 SUCCESS, 1 TIMEOUT, 0 KEY-NOT-FOUND, 0 ERROR-UID, 0 ERROR-INVALID-GET (value or version), 0 ERROR-OTHER.
+[Info] Concurrent Store/Load v2; Stage 2a; PUT Phase; Expected Key Loss: 0.0%. Actual Key Loss: 0.005%
+[Info] Concurrent Store/Load v2; Stage 2a; PUT Phase; Total Value Size (MiB): 9.531888008117676 MiB.
+[Info] Concurrent Store/Load v2; Stage 2a; PUT Phase; SUCCESS Response Count: 19999.0.
+[Info] Concurrent Store/Load v2; Stage 2a; PUT Phase; % SUCCESS: 99.995%.
+[Info] Concurrent Store/Load v2; Stage 2a; PUT Phase; % FAILED (Not SUCCESS): 0.005%.
+[Info] Concurrent Store/Load v2; Stage 2a; PUT Phase; % TIMEOUT: 0.005%.
+[Info] Concurrent Store/Load v2; Stage 2a; PUT Phase; % KEY-NOT-FOUND: 0.0%.
+[Info] Concurrent Store/Load v2; Stage 2a; PUT Phase; % ERROR-UID: 0.0%.
+[Info] Concurrent Store/Load v2; Stage 2a; PUT Phase; % ERROR-INVALID-GET (value or version): 0.0%.
+[Info] Concurrent Store/Load v2; Stage 2a; PUT Phase; % ERROR-OTHER: 0.0%.
+[Info] PUTs % SUCCESS Ok: 99.995% Success.(90.0% minimum required).
+Confirming keys were stored correctly.
+Issuing GETs ... 
+[DONE in 99.009s]
+[Info] Concurrent Store/Load v2; Stage 2a; GET Phase; Of 19999 stored keys: 19998 SUCCESS, 1 TIMEOUT, 0 KEY-NOT-FOUND, 0 ERROR-UID, 0 ERROR-INVALID-GET (value or version), 0 ERROR-OTHER.
+[Info] Concurrent Store/Load v2; Stage 2a; GET Phase; Expected Key Loss: 0.0%. Actual Key Loss: 0.005000250012500625%
+[Info] Concurrent Store/Load v2; Stage 2a; GET Phase; Total Value Size (MiB): 9.531523704528809 MiB.
+[Info] Concurrent Store/Load v2; Stage 2a; GET Phase; SUCCESS Response Count: 19998.0.
+[Info] Concurrent Store/Load v2; Stage 2a; GET Phase; % SUCCESS: 99.9949997499875%.
+[Info] Concurrent Store/Load v2; Stage 2a; GET Phase; % FAILED (Not SUCCESS): 0.005000250012500625%.
+[Info] Concurrent Store/Load v2; Stage 2a; GET Phase; % TIMEOUT: 0.005000250012500625%.
+[Info] Concurrent Store/Load v2; Stage 2a; GET Phase; % KEY-NOT-FOUND: 0.0%.
+[Info] Concurrent Store/Load v2; Stage 2a; GET Phase; % ERROR-UID: 0.0%.
+[Info] Concurrent Store/Load v2; Stage 2a; GET Phase; % ERROR-INVALID-GET (value or version): 0.0%.
+[Info] Concurrent Store/Load v2; Stage 2a; GET Phase; % ERROR-OTHER: 0.0%.
+[Info] GETs % SUCCESS Ok: 99.9949997499875% Success.(90.0% minimum required).
+Checking that 15 nodes are alive
+[Test isAlive] for plab1.cs.msu.ru:10145
+[Test isAlive] for planetlab1.cs.ubc.ca:10145
+[Test isAlive] for pl1.rcc.uottawa.ca:10145
+[Test isAlive] for node1.planetlab.mathcs.emory.edu:10145
+[Test isAlive] for planetlab3.cesnet.cz:10145
+[Test isAlive] for planetlab2.inf.ethz.ch:10145
+[Test isAlive] for planetlab1.dtc.umn.edu:10145
+[Test isAlive] for planetlab1.cs.uoregon.edu:10145
+[Test isAlive] for planetlab02.cs.washington.edu:10145
+[Test isAlive] for planetlab01.cs.washington.edu:10145
+[Test isAlive] for plink.cs.uwaterloo.ca:10145
+[Test isAlive] for planetlab2.cs.ubc.ca:10145
+[Test isAlive] for planetlab2.pop-mg.rnp.br:10145
+[Test isAlive] for planetlab4.mini.pw.edu.pl:10145
+[Test isAlive] for pl1.sos.info.hiroshima-cu.ac.jp:10145
+[ ... Completed in 0.205 seconds ]
+TEST_PASSED
+[ ... TEST Completed in 197.241 seconds ]
+
+[Info] Preparing for Stage 2b of the Suspend/Resume Test
+[Info] To resume 1 node(s) in Stage 2a.
+[Info] Will resume planetlab3.comp.nus.edu.sg:10145
+[Info] Will keep suspended planetlab2.cs.unc.edu:10145
+[Info] Will keep suspended node1.planetlab.albany.edu:10145
+[Info] Will keep suspended planetlab2.pop-pa.rnp.br:10145
+[Info] Will keep suspended pl1.eng.monash.edu.au:10145
+Waiting 10 seconds before resuming nodes
+[Info] Resuming 1 servers.
+Server planetlab3.comp.nus.edu.sg:10145 resumed
+[ ... Completed in 3.054 seconds ]
+Waiting 60 seconds after resuming nodes
+[Info] Stage 2b Scenario: Alive Nodes: 16. Dead Nodes: 4
+
+
+[ TEST Suspend Verify v2; Stage 2b; Key Recovery; ]
+Checking that 4 nodes are suspended
+[Test isAlive] for planetlab2.cs.unc.edu:10145
+[Test isAlive] for node1.planetlab.albany.edu:10145
+[Test isAlive] for planetlab2.pop-pa.rnp.br:10145
+[Test isAlive] for pl1.eng.monash.edu.au:10145
+[ ... Completed in 64.571 seconds ]
+Checking that 16 nodes are alive
+[Test isAlive] for planetlab3.comp.nus.edu.sg:10145
+[Test isAlive] for planetlab2.inf.ethz.ch:10145
+[Test isAlive] for pl1.sos.info.hiroshima-cu.ac.jp:10145
+[Test isAlive] for plab1.cs.msu.ru:10145
+[Test isAlive] for planetlab1.cs.uoregon.edu:10145
+[Test isAlive] for planetlab1.dtc.umn.edu:10145
+[Test isAlive] for pl1.rcc.uottawa.ca:10145
+[Test isAlive] for planetlab4.mini.pw.edu.pl:10145
+[Test isAlive] for planetlab2.pop-mg.rnp.br:10145
+[Test isAlive] for planetlab01.cs.washington.edu:10145
+[Test isAlive] for planetlab2.cs.ubc.ca:10145
+[Test isAlive] for plink.cs.uwaterloo.ca:10145
+[Test isAlive] for planetlab02.cs.washington.edu:10145
+[Test isAlive] for node1.planetlab.mathcs.emory.edu:10145
+[Test isAlive] for planetlab1.cs.ubc.ca:10145
+[Test isAlive] for planetlab3.cesnet.cz:10145
+[ ... Completed in 0.549 seconds ]
+Sending GetMembershipCount to all servers... 
+[Info] Server planetlab02.cs.washington.edu:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab01.cs.washington.edu:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab1.cs.ubc.ca:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab2.cs.ubc.ca:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab1.cs.uoregon.edu:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab1.dtc.umn.edu:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server node1.planetlab.mathcs.emory.edu:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server plink.cs.uwaterloo.ca:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server pl1.rcc.uottawa.ca:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server pl1.sos.info.hiroshima-cu.ac.jp:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab3.cesnet.cz:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab4.mini.pw.edu.pl:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab2.inf.ethz.ch:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab3.comp.nus.edu.sg:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server plab1.cs.msu.ru:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab2.pop-mg.rnp.br:10145 replied with membership count = 16 (expected count = 16)
+[ ... Completed in 0.214 seconds ]
+[Ok] All servers returned the expected membership count (16)
+Attempting retrieval of keys... 
+Issuing GETs ... 
+[DONE in 193.851s]
+[Info] Suspend Verify v2; Stage 2b; Key Recovery; Of 40000 stored keys: 30131 SUCCESS, 1 TIMEOUT, 9868 KEY-NOT-FOUND, 0 ERROR-UID, 0 ERROR-INVALID-GET (value or version), 0 ERROR-OTHER.
+[Info] Suspend Verify v2; Stage 2b; Key Recovery; Expected Key Loss: 20.0%. Actual Key Loss: 24.6725%
+[Info] Suspend Verify v2; Stage 2b; Key Recovery; Total Value Size (MiB): 14.432766914367676 MiB.
+[Info] Suspend Verify v2; Stage 2b; Key Recovery; SUCCESS Response Count: 30131.0.
+[Info] Suspend Verify v2; Stage 2b; Key Recovery; % SUCCESS: 75.3275%.
+[Info] Suspend Verify v2; Stage 2b; Key Recovery; % FAILED (Not SUCCESS): 24.6725%.
+[Info] Suspend Verify v2; Stage 2b; Key Recovery; % TIMEOUT: 0.0025%.
+[Info] Suspend Verify v2; Stage 2b; Key Recovery; % KEY-NOT-FOUND: 24.67%.
+[Info] Suspend Verify v2; Stage 2b; Key Recovery; % ERROR-UID: 0.0%.
+[Info] Suspend Verify v2; Stage 2b; Key Recovery; % ERROR-INVALID-GET (value or version): 0.0%.
+[Info] Suspend Verify v2; Stage 2b; Key Recovery; % ERROR-OTHER: 0.0%.
+[Info] Minimum GET SUCCESS % Ok: 75.3275% Success.(80.0% SUCCESS expected, 40.0% minimum required).
+TEST_PASSED
+[ ... TEST Completed in 259.185 seconds ]
+
+[Info] Preparing for Stage 2c of the Suspend/Resume Test
+[Info] Stage 2c Scenario: Alive Nodes: 16. Dead Nodes: 4
+
+
+[ TEST Suspend Verify v2; Stage 2c; Key Recovery; ]
+Checking that 4 nodes are suspended
+[Test isAlive] for planetlab2.cs.unc.edu:10145
+[Test isAlive] for node1.planetlab.albany.edu:10145
+[Test isAlive] for planetlab2.pop-pa.rnp.br:10145
+[Test isAlive] for pl1.eng.monash.edu.au:10145
+[ ... Completed in 64.568 seconds ]
+Checking that 16 nodes are alive
+[Test isAlive] for planetlab3.comp.nus.edu.sg:10145
+[Test isAlive] for planetlab2.inf.ethz.ch:10145
+[Test isAlive] for pl1.sos.info.hiroshima-cu.ac.jp:10145
+[Test isAlive] for plab1.cs.msu.ru:10145
+[Test isAlive] for planetlab1.cs.uoregon.edu:10145
+[Test isAlive] for planetlab1.dtc.umn.edu:10145
+[Test isAlive] for pl1.rcc.uottawa.ca:10145
+[Test isAlive] for planetlab4.mini.pw.edu.pl:10145
+[Test isAlive] for planetlab2.pop-mg.rnp.br:10145
+[Test isAlive] for node1.planetlab.mathcs.emory.edu:10145
+[Test isAlive] for planetlab02.cs.washington.edu:10145
+[Test isAlive] for planetlab01.cs.washington.edu:10145
+[Test isAlive] for plink.cs.uwaterloo.ca:10145
+[Test isAlive] for planetlab2.cs.ubc.ca:10145
+[Test isAlive] for planetlab3.cesnet.cz:10145
+[Test isAlive] for planetlab1.cs.ubc.ca:10145
+[ ... Completed in 0.545 seconds ]
+Sending GetMembershipCount to all servers... 
+[Info] Server planetlab01.cs.washington.edu:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab02.cs.washington.edu:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab2.cs.ubc.ca:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab1.cs.ubc.ca:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab1.cs.uoregon.edu:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab1.dtc.umn.edu:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server node1.planetlab.mathcs.emory.edu:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server plink.cs.uwaterloo.ca:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server pl1.rcc.uottawa.ca:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server pl1.sos.info.hiroshima-cu.ac.jp:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab2.inf.ethz.ch:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab3.cesnet.cz:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab4.mini.pw.edu.pl:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab3.comp.nus.edu.sg:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server plab1.cs.msu.ru:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab2.pop-mg.rnp.br:10145 replied with membership count = 16 (expected count = 16)
+[ ... Completed in 0.21 seconds ]
+[Ok] All servers returned the expected membership count (16)
+Attempting retrieval of keys... 
+Issuing GETs ... 
+[DONE in 102.059s]
+[Info] Suspend Verify v2; Stage 2c; Key Recovery; Of 19999 stored keys: 19924 SUCCESS, 2 TIMEOUT, 73 KEY-NOT-FOUND, 0 ERROR-UID, 0 ERROR-INVALID-GET (value or version), 0 ERROR-OTHER.
+[Info] Suspend Verify v2; Stage 2c; Key Recovery; Expected Key Loss: 0.0%. Actual Key Loss: 0.3750187509375469%
+[Info] Suspend Verify v2; Stage 2c; Key Recovery; Total Value Size (MiB): 9.494368553161621 MiB.
+[Info] Suspend Verify v2; Stage 2c; Key Recovery; SUCCESS Response Count: 19924.0.
+[Info] Suspend Verify v2; Stage 2c; Key Recovery; % SUCCESS: 99.62498124906246%.
+[Info] Suspend Verify v2; Stage 2c; Key Recovery; % FAILED (Not SUCCESS): 0.3750187509375469%.
+[Info] Suspend Verify v2; Stage 2c; Key Recovery; % TIMEOUT: 0.01000050002500125%.
+[Info] Suspend Verify v2; Stage 2c; Key Recovery; % KEY-NOT-FOUND: 0.36501825091254564%.
+[Info] Suspend Verify v2; Stage 2c; Key Recovery; % ERROR-UID: 0.0%.
+[Info] Suspend Verify v2; Stage 2c; Key Recovery; % ERROR-INVALID-GET (value or version): 0.0%.
+[Info] Suspend Verify v2; Stage 2c; Key Recovery; % ERROR-OTHER: 0.0%.
+[Info] Minimum GET SUCCESS % Ok: 99.62498124906246% Success.(100.0% SUCCESS expected, 50.0% minimum required).
+TEST_PASSED
+[ ... TEST Completed in 167.383 seconds ]
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.313 seconds ]
+[OK]
+[ ... TEST Completed in 0.313 seconds ]
+Pausing for 10 seconds to wait for the cache to be cleared!
+
+Sending GetMembershipCount to all servers... 
+[Info] Server planetlab02.cs.washington.edu:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab01.cs.washington.edu:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab1.cs.ubc.ca:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab2.cs.ubc.ca:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab1.cs.uoregon.edu:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab1.dtc.umn.edu:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server node1.planetlab.mathcs.emory.edu:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server plink.cs.uwaterloo.ca:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server pl1.rcc.uottawa.ca:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server pl1.sos.info.hiroshima-cu.ac.jp:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab2.inf.ethz.ch:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab4.mini.pw.edu.pl:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab3.comp.nus.edu.sg:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab3.cesnet.cz:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server plab1.cs.msu.ru:10145 replied with membership count = 16 (expected count = 16)
+[Info] Server planetlab2.pop-mg.rnp.br:10145 replied with membership count = 16 (expected count = 16)
+[ ... Completed in 0.213 seconds ]
+[Ok] All servers returned the expected membership count (16)
+[ ... TEST Completed in 0.213 seconds ]
+
+[ TEST Random Front-End Basic (PUT -> GET -> REM -> REM -> GET). Value Length = 8 Bytes ]
+TEST_PASSED
+
+[ TEST Random Front-End Basic (PUT -> GET -> REM -> REM -> GET). Value Length = 32 Bytes ]
+TEST_PASSED
+
+[ TEST Random Front-End Basic (PUT -> GET -> REM -> REM -> GET). Value Length = 512 Bytes ]
+TEST_PASSED
+
+[ TEST Random Front-End Basic (PUT -> GET -> REM -> REM -> GET). Value Length = 1024 Bytes ]
+TEST_PASSED
+[ ... TEST Completed in 3.361 seconds ]
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.312 seconds ]
+[OK]
+
+[ TEST Single Front-End Performance (1 clients, 60.0 seconds): PUT -> GET (closed loop) ]
+[Test isAlive] for planetlab3.comp.nus.edu.sg:10145
+[ ... Completed in 0.19 seconds ]
+Stage 2 Single Front-End: Test Status: TEST_PASSED
+Clients: 1
+Total Requests (without replies): 242
+Total Requests (including replies): 484
+Successful Responses: 242
+Timeout Responses: 0
+Total Failed Responses: 0
+% Success: 100.0
+% Timeout: 0.0
+% Failed: 0.0
+Response Time (Successful requests):
+[max] 388ms, [min] 187ms
+[avg] 248.599173553719 ms, [stdev] 57.73729762040368ms
+Throughput: 4.021871000980539 requests per second
+Goodput: 4.021871000980539 requests per second
+Retry Rate (Successful requests): 2.0
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.452 seconds ]
+[OK]
+[ ... TEST Completed in 60.814 seconds ]
+[Info] Pausing for 10 seconds to wait for the cache to be cleared!
+
+[ TEST Single Front-End Performance (16 clients, 60.0 seconds): PUT -> GET (closed loop) ]
+[Test isAlive] for planetlab3.comp.nus.edu.sg:10145
+[ ... Completed in 0.191 seconds ]
+Stage 2 Single Front-End: Test Status: TEST_PASSED
+Clients: 16
+Total Requests (without replies): 3830
+Total Requests (including replies): 7671
+Successful Responses: 3830
+Timeout Responses: 0
+Total Failed Responses: 0
+% Success: 100.0
+% Timeout: 0.0
+% Failed: 0.0
+Response Time (Successful requests):
+[max] 985ms, [min] 178ms
+[avg] 251.15900783289817 ms, [stdev] 70.00735165466321ms
+Throughput: 63.54420719061603 requests per second
+Goodput: 63.54420719061603 requests per second
+Retry Rate (Successful requests): 2.0028720626631853
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.696 seconds ]
+[OK]
+[ ... TEST Completed in 61.163 seconds ]
+[Info] Pausing for 10 seconds to wait for the cache to be cleared!
+
+[ TEST Single Front-End Performance (32 clients, 60.0 seconds): PUT -> GET (closed loop) ]
+[Test isAlive] for planetlab3.comp.nus.edu.sg:10145
+[ ... Completed in 0.19 seconds ]
+Stage 2 Single Front-End: Test Status: TEST_PASSED
+Clients: 32
+Total Requests (without replies): 7830
+Total Requests (including replies): 15660
+Successful Responses: 7830
+Timeout Responses: 0
+Total Failed Responses: 0
+% Success: 100.0
+% Timeout: 0.0
+% Failed: 0.0
+Response Time (Successful requests):
+[max] 518ms, [min] 178ms
+[avg] 245.6772669220945 ms, [stdev] 57.58327353714033ms
+Throughput: 129.81845312111415 requests per second
+Goodput: 129.81845312111415 requests per second
+Retry Rate (Successful requests): 2.0
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.894 seconds ]
+[OK]
+[ ... TEST Completed in 61.403 seconds ]
+[Info] Pausing for 10 seconds to wait for the cache to be cleared!
+
+[ TEST Single Front-End Performance (64 clients, 60.0 seconds): PUT -> GET (closed loop) ]
+[Test isAlive] for planetlab3.comp.nus.edu.sg:10145
+[ ... Completed in 0.192 seconds ]
+Stage 2 Single Front-End: Test Status: TEST_PASSED
+Clients: 64
+Total Requests (without replies): 10717
+Total Requests (including replies): 23008
+Successful Responses: 10716
+Timeout Responses: 0
+Total Failed Responses: 1
+% Success: 99.99066903051227
+% Timeout: 0.0
+% Failed: 0.009330969487729775
+Response Time (Successful requests):
+[max] 1053ms, [min] 178ms
+[avg] 359.13773796192606 ms, [stdev] 224.18021047630927ms
+Throughput: 177.57783632417028 requests per second
+Goodput: 177.56126659044588 requests per second
+Retry Rate (Successful requests): 2.1468694597368665
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.387 seconds ]
+[OK]
+[ ... TEST Completed in 60.936 seconds ]
+[Info] Pausing for 10 seconds to wait for the cache to be cleared!
+
+[ TEST Single Front-End Performance (128 clients, 60.0 seconds): PUT -> GET (closed loop) ]
+[Test isAlive] for planetlab3.comp.nus.edu.sg:10145
+[ ... Completed in 0.193 seconds ]
+Stage 2 Single Front-End: Test Status: TEST_PASSED
+Clients: 128
+Total Requests (without replies): 12406
+Total Requests (including replies): 32081
+Successful Responses: 12398
+Timeout Responses: 0
+Total Failed Responses: 8
+% Success: 99.93551507335161
+% Timeout: 0.0
+% Failed: 0.06448492664839593
+Response Time (Successful requests):
+[max] 4842ms, [min] 178ms
+[avg] 623.196886594612 ms, [stdev] 354.7297870805608ms
+Throughput: 204.08297553833754 requests per second
+Goodput: 203.95137278125978 requests per second
+Retry Rate (Successful requests): 2.5859261647589875
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.718 seconds ]
+[OK]
+[ ... TEST Completed in 61.718 seconds ]
+[Info] Pausing for 10 seconds to wait for the cache to be cleared!
+
+[ TEST Single Front-End Performance (256 clients, 60.0 seconds): PUT -> GET (closed loop) ]
+[Test isAlive] for planetlab3.comp.nus.edu.sg:10145
+[ ... Completed in 0.19 seconds ]
+Stage 2 Single Front-End: Test Status: TEST_PASSED
+Clients: 256
+Total Requests (without replies): 12400
+Total Requests (including replies): 37687
+Successful Responses: 11957
+Timeout Responses: 410
+Total Failed Responses: 33
+% Success: 96.4274193548387
+% Timeout: 3.306451612903226
+% Failed: 0.2661290322580645
+Response Time (Successful requests):
+[max] 4845ms, [min] 178ms
+[avg] 1078.5685372585097 ms, [stdev] 972.9240643625624ms
+Throughput: 196.43253176187307 requests per second
+Goodput: 189.4148211513481 requests per second
+Retry Rate (Successful requests): 3.039274193548387
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.577 seconds ]
+[OK]
+[ ... TEST Completed in 63.898 seconds ]
+[Info] Pausing for 10 seconds to wait for the cache to be cleared!
+
+[ TEST Random Front-End Performance (1 clients, 60.0 seconds): PUT -> GET (closed loop) ]
+[Test isAlive] for planetlab3.comp.nus.edu.sg:10145
+[Test isAlive] for planetlab2.inf.ethz.ch:10145
+[Test isAlive] for plab1.cs.msu.ru:10145
+[Test isAlive] for pl1.sos.info.hiroshima-cu.ac.jp:10145
+[Test isAlive] for planetlab1.cs.uoregon.edu:10145
+[Test isAlive] for planetlab1.dtc.umn.edu:10145
+[Test isAlive] for pl1.rcc.uottawa.ca:10145
+[Test isAlive] for planetlab4.mini.pw.edu.pl:10145
+[Test isAlive] for node1.planetlab.mathcs.emory.edu:10145
+[Test isAlive] for planetlab2.pop-mg.rnp.br:10145
+[Test isAlive] for planetlab02.cs.washington.edu:10145
+[Test isAlive] for planetlab01.cs.washington.edu:10145
+[Test isAlive] for plink.cs.uwaterloo.ca:10145
+[Test isAlive] for planetlab2.cs.ubc.ca:10145
+[Test isAlive] for planetlab1.cs.ubc.ca:10145
+[Test isAlive] for planetlab3.cesnet.cz:10145
+[ ... Completed in 0.207 seconds ]
+TEST_PASSED
+Stage 2 Random Front-End: Test Status: TEST_PASSED
+Clients: 1
+Total Requests (without replies): 369
+Total Requests (including replies): 596
+Successful Responses: 310
+Timeout Responses: 0
+Total Failed Responses: 59
+% Success: 84.01084010840108
+% Timeout: 0.0
+% Failed: 15.989159891598916
+Response Time (Successful requests):
+[max] 385ms, [min] 8ms
+[avg] 165.92903225806452 ms, [stdev] 79.75487524201843ms
+Throughput: 6.134663341645886 requests per second
+Goodput: 5.15378221113882 requests per second
+Retry Rate (Successful requests): 1.6151761517615175
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.482 seconds ]
+[OK]
+[ ... TEST Completed in 60.84 seconds ]
+[Info] Pausing for 10 seconds to wait for the cache to be cleared!
+
+[ TEST Random Front-End Performance (16 clients, 60.0 seconds): PUT -> GET (closed loop) ]
+[Test isAlive] for planetlab3.comp.nus.edu.sg:10145
+[Test isAlive] for planetlab2.inf.ethz.ch:10145
+[Test isAlive] for planetlab1.dtc.umn.edu:10145
+[Test isAlive] for pl1.sos.info.hiroshima-cu.ac.jp:10145
+[Test isAlive] for planetlab1.cs.uoregon.edu:10145
+[Test isAlive] for pl1.rcc.uottawa.ca:10145
+[Test isAlive] for planetlab2.pop-mg.rnp.br:10145
+[Test isAlive] for planetlab2.cs.ubc.ca:10145
+[Test isAlive] for planetlab4.mini.pw.edu.pl:10145
+[Test isAlive] for plab1.cs.msu.ru:10145
+[Test isAlive] for planetlab01.cs.washington.edu:10145
+[Test isAlive] for plink.cs.uwaterloo.ca:10145
+[Test isAlive] for planetlab1.cs.ubc.ca:10145
+[Test isAlive] for planetlab02.cs.washington.edu:10145
+[Test isAlive] for planetlab3.cesnet.cz:10145
+[Test isAlive] for node1.planetlab.mathcs.emory.edu:10145
+[ ... Completed in 0.214 seconds ]
+TEST_PASSED
+Stage 2 Random Front-End: Test Status: TEST_PASSED
+Clients: 16
+Total Requests (without replies): 5552
+Total Requests (including replies): 9355
+Successful Responses: 4853
+Timeout Responses: 0
+Total Failed Responses: 699
+% Success: 87.40994236311239
+% Timeout: 0.0
+% Failed: 12.590057636887607
+Response Time (Successful requests):
+[max] 395ms, [min] 7ms
+[avg] 178.7160519266433 ms, [stdev] 87.5393440962175ms
+Throughput: 92.0195574707881 requests per second
+Goodput: 80.43424214800696 requests per second
+Retry Rate (Successful requests): 1.684978386167147
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.249 seconds ]
+[OK]
+[ ... TEST Completed in 60.8 seconds ]
+[Info] Pausing for 10 seconds to wait for the cache to be cleared!
+
+[ TEST Random Front-End Performance (32 clients, 60.0 seconds): PUT -> GET (closed loop) ]
+[Test isAlive] for planetlab3.comp.nus.edu.sg:10145
+[Test isAlive] for planetlab2.inf.ethz.ch:10145
+[Test isAlive] for pl1.sos.info.hiroshima-cu.ac.jp:10145
+[Test isAlive] for plab1.cs.msu.ru:10145
+[Test isAlive] for planetlab1.cs.uoregon.edu:10145
+[Test isAlive] for planetlab1.dtc.umn.edu:10145
+[Test isAlive] for pl1.rcc.uottawa.ca:10145
+[Test isAlive] for planetlab4.mini.pw.edu.pl:10145
+[Test isAlive] for planetlab2.pop-mg.rnp.br:10145
+[Test isAlive] for node1.planetlab.mathcs.emory.edu:10145
+[Test isAlive] for planetlab02.cs.washington.edu:10145
+[Test isAlive] for planetlab01.cs.washington.edu:10145
+[Test isAlive] for plink.cs.uwaterloo.ca:10145
+[Test isAlive] for planetlab2.cs.ubc.ca:10145
+[Test isAlive] for planetlab1.cs.ubc.ca:10145
+[Test isAlive] for planetlab3.cesnet.cz:10145
+[ ... Completed in 0.21 seconds ]
+TEST_PASSED
+[ CPU load (loadavg, last one minute) 0.00 ]
+Stage 2 Random Front-End: Test Status: TEST_PASSED
+Clients: 32
+Total Requests (without replies): 11130
+Total Requests (including replies): 18664
+Successful Responses: 9645
+Timeout Responses: 0
+Total Failed Responses: 1485
+% Success: 86.65768194070081
+% Timeout: 0.0
+% Failed: 13.342318059299192
+Response Time (Successful requests):
+[max] 479ms, [min] 7ms
+[avg] 177.9857957490928 ms, [stdev] 83.9050866267793ms
+Throughput: 184.73029045643153 requests per second
+Goodput: 160.08298755186723 requests per second
+Retry Rate (Successful requests): 1.6769092542677448
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.257 seconds ]
+[OK]
+[ ... TEST Completed in 60.724 seconds ]
+[Info] Pausing for 10 seconds to wait for the cache to be cleared!
+
+[ TEST Random Front-End Performance (64 clients, 60.0 seconds): PUT -> GET (closed loop) ]
+[Test isAlive] for planetlab3.comp.nus.edu.sg:10145
+[Test isAlive] for planetlab2.inf.ethz.ch:10145
+[Test isAlive] for pl1.sos.info.hiroshima-cu.ac.jp:10145
+[Test isAlive] for plab1.cs.msu.ru:10145
+[Test isAlive] for planetlab1.cs.uoregon.edu:10145
+[Test isAlive] for planetlab1.dtc.umn.edu:10145
+[Test isAlive] for pl1.rcc.uottawa.ca:10145
+[Test isAlive] for planetlab2.pop-mg.rnp.br:10145
+[Test isAlive] for node1.planetlab.mathcs.emory.edu:10145
+[Test isAlive] for planetlab4.mini.pw.edu.pl:10145
+[Test isAlive] for plink.cs.uwaterloo.ca:10145
+[Test isAlive] for planetlab02.cs.washington.edu:10145
+[Test isAlive] for planetlab2.cs.ubc.ca:10145
+[Test isAlive] for planetlab01.cs.washington.edu:10145
+[Test isAlive] for planetlab3.cesnet.cz:10145
+[Test isAlive] for planetlab1.cs.ubc.ca:10145
+[ ... Completed in 0.433 seconds ]
+TEST_PASSED
+[ CPU load (loadavg, last one minute) 0.00 ]
+Stage 2 Random Front-End: Test Status: TEST_PASSED
+Clients: 64
+Total Requests (without replies): 22957
+Total Requests (including replies): 37975
+Successful Responses: 19947
+Timeout Responses: 0
+Total Failed Responses: 3010
+% Success: 86.88853073136734
+% Timeout: 0.0
+% Failed: 13.11146926863266
+Response Time (Successful requests):
+[max] 458ms, [min] 7ms
+[avg] 173.50438662455508 ms, [stdev] 87.6344989295058ms
+Throughput: 380.5300933216198 requests per second
+Goodput: 330.6370070778564 requests per second
+Retry Rate (Successful requests): 1.6541795530774928
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.259 seconds ]
+[OK]
+[ ... TEST Completed in 61.033 seconds ]
+[Info] Pausing for 10 seconds to wait for the cache to be cleared!
+
+[ TEST Random Front-End Performance (128 clients, 60.0 seconds): PUT -> GET (closed loop) ]
+[Test isAlive] for planetlab3.comp.nus.edu.sg:10145
+[Test isAlive] for planetlab2.inf.ethz.ch:10145
+[Test isAlive] for pl1.sos.info.hiroshima-cu.ac.jp:10145
+[Test isAlive] for plab1.cs.msu.ru:10145
+[Test isAlive] for planetlab1.dtc.umn.edu:10145
+[Test isAlive] for planetlab1.cs.uoregon.edu:10145
+[Test isAlive] for plink.cs.uwaterloo.ca:10145
+[Test isAlive] for node1.planetlab.mathcs.emory.edu:10145
+[Test isAlive] for planetlab01.cs.washington.edu:10145
+[Test isAlive] for planetlab02.cs.washington.edu:10145
+[Test isAlive] for planetlab2.pop-mg.rnp.br:10145
+[Test isAlive] for planetlab2.cs.ubc.ca:10145
+[Test isAlive] for planetlab4.mini.pw.edu.pl:10145
+[Test isAlive] for pl1.rcc.uottawa.ca:10145
+[Test isAlive] for planetlab1.cs.ubc.ca:10145
+[Test isAlive] for planetlab3.cesnet.cz:10145
+[ ... Completed in 0.216 seconds ]
+TEST_PASSED
+[ CPU load (loadavg, last one minute) 0.00 ]
+Stage 2 Random Front-End: Test Status: TEST_PASSED
+Clients: 128
+Total Requests (without replies): 45949
+Total Requests (including replies): 75940
+Successful Responses: 39760
+Timeout Responses: 1
+Total Failed Responses: 6188
+% Success: 86.53071884045355
+% Timeout: 0.002176325926570763
+% Failed: 13.467104833619883
+Response Time (Successful requests):
+[max] 438ms, [min] 6ms
+[avg] 172.67505030181087 ms, [stdev] 85.8907510617726ms
+Throughput: 761.0348311443099 requests per second
+Goodput: 658.5289100154032 requests per second
+Retry Rate (Successful requests): 1.6527019086378376
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.248 seconds ]
+[OK]
+[ ... TEST Completed in 60.857 seconds ]
+[Info] Pausing for 10 seconds to wait for the cache to be cleared!
+
+[ TEST Random Front-End Performance (256 clients, 60.0 seconds): PUT -> GET (closed loop) ]
+[Test isAlive] for planetlab3.comp.nus.edu.sg:10145
+[Test isAlive] for planetlab2.inf.ethz.ch:10145
+[Test isAlive] for pl1.sos.info.hiroshima-cu.ac.jp:10145
+[Test isAlive] for plab1.cs.msu.ru:10145
+[Test isAlive] for planetlab1.cs.uoregon.edu:10145
+[Test isAlive] for planetlab1.dtc.umn.edu:10145
+[Test isAlive] for pl1.rcc.uottawa.ca:10145
+[Test isAlive] for planetlab4.mini.pw.edu.pl:10145
+[Test isAlive] for planetlab2.pop-mg.rnp.br:10145
+[Test isAlive] for node1.planetlab.mathcs.emory.edu:10145
+[Test isAlive] for planetlab02.cs.washington.edu:10145
+[Test isAlive] for planetlab01.cs.washington.edu:10145
+[Test isAlive] for plink.cs.uwaterloo.ca:10145
+[Test isAlive] for planetlab2.cs.ubc.ca:10145
+[Test isAlive] for planetlab1.cs.ubc.ca:10145
+[Test isAlive] for planetlab3.cesnet.cz:10145
+[ ... Completed in 0.372 seconds ]
+TEST_PASSED
+[ CPU load (loadavg, last one minute) 0.00 ]
+Stage 2 Random Front-End: Test Status: TEST_PASSED
+Clients: 256
+Total Requests (without replies): 91408
+Total Requests (including replies): 151508
+Successful Responses: 79258
+Timeout Responses: 1
+Total Failed Responses: 12149
+% Success: 86.7079467880273
+% Timeout: 0.001093996149133555
+% Failed: 13.29095921582356
+Response Time (Successful requests):
+[max] 939ms, [min] 6ms
+[avg] 173.21213000580383 ms, [stdev] 85.83211735096383ms
+Throughput: 1515.0329830609608 requests per second
+Goodput: 1313.6539927735605 requests per second
+Retry Rate (Successful requests): 1.6574916856292665
+Sending WIPE-OUT to all servers...
+[ ... Completed in 0.239 seconds ]
+[OK]
+[ ... TEST Completed in 60.979 seconds ]
+[Info] Pausing for 10 seconds to wait for the cache to be cleared!
+
+[Test isAlive] for planetlab2.cs.unc.edu:10145
+[Test isAlive] for node1.planetlab.albany.edu:10145
+[Test isAlive] for planetlab2.pop-pa.rnp.br:10145
+[Test isAlive] for pl1.eng.monash.edu.au:10145
+[ ... Completed in 64.646 seconds ]
+
+Results Summary:
+Client AWS Instance Type : c5.large
+Client Local Hostname : ip-172-31-36-38
+Client Local IP : ip-172-31-36-38/172.31.36.38
+Concurrent Store/Load v2; Stage 0; : 2.0
+Concurrent Store/Load v2; Stage 0; GET Phase; % ERROR-INVALID-GET (value or version) : 0.0
+Concurrent Store/Load v2; Stage 0; GET Phase; % ERROR-OTHER : 0.0
+Concurrent Store/Load v2; Stage 0; GET Phase; % ERROR-UID : 0.0
+Concurrent Store/Load v2; Stage 0; GET Phase; % FAILED (Not SUCCESS) : 0.0
+Concurrent Store/Load v2; Stage 0; GET Phase; % KEY-NOT-FOUND : 0.0
+Concurrent Store/Load v2; Stage 0; GET Phase; % SUCCESS : 100.0
+Concurrent Store/Load v2; Stage 0; GET Phase; % TIMEOUT : 0.0
+Concurrent Store/Load v2; Stage 0; GET Phase; SUCCESS Response Count : 40000.0
+Concurrent Store/Load v2; Stage 0; GET Phase; Total Value Size (MiB) : 19.15686321258545
+Concurrent Store/Load v2; Stage 0; PUT Phase; % ERROR-INVALID-GET (value or version) : 0.0
+Concurrent Store/Load v2; Stage 0; PUT Phase; % ERROR-OTHER : 0.0
+Concurrent Store/Load v2; Stage 0; PUT Phase; % ERROR-UID : 0.0
+Concurrent Store/Load v2; Stage 0; PUT Phase; % FAILED (Not SUCCESS) : 0.0
+Concurrent Store/Load v2; Stage 0; PUT Phase; % KEY-NOT-FOUND : 0.0
+Concurrent Store/Load v2; Stage 0; PUT Phase; % SUCCESS : 100.0
+Concurrent Store/Load v2; Stage 0; PUT Phase; % TIMEOUT : 0.0
+Concurrent Store/Load v2; Stage 0; PUT Phase; SUCCESS Response Count : 40000.0
+Concurrent Store/Load v2; Stage 0; PUT Phase; Total Value Size (MiB) : 19.15686321258545
+Concurrent Store/Load v2; Stage 2a; : 2.0
+Concurrent Store/Load v2; Stage 2a; GET Phase; % ERROR-INVALID-GET (value or version) : 0.0
+Concurrent Store/Load v2; Stage 2a; GET Phase; % ERROR-OTHER : 0.0
+Concurrent Store/Load v2; Stage 2a; GET Phase; % ERROR-UID : 0.0
+Concurrent Store/Load v2; Stage 2a; GET Phase; % FAILED (Not SUCCESS) : 0.005000250012500625
+Concurrent Store/Load v2; Stage 2a; GET Phase; % KEY-NOT-FOUND : 0.0
+Concurrent Store/Load v2; Stage 2a; GET Phase; % SUCCESS : 99.9949997499875
+Concurrent Store/Load v2; Stage 2a; GET Phase; % TIMEOUT : 0.005000250012500625
+Concurrent Store/Load v2; Stage 2a; GET Phase; SUCCESS Response Count : 19998.0
+Concurrent Store/Load v2; Stage 2a; GET Phase; Total Value Size (MiB) : 9.531523704528809
+Concurrent Store/Load v2; Stage 2a; PUT Phase; % ERROR-INVALID-GET (value or version) : 0.0
+Concurrent Store/Load v2; Stage 2a; PUT Phase; % ERROR-OTHER : 0.0
+Concurrent Store/Load v2; Stage 2a; PUT Phase; % ERROR-UID : 0.0
+Concurrent Store/Load v2; Stage 2a; PUT Phase; % FAILED (Not SUCCESS) : 0.005
+Concurrent Store/Load v2; Stage 2a; PUT Phase; % KEY-NOT-FOUND : 0.0
+Concurrent Store/Load v2; Stage 2a; PUT Phase; % SUCCESS : 99.995
+Concurrent Store/Load v2; Stage 2a; PUT Phase; % TIMEOUT : 0.005
+Concurrent Store/Load v2; Stage 2a; PUT Phase; SUCCESS Response Count : 19999.0
+Concurrent Store/Load v2; Stage 2a; PUT Phase; Total Value Size (MiB) : 9.531888008117676
+Local At-Most-Once Policy : 2.0
+Local At-Most-Once Policy Empty REMs : 2.0
+Local At-Most-Once Policy Error Return Code : 2.0
+Local Basic PUT GET  : 2.0
+Local Client Capacity Test : 2.0
+Local Double PUT with version : 2.0
+Local Double Remove : 2.0
+Local Invalid Command : 2.0
+Local Invalid Key Test : 2.0
+Local Invalid Value Test : 2.0
+Local Remove Operation : 2.0
+Local Shutdown Test : 2.0
+Local Single node: 1 Client(s) % Failed : 0.0052119648180792635
+Local Single node: 1 Client(s) % Success : 99.99478803518193
+Local Single node: 1 Client(s) % Timeout : 0.0
+Local Single node: 1 Client(s) Average Response Time (ms) : 1.0
+Local Single node: 1 Client(s) Goodput (Requests per Second) : 14389.0
+Local Single node: 1 Client(s) Maximum Response Time (ms) : 16.0
+Local Single node: 1 Client(s) STDEV Response Time (ms) : 1.0
+Local Single node: 1 Client(s) Successful Responses : 863353
+Local Single node: 1 Client(s) Throughput (Requests per Second) : 14390.0
+Local Single node: 1 Client(s) Timeout Responses : 0
+Local Single node: 1 Client(s) Total Failed Responses : 45
+Local Single node: 1 Client(s) Total Requests (including retries) : 863398
+Local Single node: 1 Client(s) Total Requests (without retries) : 863398
+Local Single node: 16 Client(s) % Failed : 0.00489696611471272
+Local Single node: 16 Client(s) % Success : 99.99510303388529
+Local Single node: 16 Client(s) % Timeout : 0.0
+Local Single node: 16 Client(s) Average Response Time (ms) : 1.0
+Local Single node: 16 Client(s) Goodput (Requests per Second) : 19398.0
+Local Single node: 16 Client(s) Maximum Response Time (ms) : 664.0
+Local Single node: 16 Client(s) STDEV Response Time (ms) : 7.0
+Local Single node: 16 Client(s) Successful Responses : 1163929
+Local Single node: 16 Client(s) Throughput (Requests per Second) : 19399.0
+Local Single node: 16 Client(s) Timeout Responses : 0
+Local Single node: 16 Client(s) Total Failed Responses : 57
+Local Single node: 16 Client(s) Total Requests (including retries) : 1163986
+Local Single node: 16 Client(s) Total Requests (without retries) : 1163986
+Local Single node: 64 Client(s) % Failed : 0.004885982117305451
+Local Single node: 64 Client(s) % Success : 99.9951140178827
+Local Single node: 64 Client(s) % Timeout : 0.0
+Local Single node: 64 Client(s) Average Response Time (ms) : 4.0
+Local Single node: 64 Client(s) Goodput (Requests per Second) : 19086.0
+Local Single node: 64 Client(s) Maximum Response Time (ms) : 380.0
+Local Single node: 64 Client(s) STDEV Response Time (ms) : 14.0
+Local Single node: 64 Client(s) Successful Responses : 1146080
+Local Single node: 64 Client(s) Throughput (Requests per Second) : 19087.0
+Local Single node: 64 Client(s) Timeout Responses : 0
+Local Single node: 64 Client(s) Total Failed Responses : 56
+Local Single node: 64 Client(s) Total Requests (including retries) : 1146136
+Local Single node: 64 Client(s) Total Requests (without retries) : 1146136
+Server Count : 20
+Server List : planetlab1.cs.ubc.ca_10145_planetlab2.cs.ubc.ca_10145_planetlab2.cs.unc.edu_10145_planetlab4.mini.pw.edu.pl_10145_planetlab2.pop-pa.rnp.br_10145_plink.cs.uwaterloo.ca_10145_node1.planetlab.albany.edu_10145_pl1.eng.monash.edu.au_10145_planetlab2.inf.ethz.ch_10145_planetlab01.cs.washington.edu_10145_planetlab02.cs.washington.edu_10145_planetlab2.pop-mg.rnp.br_10145_planetlab3.comp.nus.edu.sg_10145_pl1.sos.info.hiroshima-cu.ac.jp_10145_planetlab1.dtc.umn.edu_10145_pl1.rcc.uottawa.ca_10145_planetlab3.cesnet.cz_10145_node1.planetlab.mathcs.emory.edu_10145_plab1.cs.msu.ru_10145_planetlab1.cs.uoregon.edu_10145_
+Single Client Capacity (MiB) for value size of 500 : 24.0
+Single Front Node (At-Most-Once) Policy : 2.0
+Single Front Node At-Most-Once Policy Empty REMs : 2.0
+Single Front Node At-Most-Once Policy Error Return Code : 2.0
+Single Front Node Basic PUT GET  : 2.0
+Single Front Node Double PUT with version : 2.0
+Single Front Node Double Remove : 2.0
+Single Front Node Invalid Command : 2.0
+Single Front Node Invalid Key Test : 2.0
+Single Front Node Invalid Value Test : 2.0
+Single Front Node Multi-Client Crash : 2.0
+Single Front Node Remove Operation : 2.0
+Single Front-End: 1 Client(s) % Failed : 0.0
+Single Front-End: 1 Client(s) % Success : 100.0
+Single Front-End: 1 Client(s) % Timeout : 0.0
+Single Front-End: 1 Client(s) Average Response Time (ms) : 112.0
+Single Front-End: 1 Client(s) Goodput (Requests per Second) : 9.0
+Single Front-End: 1 Client(s) Maximum Response Time (ms) : 235.0
+Single Front-End: 1 Client(s) STDEV Response Time (ms) : 74.0
+Single Front-End: 1 Client(s) Successful Responses : 537
+Single Front-End: 1 Client(s) Throughput (Requests per Second) : 9.0
+Single Front-End: 1 Client(s) Timeout Responses : 0
+Single Front-End: 1 Client(s) Total Failed Responses : 0
+Single Front-End: 1 Client(s) Total Requests (including retries) : 747
+Single Front-End: 1 Client(s) Total Requests (without retries) : 537
+Single Front-End: 128 Client(s) % Failed : 0.0
+Single Front-End: 128 Client(s) % Success : 100.0
+Single Front-End: 128 Client(s) % Timeout : 0.0
+Single Front-End: 128 Client(s) Average Response Time (ms) : 130.0
+Single Front-End: 128 Client(s) Goodput (Requests per Second) : 986.0
+Single Front-End: 128 Client(s) Maximum Response Time (ms) : 407.0
+Single Front-End: 128 Client(s) STDEV Response Time (ms) : 76.0
+Single Front-End: 128 Client(s) Successful Responses : 59374
+Single Front-End: 128 Client(s) Throughput (Requests per Second) : 986.0
+Single Front-End: 128 Client(s) Timeout Responses : 0
+Single Front-End: 128 Client(s) Total Failed Responses : 0
+Single Front-End: 128 Client(s) Total Requests (including retries) : 85137
+Single Front-End: 128 Client(s) Total Requests (without retries) : 59374
+Single Front-End: 16 Client(s) % Failed : 0.0
+Single Front-End: 16 Client(s) % Success : 100.0
+Single Front-End: 16 Client(s) % Timeout : 0.0
+Single Front-End: 16 Client(s) Average Response Time (ms) : 114.0
+Single Front-End: 16 Client(s) Goodput (Requests per Second) : 141.0
+Single Front-End: 16 Client(s) Maximum Response Time (ms) : 516.0
+Single Front-End: 16 Client(s) STDEV Response Time (ms) : 76.0
+Single Front-End: 16 Client(s) Successful Responses : 8437
+Single Front-End: 16 Client(s) Throughput (Requests per Second) : 141.0
+Single Front-End: 16 Client(s) Timeout Responses : 0
+Single Front-End: 16 Client(s) Total Failed Responses : 0
+Single Front-End: 16 Client(s) Total Requests (including retries) : 11904
+Single Front-End: 16 Client(s) Total Requests (without retries) : 8437
+Single Front-End: 256 Client(s) % Failed : 0.0
+Single Front-End: 256 Client(s) % Success : 99.90373507893723
+Single Front-End: 256 Client(s) % Timeout : 0.09626492106276473
+Single Front-End: 256 Client(s) Average Response Time (ms) : 264.0
+Single Front-End: 256 Client(s) Goodput (Requests per Second) : 924.0
+Single Front-End: 256 Client(s) Maximum Response Time (ms) : 4779.0
+Single Front-End: 256 Client(s) STDEV Response Time (ms) : 299.0
+Single Front-End: 256 Client(s) Successful Responses : 57079
+Single Front-End: 256 Client(s) Throughput (Requests per Second) : 925.0
+Single Front-End: 256 Client(s) Timeout Responses : 55
+Single Front-End: 256 Client(s) Total Failed Responses : 0
+Single Front-End: 256 Client(s) Total Requests (including retries) : 102524
+Single Front-End: 256 Client(s) Total Requests (without retries) : 57134
+Single Front-End: 32 Client(s) % Failed : 0.0
+Single Front-End: 32 Client(s) % Success : 100.0
+Single Front-End: 32 Client(s) % Timeout : 0.0
+Single Front-End: 32 Client(s) Average Response Time (ms) : 115.0
+Single Front-End: 32 Client(s) Goodput (Requests per Second) : 280.0
+Single Front-End: 32 Client(s) Maximum Response Time (ms) : 363.0
+Single Front-End: 32 Client(s) STDEV Response Time (ms) : 75.0
+Single Front-End: 32 Client(s) Successful Responses : 16853
+Single Front-End: 32 Client(s) Throughput (Requests per Second) : 280.0
+Single Front-End: 32 Client(s) Timeout Responses : 0
+Single Front-End: 32 Client(s) Total Failed Responses : 0
+Single Front-End: 32 Client(s) Total Requests (including retries) : 23776
+Single Front-End: 32 Client(s) Total Requests (without retries) : 16853
+Single Front-End: 64 Client(s) % Failed : 0.0
+Single Front-End: 64 Client(s) % Success : 99.99693100908421
+Single Front-End: 64 Client(s) % Timeout : 0.003068990915786889
+Single Front-End: 64 Client(s) Average Response Time (ms) : 118.0
+Single Front-End: 64 Client(s) Goodput (Requests per Second) : 542.0
+Single Front-End: 64 Client(s) Maximum Response Time (ms) : 332.0
+Single Front-End: 64 Client(s) STDEV Response Time (ms) : 76.0
+Single Front-End: 64 Client(s) Successful Responses : 32583
+Single Front-End: 64 Client(s) Throughput (Requests per Second) : 542.0
+Single Front-End: 64 Client(s) Timeout Responses : 1
+Single Front-End: 64 Client(s) Total Failed Responses : 0
+Single Front-End: 64 Client(s) Total Requests (including retries) : 46049
+Single Front-End: 64 Client(s) Total Requests (without retries) : 32584
+Stage 1 Random Front-End Basic : 2.0
+Stage 1 Random Front-End Performance: 1 Client(s) % Failed : 0.0
+Stage 1 Random Front-End Performance: 1 Client(s) % Success : 100.0
+Stage 1 Random Front-End Performance: 1 Client(s) % Timeout : 0.0
+Stage 1 Random Front-End Performance: 1 Client(s) Average Response Time (ms) : 180.0
+Stage 1 Random Front-End Performance: 1 Client(s) Goodput (Requests per Second) : 6.0
+Stage 1 Random Front-End Performance: 1 Client(s) Maximum Response Time (ms) : 391.0
+Stage 1 Random Front-End Performance: 1 Client(s) STDEV Response Time (ms) : 85.0
+Stage 1 Random Front-End Performance: 1 Client(s) Successful Responses : 328
+Stage 1 Random Front-End Performance: 1 Client(s) Throughput (Requests per Second) : 6.0
+Stage 1 Random Front-End Performance: 1 Client(s) Timeout Responses : 0
+Stage 1 Random Front-End Performance: 1 Client(s) Total Failed Responses : 0
+Stage 1 Random Front-End Performance: 1 Client(s) Total Requests (including replies) : 557
+Stage 1 Random Front-End Performance: 1 Client(s) Total Requests (without replies) : 328
+Stage 1 Random Front-End Performance: 128 Client(s) % Failed : 0.0
+Stage 1 Random Front-End Performance: 128 Client(s) % Success : 100.0
+Stage 1 Random Front-End Performance: 128 Client(s) % Timeout : 0.0
+Stage 1 Random Front-End Performance: 128 Client(s) Average Response Time (ms) : 178.0
+Stage 1 Random Front-End Performance: 128 Client(s) CPU load (loadavg - last one minute) : 0.10
+Stage 1 Random Front-End Performance: 128 Client(s) Goodput (Requests per Second) : 719.0
+Stage 1 Random Front-End Performance: 128 Client(s) Maximum Response Time (ms) : 528.0
+Stage 1 Random Front-End Performance: 128 Client(s) STDEV Response Time (ms) : 89.0
+Stage 1 Random Front-End Performance: 128 Client(s) Successful Responses : 43364
+Stage 1 Random Front-End Performance: 128 Client(s) Throughput (Requests per Second) : 719.0
+Stage 1 Random Front-End Performance: 128 Client(s) Timeout Responses : 0
+Stage 1 Random Front-End Performance: 128 Client(s) Total Failed Responses : 0
+Stage 1 Random Front-End Performance: 128 Client(s) Total Requests (including replies) : 72526
+Stage 1 Random Front-End Performance: 128 Client(s) Total Requests (without replies) : 43364
+Stage 1 Random Front-End Performance: 16 Client(s) % Failed : 0.0
+Stage 1 Random Front-End Performance: 16 Client(s) % Success : 100.0
+Stage 1 Random Front-End Performance: 16 Client(s) % Timeout : 0.0
+Stage 1 Random Front-End Performance: 16 Client(s) Average Response Time (ms) : 178.0
+Stage 1 Random Front-End Performance: 16 Client(s) Goodput (Requests per Second) : 90.0
+Stage 1 Random Front-End Performance: 16 Client(s) Maximum Response Time (ms) : 545.0
+Stage 1 Random Front-End Performance: 16 Client(s) STDEV Response Time (ms) : 90.0
+Stage 1 Random Front-End Performance: 16 Client(s) Successful Responses : 5405
+Stage 1 Random Front-End Performance: 16 Client(s) Throughput (Requests per Second) : 90.0
+Stage 1 Random Front-End Performance: 16 Client(s) Timeout Responses : 0
+Stage 1 Random Front-End Performance: 16 Client(s) Total Failed Responses : 0
+Stage 1 Random Front-End Performance: 16 Client(s) Total Requests (including replies) : 9102
+Stage 1 Random Front-End Performance: 16 Client(s) Total Requests (without replies) : 5405
+Stage 1 Random Front-End Performance: 256 Client(s) % Failed : 0.0
+Stage 1 Random Front-End Performance: 256 Client(s) % Success : 99.9988525794015
+Stage 1 Random Front-End Performance: 256 Client(s) % Timeout : 0.001147420598494584
+Stage 1 Random Front-End Performance: 256 Client(s) Average Response Time (ms) : 177.0
+Stage 1 Random Front-End Performance: 256 Client(s) CPU load (loadavg - last one minute) : 0.02
+Stage 1 Random Front-End Performance: 256 Client(s) Goodput (Requests per Second) : 1444.0
+Stage 1 Random Front-End Performance: 256 Client(s) Maximum Response Time (ms) : 545.0
+Stage 1 Random Front-End Performance: 256 Client(s) STDEV Response Time (ms) : 89.0
+Stage 1 Random Front-End Performance: 256 Client(s) Successful Responses : 87151
+Stage 1 Random Front-End Performance: 256 Client(s) Throughput (Requests per Second) : 1444.0
+Stage 1 Random Front-End Performance: 256 Client(s) Timeout Responses : 1
+Stage 1 Random Front-End Performance: 256 Client(s) Total Failed Responses : 0
+Stage 1 Random Front-End Performance: 256 Client(s) Total Requests (including replies) : 145665
+Stage 1 Random Front-End Performance: 256 Client(s) Total Requests (without replies) : 87152
+Stage 1 Random Front-End Performance: 32 Client(s) % Failed : 0.0
+Stage 1 Random Front-End Performance: 32 Client(s) % Success : 100.0
+Stage 1 Random Front-End Performance: 32 Client(s) % Timeout : 0.0
+Stage 1 Random Front-End Performance: 32 Client(s) Average Response Time (ms) : 179.0
+Stage 1 Random Front-End Performance: 32 Client(s) CPU load (loadavg - last one minute) : 0.00
+Stage 1 Random Front-End Performance: 32 Client(s) Goodput (Requests per Second) : 179.0
+Stage 1 Random Front-End Performance: 32 Client(s) Maximum Response Time (ms) : 4746.0
+Stage 1 Random Front-End Performance: 32 Client(s) STDEV Response Time (ms) : 122.0
+Stage 1 Random Front-End Performance: 32 Client(s) Successful Responses : 10774
+Stage 1 Random Front-End Performance: 32 Client(s) Throughput (Requests per Second) : 179.0
+Stage 1 Random Front-End Performance: 32 Client(s) Timeout Responses : 0
+Stage 1 Random Front-End Performance: 32 Client(s) Total Failed Responses : 0
+Stage 1 Random Front-End Performance: 32 Client(s) Total Requests (including replies) : 17961
+Stage 1 Random Front-End Performance: 32 Client(s) Total Requests (without replies) : 10774
+Stage 1 Random Front-End Performance: 64 Client(s) % Failed : 0.0
+Stage 1 Random Front-End Performance: 64 Client(s) % Success : 100.0
+Stage 1 Random Front-End Performance: 64 Client(s) % Timeout : 0.0
+Stage 1 Random Front-End Performance: 64 Client(s) Average Response Time (ms) : 175.0
+Stage 1 Random Front-End Performance: 64 Client(s) CPU load (loadavg - last one minute) : 0.00
+Stage 1 Random Front-End Performance: 64 Client(s) Goodput (Requests per Second) : 366.0
+Stage 1 Random Front-End Performance: 64 Client(s) Maximum Response Time (ms) : 418.0
+Stage 1 Random Front-End Performance: 64 Client(s) STDEV Response Time (ms) : 89.0
+Stage 1 Random Front-End Performance: 64 Client(s) Successful Responses : 22059
+Stage 1 Random Front-End Performance: 64 Client(s) Throughput (Requests per Second) : 366.0
+Stage 1 Random Front-End Performance: 64 Client(s) Timeout Responses : 0
+Stage 1 Random Front-End Performance: 64 Client(s) Total Failed Responses : 0
+Stage 1 Random Front-End Performance: 64 Client(s) Total Requests (including replies) : 36670
+Stage 1 Random Front-End Performance: 64 Client(s) Total Requests (without replies) : 22059
+Stage 1 Suspend Node Count : 5
+Stage 2 Distributed Shutdown Honoured : 2.0
+Stage 2 Random Front-End Basic : 2.0
+Stage 2 Random Front-End: 1 Client(s) % Failed : 15.989159891598916
+Stage 2 Random Front-End: 1 Client(s) % Success : 84.01084010840108
+Stage 2 Random Front-End: 1 Client(s) % Timeout : 0.0
+Stage 2 Random Front-End: 1 Client(s) Average Response Time (ms) : 166.0
+Stage 2 Random Front-End: 1 Client(s) Goodput (Requests per Second) : 6.0
+Stage 2 Random Front-End: 1 Client(s) Maximum Response Time (ms) : 385.0
+Stage 2 Random Front-End: 1 Client(s) STDEV Response Time (ms) : 80.0
+Stage 2 Random Front-End: 1 Client(s) Successful Responses : 310
+Stage 2 Random Front-End: 1 Client(s) Throughput (Requests per Second) : 7.0
+Stage 2 Random Front-End: 1 Client(s) Timeout Responses : 0
+Stage 2 Random Front-End: 1 Client(s) Total Failed Responses : 59
+Stage 2 Random Front-End: 1 Client(s) Total Requests (including replies) : 596
+Stage 2 Random Front-End: 1 Client(s) Total Requests (without replies) : 369
+Stage 2 Random Front-End: 128 Client(s) % Failed : 13.467104833619883
+Stage 2 Random Front-End: 128 Client(s) % Success : 86.53071884045355
+Stage 2 Random Front-End: 128 Client(s) % Timeout : 0.002176325926570763
+Stage 2 Random Front-End: 128 Client(s) Average Response Time (ms) : 173.0
+Stage 2 Random Front-End: 128 Client(s) CPU load (loadavg - last one minute) : 0.00
+Stage 2 Random Front-End: 128 Client(s) Goodput (Requests per Second) : 659.0
+Stage 2 Random Front-End: 128 Client(s) Maximum Response Time (ms) : 438.0
+Stage 2 Random Front-End: 128 Client(s) STDEV Response Time (ms) : 86.0
+Stage 2 Random Front-End: 128 Client(s) Successful Responses : 39760
+Stage 2 Random Front-End: 128 Client(s) Throughput (Requests per Second) : 762.0
+Stage 2 Random Front-End: 128 Client(s) Timeout Responses : 1
+Stage 2 Random Front-End: 128 Client(s) Total Failed Responses : 6188
+Stage 2 Random Front-End: 128 Client(s) Total Requests (including replies) : 75940
+Stage 2 Random Front-End: 128 Client(s) Total Requests (without replies) : 45949
+Stage 2 Random Front-End: 16 Client(s) % Failed : 12.590057636887607
+Stage 2 Random Front-End: 16 Client(s) % Success : 87.40994236311239
+Stage 2 Random Front-End: 16 Client(s) % Timeout : 0.0
+Stage 2 Random Front-End: 16 Client(s) Average Response Time (ms) : 179.0
+Stage 2 Random Front-End: 16 Client(s) Goodput (Requests per Second) : 81.0
+Stage 2 Random Front-End: 16 Client(s) Maximum Response Time (ms) : 395.0
+Stage 2 Random Front-End: 16 Client(s) STDEV Response Time (ms) : 88.0
+Stage 2 Random Front-End: 16 Client(s) Successful Responses : 4853
+Stage 2 Random Front-End: 16 Client(s) Throughput (Requests per Second) : 93.0
+Stage 2 Random Front-End: 16 Client(s) Timeout Responses : 0
+Stage 2 Random Front-End: 16 Client(s) Total Failed Responses : 699
+Stage 2 Random Front-End: 16 Client(s) Total Requests (including replies) : 9355
+Stage 2 Random Front-End: 16 Client(s) Total Requests (without replies) : 5552
+Stage 2 Random Front-End: 256 Client(s) % Failed : 13.29095921582356
+Stage 2 Random Front-End: 256 Client(s) % Success : 86.7079467880273
+Stage 2 Random Front-End: 256 Client(s) % Timeout : 0.001093996149133555
+Stage 2 Random Front-End: 256 Client(s) Average Response Time (ms) : 174.0
+Stage 2 Random Front-End: 256 Client(s) CPU load (loadavg - last one minute) : 0.00
+Stage 2 Random Front-End: 256 Client(s) Goodput (Requests per Second) : 1314.0
+Stage 2 Random Front-End: 256 Client(s) Maximum Response Time (ms) : 939.0
+Stage 2 Random Front-End: 256 Client(s) STDEV Response Time (ms) : 86.0
+Stage 2 Random Front-End: 256 Client(s) Successful Responses : 79258
+Stage 2 Random Front-End: 256 Client(s) Throughput (Requests per Second) : 1516.0
+Stage 2 Random Front-End: 256 Client(s) Timeout Responses : 1
+Stage 2 Random Front-End: 256 Client(s) Total Failed Responses : 12149
+Stage 2 Random Front-End: 256 Client(s) Total Requests (including replies) : 151508
+Stage 2 Random Front-End: 256 Client(s) Total Requests (without replies) : 91408
+Stage 2 Random Front-End: 32 Client(s) % Failed : 13.342318059299192
+Stage 2 Random Front-End: 32 Client(s) % Success : 86.65768194070081
+Stage 2 Random Front-End: 32 Client(s) % Timeout : 0.0
+Stage 2 Random Front-End: 32 Client(s) Average Response Time (ms) : 178.0
+Stage 2 Random Front-End: 32 Client(s) CPU load (loadavg - last one minute) : 0.00
+Stage 2 Random Front-End: 32 Client(s) Goodput (Requests per Second) : 161.0
+Stage 2 Random Front-End: 32 Client(s) Maximum Response Time (ms) : 479.0
+Stage 2 Random Front-End: 32 Client(s) STDEV Response Time (ms) : 84.0
+Stage 2 Random Front-End: 32 Client(s) Successful Responses : 9645
+Stage 2 Random Front-End: 32 Client(s) Throughput (Requests per Second) : 185.0
+Stage 2 Random Front-End: 32 Client(s) Timeout Responses : 0
+Stage 2 Random Front-End: 32 Client(s) Total Failed Responses : 1485
+Stage 2 Random Front-End: 32 Client(s) Total Requests (including replies) : 18664
+Stage 2 Random Front-End: 32 Client(s) Total Requests (without replies) : 11130
+Stage 2 Random Front-End: 64 Client(s) % Failed : 13.11146926863266
+Stage 2 Random Front-End: 64 Client(s) % Success : 86.88853073136734
+Stage 2 Random Front-End: 64 Client(s) % Timeout : 0.0
+Stage 2 Random Front-End: 64 Client(s) Average Response Time (ms) : 174.0
+Stage 2 Random Front-End: 64 Client(s) CPU load (loadavg - last one minute) : 0.00
+Stage 2 Random Front-End: 64 Client(s) Goodput (Requests per Second) : 331.0
+Stage 2 Random Front-End: 64 Client(s) Maximum Response Time (ms) : 458.0
+Stage 2 Random Front-End: 64 Client(s) STDEV Response Time (ms) : 88.0
+Stage 2 Random Front-End: 64 Client(s) Successful Responses : 19947
+Stage 2 Random Front-End: 64 Client(s) Throughput (Requests per Second) : 381.0
+Stage 2 Random Front-End: 64 Client(s) Timeout Responses : 0
+Stage 2 Random Front-End: 64 Client(s) Total Failed Responses : 3010
+Stage 2 Random Front-End: 64 Client(s) Total Requests (including replies) : 37975
+Stage 2 Random Front-End: 64 Client(s) Total Requests (without replies) : 22957
+Stage 2 Resumed Node Count : 1
+Stage 2 Single Front-End: 1 Client(s) % Failed : 0.0
+Stage 2 Single Front-End: 1 Client(s) % Success : 100.0
+Stage 2 Single Front-End: 1 Client(s) % Timeout : 0.0
+Stage 2 Single Front-End: 1 Client(s) Average Response Time (ms) : 249.0
+Stage 2 Single Front-End: 1 Client(s) Goodput (Requests per Second) : 5.0
+Stage 2 Single Front-End: 1 Client(s) Maximum Response Time (ms) : 388.0
+Stage 2 Single Front-End: 1 Client(s) STDEV Response Time (ms) : 58.0
+Stage 2 Single Front-End: 1 Client(s) Successful Responses : 242
+Stage 2 Single Front-End: 1 Client(s) Throughput (Requests per Second) : 5.0
+Stage 2 Single Front-End: 1 Client(s) Timeout Responses : 0
+Stage 2 Single Front-End: 1 Client(s) Total Failed Responses : 0
+Stage 2 Single Front-End: 1 Client(s) Total Requests (including retries) : 484
+Stage 2 Single Front-End: 1 Client(s) Total Requests (without retries) : 242
+Stage 2 Single Front-End: 128 Client(s) % Failed : 0.06448492664839593
+Stage 2 Single Front-End: 128 Client(s) % Success : 99.93551507335161
+Stage 2 Single Front-End: 128 Client(s) % Timeout : 0.0
+Stage 2 Single Front-End: 128 Client(s) Average Response Time (ms) : 624.0
+Stage 2 Single Front-End: 128 Client(s) Goodput (Requests per Second) : 204.0
+Stage 2 Single Front-End: 128 Client(s) Maximum Response Time (ms) : 4842.0
+Stage 2 Single Front-End: 128 Client(s) STDEV Response Time (ms) : 355.0
+Stage 2 Single Front-End: 128 Client(s) Successful Responses : 12398
+Stage 2 Single Front-End: 128 Client(s) Throughput (Requests per Second) : 205.0
+Stage 2 Single Front-End: 128 Client(s) Timeout Responses : 0
+Stage 2 Single Front-End: 128 Client(s) Total Failed Responses : 8
+Stage 2 Single Front-End: 128 Client(s) Total Requests (including retries) : 32081
+Stage 2 Single Front-End: 128 Client(s) Total Requests (without retries) : 12406
+Stage 2 Single Front-End: 16 Client(s) % Failed : 0.0
+Stage 2 Single Front-End: 16 Client(s) % Success : 100.0
+Stage 2 Single Front-End: 16 Client(s) % Timeout : 0.0
+Stage 2 Single Front-End: 16 Client(s) Average Response Time (ms) : 252.0
+Stage 2 Single Front-End: 16 Client(s) Goodput (Requests per Second) : 64.0
+Stage 2 Single Front-End: 16 Client(s) Maximum Response Time (ms) : 985.0
+Stage 2 Single Front-End: 16 Client(s) STDEV Response Time (ms) : 71.0
+Stage 2 Single Front-End: 16 Client(s) Successful Responses : 3830
+Stage 2 Single Front-End: 16 Client(s) Throughput (Requests per Second) : 64.0
+Stage 2 Single Front-End: 16 Client(s) Timeout Responses : 0
+Stage 2 Single Front-End: 16 Client(s) Total Failed Responses : 0
+Stage 2 Single Front-End: 16 Client(s) Total Requests (including retries) : 7671
+Stage 2 Single Front-End: 16 Client(s) Total Requests (without retries) : 3830
+Stage 2 Single Front-End: 256 Client(s) % Failed : 0.2661290322580645
+Stage 2 Single Front-End: 256 Client(s) % Success : 96.4274193548387
+Stage 2 Single Front-End: 256 Client(s) % Timeout : 3.306451612903226
+Stage 2 Single Front-End: 256 Client(s) Average Response Time (ms) : 1079.0
+Stage 2 Single Front-End: 256 Client(s) Goodput (Requests per Second) : 190.0
+Stage 2 Single Front-End: 256 Client(s) Maximum Response Time (ms) : 4845.0
+Stage 2 Single Front-End: 256 Client(s) STDEV Response Time (ms) : 973.0
+Stage 2 Single Front-End: 256 Client(s) Successful Responses : 11957
+Stage 2 Single Front-End: 256 Client(s) Throughput (Requests per Second) : 197.0
+Stage 2 Single Front-End: 256 Client(s) Timeout Responses : 410
+Stage 2 Single Front-End: 256 Client(s) Total Failed Responses : 33
+Stage 2 Single Front-End: 256 Client(s) Total Requests (including retries) : 37687
+Stage 2 Single Front-End: 256 Client(s) Total Requests (without retries) : 12400
+Stage 2 Single Front-End: 32 Client(s) % Failed : 0.0
+Stage 2 Single Front-End: 32 Client(s) % Success : 100.0
+Stage 2 Single Front-End: 32 Client(s) % Timeout : 0.0
+Stage 2 Single Front-End: 32 Client(s) Average Response Time (ms) : 246.0
+Stage 2 Single Front-End: 32 Client(s) Goodput (Requests per Second) : 130.0
+Stage 2 Single Front-End: 32 Client(s) Maximum Response Time (ms) : 518.0
+Stage 2 Single Front-End: 32 Client(s) STDEV Response Time (ms) : 58.0
+Stage 2 Single Front-End: 32 Client(s) Successful Responses : 7830
+Stage 2 Single Front-End: 32 Client(s) Throughput (Requests per Second) : 130.0
+Stage 2 Single Front-End: 32 Client(s) Timeout Responses : 0
+Stage 2 Single Front-End: 32 Client(s) Total Failed Responses : 0
+Stage 2 Single Front-End: 32 Client(s) Total Requests (including retries) : 15660
+Stage 2 Single Front-End: 32 Client(s) Total Requests (without retries) : 7830
+Stage 2 Single Front-End: 64 Client(s) % Failed : 0.009330969487729775
+Stage 2 Single Front-End: 64 Client(s) % Success : 99.99066903051227
+Stage 2 Single Front-End: 64 Client(s) % Timeout : 0.0
+Stage 2 Single Front-End: 64 Client(s) Average Response Time (ms) : 360.0
+Stage 2 Single Front-End: 64 Client(s) Goodput (Requests per Second) : 178.0
+Stage 2 Single Front-End: 64 Client(s) Maximum Response Time (ms) : 1053.0
+Stage 2 Single Front-End: 64 Client(s) STDEV Response Time (ms) : 225.0
+Stage 2 Single Front-End: 64 Client(s) Successful Responses : 10716
+Stage 2 Single Front-End: 64 Client(s) Throughput (Requests per Second) : 178.0
+Stage 2 Single Front-End: 64 Client(s) Timeout Responses : 0
+Stage 2 Single Front-End: 64 Client(s) Total Failed Responses : 1
+Stage 2 Single Front-End: 64 Client(s) Total Requests (including retries) : 23008
+Stage 2 Single Front-End: 64 Client(s) Total Requests (without retries) : 10717
+Suspend Verify v2; Stage 1; Key Recovery; : 2.0
+Suspend Verify v2; Stage 1; Key Recovery; % ERROR-INVALID-GET (value or version) : 0.0
+Suspend Verify v2; Stage 1; Key Recovery; % ERROR-OTHER : 0.0
+Suspend Verify v2; Stage 1; Key Recovery; % ERROR-UID : 0.0
+Suspend Verify v2; Stage 1; Key Recovery; % FAILED (Not SUCCESS) : 25.0
+Suspend Verify v2; Stage 1; Key Recovery; % KEY-NOT-FOUND : 24.9975
+Suspend Verify v2; Stage 1; Key Recovery; % SUCCESS : 75.0
+Suspend Verify v2; Stage 1; Key Recovery; % TIMEOUT : 0.0025
+Suspend Verify v2; Stage 1; Key Recovery; SUCCESS Response Count : 30000.0
+Suspend Verify v2; Stage 1; Key Recovery; Total Value Size (MiB) : 14.365445137023926
+Suspend Verify v2; Stage 2b; Key Recovery; : 2.0
+Suspend Verify v2; Stage 2b; Key Recovery; % ERROR-INVALID-GET (value or version) : 0.0
+Suspend Verify v2; Stage 2b; Key Recovery; % ERROR-OTHER : 0.0
+Suspend Verify v2; Stage 2b; Key Recovery; % ERROR-UID : 0.0
+Suspend Verify v2; Stage 2b; Key Recovery; % FAILED (Not SUCCESS) : 24.6725
+Suspend Verify v2; Stage 2b; Key Recovery; % KEY-NOT-FOUND : 24.67
+Suspend Verify v2; Stage 2b; Key Recovery; % SUCCESS : 75.3275
+Suspend Verify v2; Stage 2b; Key Recovery; % TIMEOUT : 0.0025
+Suspend Verify v2; Stage 2b; Key Recovery; SUCCESS Response Count : 30131.0
+Suspend Verify v2; Stage 2b; Key Recovery; Total Value Size (MiB) : 14.432766914367676
+Suspend Verify v2; Stage 2c; Key Recovery; : 2.0
+Suspend Verify v2; Stage 2c; Key Recovery; % ERROR-INVALID-GET (value or version) : 0.0
+Suspend Verify v2; Stage 2c; Key Recovery; % ERROR-OTHER : 0.0
+Suspend Verify v2; Stage 2c; Key Recovery; % ERROR-UID : 0.0
+Suspend Verify v2; Stage 2c; Key Recovery; % FAILED (Not SUCCESS) : 0.3750187509375469
+Suspend Verify v2; Stage 2c; Key Recovery; % KEY-NOT-FOUND : 0.36501825091254564
+Suspend Verify v2; Stage 2c; Key Recovery; % SUCCESS : 99.62498124906246
+Suspend Verify v2; Stage 2c; Key Recovery; % TIMEOUT : 0.01000050002500125
+Suspend Verify v2; Stage 2c; Key Recovery; SUCCESS Response Count : 19924.0
+Suspend Verify v2; Stage 2c; Key Recovery; Total Value Size (MiB) : 9.494368553161621
+Test Start Time : Sat Mar 09 10:37:40 UTC 2019
+Result Verification Code : E0DA2E2352DF4293346E659E57444AF4
+[Info] Number of collected result fields: 463
+[Info] Submission Successful!
+[Info] Results server is up. Secret is valid.
+[Info] Results successfully submitted.
+[Info] Completed A9 Tests.
+
+[TA-Note] Resuming any remaining dead nodes (so you do not have to redeploy your service)!
+Waiting 10 seconds before resuming nodes
+[Info] Resuming 4 servers.
+Server planetlab2.cs.unc.edu:10145 resumed
+Server node1.planetlab.albany.edu:10145 resumed
+Server pl1.eng.monash.edu.au:10145 resumed
+Server planetlab2.pop-pa.rnp.br:10145 resumed
+[ ... Completed in 9.016 seconds ]
+
+Testing completed in 3647.585s

@@ -81,6 +81,10 @@ public class EpidemicServer implements Runnable {
 				}
 
                 InternalRequest.EpidemicRequest request = EpidemicServer.UnpackEpidemicRequest(rec_msg);
+                long now = System.currentTimeMillis() / 1000L;
+                if(now - request.getTimestamp() >= 60) {
+                	continue;
+                }
 
                 // Spread the epidemic
         		Epidemic epi = new Epidemic(request);

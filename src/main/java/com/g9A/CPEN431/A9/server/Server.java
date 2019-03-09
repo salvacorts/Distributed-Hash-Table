@@ -139,17 +139,23 @@ public class Server {
     public static void AlertOtherNodes() throws InvalidHashRangeException, IOException {
     	EpidemicServer.clear();
     	
+    	long timestamp = System.currentTimeMillis() / 1000L;
+    	
 		ByteString id = Epidemic.generateID(selfNode.getAddress(), selfNode.getEpiPort(), EpidemicType.ALIVE);
-    	InternalRequest.EpidemicRequest epiRequest = InternalRequest.EpidemicRequest.newBuilder()
-				.setServer(selfNode.getAddress().getHostAddress())
-				.setPort(selfNode.getPort())
-				.setEpId(id)
-				.setNodeId(selfNode.getId())
-				.setType(EpidemicType.ALIVE)
-			.build();
-
-    	FailureCheck.stop();
-    	FailureCheck.start();
+    	InternalRequest.EpidemicRequest.Builder builder = InternalRequest.EpidemicRequest.newBuilder();
+		builder.setServer(selfNode.getAddress().getHostAddress())
+			.setPort(selfNode.getPort())
+			.setEpId(id)
+			.setTimestamp(timestamp)
+			.setNodeId(selfNode.getId())
+			.setType(EpidemicType.ALIVE);
+		
+    	for(int hash: selfNode.getHashValues()) {
+    		builder.addHashes(hash);
+    	}
+    	
+    	InternalRequest.EpidemicRequest epiRequest = builder.build();
+    	
     	metrics.aliveEpidemics.inc();
 		Epidemic epi = new Epidemic(epiRequest);
 		Server.EpidemicServer.add(epi);
@@ -201,9 +207,14 @@ public class Server {
      * @throws InvalidHashRangeException
      * @throws IOException 
      */
-    public static void RejoinNode(int id, String addr, int port, int[] hashValues) throws InvalidHashRangeException, IOException {
-        // Add the node to the nodes list and remove from dead nodes list
-        ServerNode node = new ServerNode(addr, port, 4321, id, hashValues);
+    public static void RejoinNode(int id, String addr, int port, List<Integer> hashValues) throws InvalidHashRangeException, IOException {
+        int[] hashArray = new int[hashValues.size()];
+    	for(int i = 0; i < hashArray.length; i++) {
+        	hashArray[i] = hashValues.get(i);
+        }
+    	
+    	// Add the node to the nodes list and remove from dead nodes list
+        ServerNode node = new ServerNode(addr, port, 4321, id, hashArray);
        if(!HasDeadNode(id)) return;
 /*
         for (Iterator<ServerNode> iter = DeadNodes.iterator(); iter.hasNext();) {
@@ -225,6 +236,7 @@ public class Server {
 		
         ServerNodes.add(node);
         DeadNodes.remove(node);
+        metrics.deadNodes.dec();
     	
     	// Reactivate hash values
     	for(int i: node.getHashValues()) {
