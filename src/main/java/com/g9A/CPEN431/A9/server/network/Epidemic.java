@@ -141,6 +141,8 @@ public class Epidemic implements Runnable {
 				e.printStackTrace();
 			}
 		}
+    	EpidemicServer.remove(this);
+    	socket.close();
     }
 
     public void start() throws InvalidHashRangeException, IOException {
@@ -159,7 +161,10 @@ public class Epidemic implements Runnable {
     }
 
     public void stop() {
+    	t.interrupt();
+    	EpidemicServer.remove(this);
 		STOP_FLAG = true;
+    	socket.close();
     }
 
 	public ByteString getID() {

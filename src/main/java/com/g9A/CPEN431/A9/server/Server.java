@@ -137,6 +137,8 @@ public class Server {
      * @throws InvalidHashRangeException 
      */
     public static void AlertOtherNodes() throws InvalidHashRangeException, IOException {
+    	EpidemicServer.clear();
+    	
 		ByteString id = Epidemic.generateID(selfNode.getAddress(), selfNode.getEpiPort(), EpidemicType.ALIVE);
     	InternalRequest.EpidemicRequest epiRequest = InternalRequest.EpidemicRequest.newBuilder()
 				.setServer(selfNode.getAddress().getHostAddress())

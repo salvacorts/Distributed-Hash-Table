@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.List;
 
 import ca.NetSysLab.ProtocolBuffers.KeyValueRequest;
 import ca.NetSysLab.ProtocolBuffers.KeyValueResponse;
@@ -23,24 +25,38 @@ public class EpidemicServer implements Runnable {
 	
 	private static boolean KEEP_RECEIVING = true;
 
-	private final EpidemicCache Cache = EpidemicCache.getInstance();
+	private static final EpidemicCache Cache = EpidemicCache.getInstance();
+	private static List<Epidemic> epidemics; 
 	private DatagramSocket listeningSocket;
 	private Thread t;
 	private final MetricsServer metrics = MetricsServer.getInstance();
 
 	public EpidemicServer(int port) throws SocketException {
         this.listeningSocket = new DatagramSocket(port);
+        epidemics = new ArrayList<Epidemic>();
 	}
 
 	public static InternalRequest.EpidemicRequest UnpackEpidemicRequest(Message.Msg msg) throws InvalidProtocolBufferException{
 		return InternalRequest.EpidemicRequest.newBuilder().mergeFrom(msg.getPayload()).build();
 	}
 	
-	public void add(Epidemic epi) throws InvalidHashRangeException, IOException {
+	public static void add(Epidemic epi) throws InvalidHashRangeException, IOException {
 		if (Cache.check(epi.getID())) return;
 
 		Cache.put(epi.getID());
+		epidemics.add(epi);
 		epi.start();
+	}
+	
+	public static void remove(Epidemic epi) {
+		epidemics.remove(epi);
+	}
+	
+	public static void clear() {
+		for(Epidemic epi: epidemics) {
+			epi.stop();
+		}
+		epidemics = new ArrayList<Epidemic>();
 	}
 	
 	public void run() {
