@@ -107,7 +107,7 @@ public class FailureCheck implements Runnable {
 			FIRST_TIME_FLAG = false;
 
 			try {
-				Thread.sleep(2*60*1000);
+				Thread.sleep(1*60*1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -134,5 +134,6 @@ public class FailureCheck implements Runnable {
 
     public void stop() {
 		STOP_FLAG = true;
+		FIRST_TIME_FLAG = true;
 	}
 }

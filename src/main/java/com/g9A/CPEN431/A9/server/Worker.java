@@ -156,13 +156,10 @@ public class Worker implements Runnable {
      * @param request the request to reroute
      * @param clientAddr address of the original client
      * @param clientPort port of the original client
-     * @param hash hash of the key
+     * @param correctNode the node to reroute to
      * @throws IOException
      */
-    private boolean Reroute(Message.Msg request, InetAddress clientAddr, int clientPort, int hash, int command) throws IOException{
-    	if(command > 3) {
-    		return false;
-    	}
+    private void Reroute(Message.Msg request, InetAddress clientAddr, int clientPort, ServerNode correctNode) throws IOException{
     	
     	ByteString addr = ByteString.copyFrom(clientAddr.getAddress());
 
@@ -178,21 +175,8 @@ public class Worker implements Runnable {
     			.setClient(client)
     			.build();
     	
-    	int original = hash;
-    	do {
-    		hash = (hash+1)%256;
-    		ServerNode node = Server.HashCircle.get(hash);
-    		if(node != null) {
-    			if(node.equals(Server.selfNode)){
-    				return false;
-    			}
-    			Send(socket,newRequest, node.getAddress(), node.getPort());
-    			return true;
-    		}
-    	}while(hash != original);
-    	
-    	System.err.println("No routed ServerNode found!");
-    	return false;
+
+		Send(socket, newRequest, correctNode.getAddress(), correctNode.getPort());
     }
 
     private static boolean CorrectChecksum(Message.Msg msg) {
@@ -285,17 +269,8 @@ public class Worker implements Runnable {
                 // Check if request is cached. If it is not process the request
                 if ((response = this.cache.Get(uuid))  == null) {
                     KeyValueRequest.KVRequest request = UnpackKVRequest(rec_msg);
-                    int hash = RequestProcessor.getHash(request.getKey());
-                    int command = request.getCommand();
-                    boolean rerouted = Reroute(rec_msg, packet.getAddress(), packet.getPort(), hash, command);
-                    if(rerouted) {
-                        processing_messages.remove(uuid);
-                        return;
-                    }
-                    else {
-	                    response = requestProcessor.ProcessRequest(request, uuid);
-	                    this.cache.Put(uuid, response);
-                    }
+                    response = requestProcessor.ProcessRequest(request, uuid);
+                    this.cache.Put(uuid, response);
                 }
 
             } catch (ShutdownCommandException e) {
@@ -311,8 +286,9 @@ public class Worker implements Runnable {
                         .setOverloadWaitTime((int) Server.avgProcessTime)
                         .build();
             } catch (WrongNodeException e) {
+                Reroute(rec_msg, packet.getAddress(), packet.getPort(), e.trueNode);
+                processing_messages.remove(uuid);
                 return;
-                
             } catch (Exception e) {
                 e.printStackTrace();
                 response = KeyValueResponse.KVResponse.newBuilder()

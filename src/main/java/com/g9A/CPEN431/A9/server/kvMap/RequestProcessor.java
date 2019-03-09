@@ -5,6 +5,7 @@ import ca.NetSysLab.ProtocolBuffers.KeyValueRequest;
 import ca.NetSysLab.ProtocolBuffers.KeyValueResponse;
 
 import com.g9A.CPEN431.A9.server.Server;
+import com.g9A.CPEN431.A9.server.ServerNode;
 import com.g9A.CPEN431.A9.server.exceptions.*;
 import com.g9A.CPEN431.A9.server.metrics.MetricsServer;
 import com.google.protobuf.ByteString;
@@ -34,6 +35,28 @@ public class RequestProcessor {
     }
     public static int getHash(KVMapKey key) {
     	return getHash(ByteString.copyFrom(key.getKey()));
+    }
+    
+    /**
+     * Indicates if the request's key places it in the current node
+     * @param request the given request
+     * @return the correct node to reroute to
+     * @throws MissingParameterException
+     */
+    private static ServerNode CorrectNode(KeyValueRequest.KVRequest request) throws MissingParameterException {
+    	if (!request.hasKey()) throw new MissingParameterException();
+
+        int hash = getHash(request.getKey());
+        
+        int original = hash;
+    	do {
+    		hash = (hash+1)%256;
+    		ServerNode node = Server.HashCircle.get(hash);
+    		if(node != null) {
+    			return node;
+    		}
+    	}while(hash != original);
+    	return Server.selfNode;
     }
     
 	/**
@@ -68,6 +91,9 @@ public class RequestProcessor {
         if (request.getKey().size() > 32) throw new KeyTooLargeException();
 
         if (request.getValue().size() > 10000) throw new ValueTooLargeException();
+        
+        ServerNode correctNode = CorrectNode(request);
+        if(!correctNode.equals(Server.selfNode)) throw new WrongNodeException(correctNode);
 
         // Check if there is enough space to store this data, leaving at least space for another biggest request
         long storeSize = request.getKey().size() + request.getValue().size();
@@ -103,6 +129,9 @@ public class RequestProcessor {
 
         if (request.getKey().size() > 32) throw new KeyTooLargeException();
 
+        ServerNode correctNode = CorrectNode(request);
+        if(!correctNode.equals(Server.selfNode)) throw new WrongNodeException(correctNode);
+
         KVMapKey key = new KVMapKey(request.getKey().toByteArray());
 
         if (!kvMap.containsKey(key)) throw new UnexistingKey();
@@ -130,6 +159,9 @@ public class RequestProcessor {
         if (!request.hasKey()) throw new MissingParameterException();
         
         if (request.getKey().size() > 32) throw new KeyTooLargeException();
+
+        ServerNode correctNode = CorrectNode(request);
+        if(!correctNode.equals(Server.selfNode)) throw new WrongNodeException(correctNode);
 
         KVMapKey key = new KVMapKey(request.getKey().toByteArray());
 

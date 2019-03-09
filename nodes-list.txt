@@ -2,7 +2,7 @@ planetlab1.cs.ubc.ca:10145:4321:1
 planetlab2.cs.ubc.ca:10145:4321:72
 planetlab2.cs.unc.edu:10145:4321:144
 planetlab4.mini.pw.edu.pl:10145:4321:60
-planetlab2.pop-pa.rnp.br:10145:4321:192
+planetlab2.pop-pa.rnp.br:10145:4321:12
 plink.cs.uwaterloo.ca:10145:4321:204
 node1.planetlab.albany.edu:10145:4321:228
 pl1.eng.monash.edu.au:10145:4321:24

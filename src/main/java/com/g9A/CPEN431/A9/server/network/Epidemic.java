@@ -41,7 +41,7 @@ public class Epidemic implements Runnable {
     	this.epId = request.getEpId();
     	this.payload = request.toByteString();
 
-    	if (iterations < 20) iterations = (20 - iterations) * 2;
+    	if (iterations < 20) iterations += 5;
     }
 
 	public static ByteString generateID(InetAddress svr, int port, EpidemicType type) {
@@ -104,7 +104,7 @@ public class Epidemic implements Runnable {
 		Message.Msg msg = PackInternalMessage(payload, socket);
 
 		// Send the payload to that node
-		System.out.println("[Epidemic " + StringUtils.byteArrayToHexString(this.epId.toByteArray()) + "] sending to " + node.getAddress().getHostName() + ":" + node.getEpiPort());
+		//System.out.println("[Epidemic " + StringUtils.byteArrayToHexString(this.epId.toByteArray()) + "] sending to " + node.getAddress().getHostName() + ":" + node.getEpiPort());
 		Worker.Send(socket, msg, node.getAddress(), node.getEpiPort());
 
     	iterations--;
@@ -114,19 +114,12 @@ public class Epidemic implements Runnable {
     	
     	switch (request.getType()) {
 			case DEAD:	// Remove the node that is down
-                System.out.println("Node down: " + request.getServer() + ":" + request.getPort());
                 Server.RemoveNode(request.getNodeId());
 				metrics.deadMessagesReceieved.inc();
 				break;
 			case ALIVE:	// Re-add the node that was down
-				/*try {
-					if (!Server.HasDeadNode(request.getNodeId())) return;
-
-				} catch (UnknownHostException e1) {
-					e1.printStackTrace();
-				}*/
 				try {
-					int[] hashes = request.getHashesList().stream().mapToInt(Integer::intValue).toArray();;
+					int[] hashes = request.getHashesList().stream().mapToInt(Integer::intValue).toArray();
 					Server.RejoinNode(request.getNodeId(), request.getServer(), request.getPort(), hashes);
 				} catch (InvalidHashRangeException e1) {
 					e1.printStackTrace();

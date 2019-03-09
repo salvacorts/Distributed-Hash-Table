@@ -146,6 +146,8 @@ public class Server {
 				.setType(EpidemicType.ALIVE)
 			.build();
 
+    	FailureCheck.stop();
+    	FailureCheck.start();
     	metrics.aliveEpidemics.inc();
 		Epidemic epi = new Epidemic(epiRequest);
 		Server.EpidemicServer.add(epi);
@@ -158,7 +160,6 @@ public class Server {
     		ServerNode node = iter.next();
 
       	    if (id == node.getId()) {
-
 
                 DeadNodes.add(node);
                 for(int i: node.getHashValues()) {
@@ -182,7 +183,7 @@ public class Server {
     }
     
     // Determines if the server has a node currently in DeadNodes, to avoid unnecessary epidemics
-    public static boolean HasDeadNode(int id) throws UnknownHostException {
+    public static boolean HasDeadNode(int id) {
     	for (Iterator<ServerNode> iter = DeadNodes.iterator(); iter.hasNext();) {
 			ServerNode n = iter.next();
 
@@ -201,7 +202,7 @@ public class Server {
     public static void RejoinNode(int id, String addr, int port, int[] hashValues) throws InvalidHashRangeException, IOException {
         // Add the node to the nodes list and remove from dead nodes list
         ServerNode node = new ServerNode(addr, port, 4321, id, hashValues);
-       
+       if(!HasDeadNode(id)) return;
 /*
         for (Iterator<ServerNode> iter = DeadNodes.iterator(); iter.hasNext();) {
 			ServerNode n = iter.next();
@@ -216,10 +217,12 @@ public class Server {
 		//Node was never in deadnodes in the first place
 		//if (node == null) return;
         
-        if(ServerNodes.contains(node)) return;
-        
+        if(ServerNodes.contains(node)) {
+        	return;
+        }
+		
         ServerNodes.add(node);
-        metrics.deadNodes.dec();
+        DeadNodes.remove(node);
     	
     	// Reactivate hash values
     	for(int i: node.getHashValues()) {
