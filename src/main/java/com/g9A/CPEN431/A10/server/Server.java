@@ -99,7 +99,6 @@ public class Server {
         	System.err.println("Current server not present in nodes-list");
         	System.exit(1);
         }
-        System.out.println("Self Node: " + selfNode.getAddress().getHostName() + ":" + selfNode.getPort() + ", ID: " + selfNode.getId());
 
         // In case that the process is resumed
         try {

@@ -47,6 +47,15 @@ public final class KeyValueRequest {
      * <code>optional int32 version = 4;</code>
      */
     int getVersion();
+
+    /**
+     * <code>optional int32 reps = 5;</code>
+     */
+    boolean hasReps();
+    /**
+     * <code>optional int32 reps = 5;</code>
+     */
+    int getReps();
   }
   /**
    * Protobuf type {@code KVRequest}
@@ -118,6 +127,11 @@ public final class KeyValueRequest {
             case 32: {
               bitField0_ |= 0x00000008;
               version_ = input.readInt32();
+              break;
+            }
+            case 40: {
+              bitField0_ |= 0x00000010;
+              reps_ = input.readInt32();
               break;
             }
           }
@@ -220,11 +234,27 @@ public final class KeyValueRequest {
       return version_;
     }
 
+    public static final int REPS_FIELD_NUMBER = 5;
+    private int reps_;
+    /**
+     * <code>optional int32 reps = 5;</code>
+     */
+    public boolean hasReps() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    /**
+     * <code>optional int32 reps = 5;</code>
+     */
+    public int getReps() {
+      return reps_;
+    }
+
     private void initFields() {
       command_ = 0;
       key_ = com.google.protobuf.ByteString.EMPTY;
       value_ = com.google.protobuf.ByteString.EMPTY;
       version_ = 0;
+      reps_ = 0;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -255,6 +285,9 @@ public final class KeyValueRequest {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeInt32(4, version_);
       }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeInt32(5, reps_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -279,6 +312,10 @@ public final class KeyValueRequest {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(4, version_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(5, reps_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -405,6 +442,8 @@ public final class KeyValueRequest {
         bitField0_ = (bitField0_ & ~0x00000004);
         version_ = 0;
         bitField0_ = (bitField0_ & ~0x00000008);
+        reps_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -449,6 +488,10 @@ public final class KeyValueRequest {
           to_bitField0_ |= 0x00000008;
         }
         result.version_ = version_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        result.reps_ = reps_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -476,6 +519,9 @@ public final class KeyValueRequest {
         }
         if (other.hasVersion()) {
           setVersion(other.getVersion());
+        }
+        if (other.hasReps()) {
+          setReps(other.getReps());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -642,6 +688,38 @@ public final class KeyValueRequest {
         return this;
       }
 
+      private int reps_ ;
+      /**
+       * <code>optional int32 reps = 5;</code>
+       */
+      public boolean hasReps() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>optional int32 reps = 5;</code>
+       */
+      public int getReps() {
+        return reps_;
+      }
+      /**
+       * <code>optional int32 reps = 5;</code>
+       */
+      public Builder setReps(int value) {
+        bitField0_ |= 0x00000010;
+        reps_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 reps = 5;</code>
+       */
+      public Builder clearReps() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        reps_ = 0;
+        onChanged();
+        return this;
+      }
+
       // @@protoc_insertion_point(builder_scope:KVRequest)
     }
 
@@ -667,10 +745,11 @@ public final class KeyValueRequest {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\025KeyValueRequest.proto\"I\n\tKVRequest\022\017\n\007" +
+      "\n\025KeyValueRequest.proto\"W\n\tKVRequest\022\017\n\007" +
       "command\030\001 \002(\r\022\013\n\003key\030\002 \001(\014\022\r\n\005value\030\003 \001(" +
-      "\014\022\017\n\007version\030\004 \001(\005B/\n\034ca.NetSysLab.Proto" +
-      "colBuffersB\017KeyValueRequest"
+      "\014\022\017\n\007version\030\004 \001(\005\022\014\n\004reps\030\005 \001(\005B/\n\034ca.N" +
+      "etSysLab.ProtocolBuffersB\017KeyValueReques" +
+      "t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -689,7 +768,7 @@ public final class KeyValueRequest {
     internal_static_KVRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_KVRequest_descriptor,
-        new java.lang.String[] { "Command", "Key", "Value", "Version", });
+        new java.lang.String[] { "Command", "Key", "Value", "Version", "Reps", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

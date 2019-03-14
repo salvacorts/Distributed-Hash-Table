@@ -49,13 +49,14 @@ public class RequestProcessor {
         int hash = getHash(request.getKey());
         
         int original = hash;
-    	do {
-    		hash = (hash+1)%256;
+		hash = (hash+1)%256;
+    	while(hash != original) {
     		ServerNode node = Server.HashCircle.get(hash);
     		if(node != null) {
     			return node;
     		}
-    	}while(hash != original);
+    		hash = (hash+1)%256;
+    	}
     	return Server.selfNode;
     }
     
@@ -92,8 +93,10 @@ public class RequestProcessor {
 
         if (request.getValue().size() > 10000) throw new ValueTooLargeException();
         
-        ServerNode correctNode = CorrectNode(request);
-        if(!correctNode.equals(Server.selfNode)) throw new WrongNodeException(correctNode);
+        if(!request.hasReps()) {
+            ServerNode correctNode = CorrectNode(request);
+        	if(!correctNode.equals(Server.selfNode)) throw new WrongNodeException(correctNode);
+        }
 
         // Check if there is enough space to store this data, leaving at least space for another biggest request
         long storeSize = request.getKey().size() + request.getValue().size();
@@ -109,7 +112,7 @@ public class RequestProcessor {
 
         kvMap.put(key, value);
         
-        //System.out.println("PUT with key " + request.getKey().hashCode() + ", value " + value.hashCode());
+        //System.out.println("PUT with key " + request.getKey().hashCode() + ", value " + request.getValue().hashCode());
 
         return KeyValueResponse.KVResponse.newBuilder()
                 .setErrCode(0)
@@ -129,8 +132,11 @@ public class RequestProcessor {
 
         if (request.getKey().size() > 32) throw new KeyTooLargeException();
 
-        ServerNode correctNode = CorrectNode(request);
-        if(!correctNode.equals(Server.selfNode)) throw new WrongNodeException(correctNode);
+
+        if(!request.hasReps()) {
+            ServerNode correctNode = CorrectNode(request);
+        	if(!correctNode.equals(Server.selfNode)) throw new WrongNodeException(correctNode);
+        }
 
         KVMapKey key = new KVMapKey(request.getKey().toByteArray());
 
@@ -138,7 +144,7 @@ public class RequestProcessor {
         
         KVMapValue value = kvMap.get(key);
         
-        //System.out.println("GET with key " + request.getKey().hashCode() + ", value " + value.hashCode());
+        //System.out.println("GET with key " + request.getKey().hashCode() + ", value " + value.getValue().hashCode());
 
         return KeyValueResponse.KVResponse.newBuilder()
                 .setErrCode(0)
@@ -160,9 +166,11 @@ public class RequestProcessor {
         
         if (request.getKey().size() > 32) throw new KeyTooLargeException();
 
-        ServerNode correctNode = CorrectNode(request);
-        if(!correctNode.equals(Server.selfNode)) throw new WrongNodeException(correctNode);
-
+        if(!request.hasReps()) {
+        	ServerNode correctNode = CorrectNode(request);
+        	if(!correctNode.equals(Server.selfNode)) throw new WrongNodeException(correctNode);
+        }
+        
         KVMapKey key = new KVMapKey(request.getKey().toByteArray());
 
         if (!kvMap.containsKey(key)) throw new UnexistingKey();

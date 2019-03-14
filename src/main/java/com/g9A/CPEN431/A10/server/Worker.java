@@ -2,6 +2,7 @@ package com.g9A.CPEN431.A10.server;
 
 import ca.NetSysLab.ProtocolBuffers.InternalRequest;
 import ca.NetSysLab.ProtocolBuffers.KeyValueRequest;
+import ca.NetSysLab.ProtocolBuffers.KeyValueRequest.KVRequest;
 import ca.NetSysLab.ProtocolBuffers.KeyValueResponse;
 import ca.NetSysLab.ProtocolBuffers.Message;
 import ca.NetSysLab.ProtocolBuffers.KeyValueResponse.KVResponse;
@@ -234,6 +235,59 @@ public class Worker implements Runnable {
         this.cache = CacheManager.getInstance();
         this.requestProcessor = RequestProcessor.getInstance();
     }
+    
+    private void ReplicateRequest(Message.Msg msg, KeyValueRequest.KVRequest request) throws IOException {
+    	int reps;
+    	if(request.hasReps()) {
+    		reps = request.getReps() - 1;
+        	if(reps < 1) {
+        		return;
+        	}
+    	}
+    	else {
+    		reps = 2;
+    	}
+    	int command = request.getCommand();
+    	
+    	KVRequest newRequest = request.toBuilder()
+    			.setReps(reps)
+    			.build();
+    	
+    	CRC32 crc32 = new CRC32();
+    	byte[] concat = ByteOrder.concatArray(msg.getMessageID().toByteArray(), newRequest.toByteArray());
+        crc32.update(concat);
+        long checksum = crc32.getValue();
+    	
+    	Message.Msg newMessage = msg.toBuilder()
+    			.setPayload(newRequest.toByteString())
+    			.setCheckSum(checksum)
+    			.build();
+    	
+    	switch(command) {
+    	case 3:
+    	case 1:
+    		int hash = Server.selfNode.getHashValues()[0];
+    		int original = hash;
+    		hash = (hash+1)%256;
+            byte[] buffSend = newMessage.toByteArray();
+
+			ServerNode server;
+			while(hash != original){
+    			server = Server.HashCircle.get(hash);
+    			if(server != null && !server.equals(Server.selfNode)) {
+    	    		DatagramSocket socket = new DatagramSocket();
+    	            DatagramPacket packet = new DatagramPacket(buffSend, buffSend.length, server.getAddress(), server.getPort());
+    	            socket.send(packet);
+    	            socket.close();
+    	            return;
+    			}
+    			hash = (hash+1)%256;
+    		}
+    		break;
+    	default:
+    		return;
+    	}
+    }
 
     public void run() {
         long startTime = System.currentTimeMillis();
@@ -271,6 +325,7 @@ public class Worker implements Runnable {
                     KeyValueRequest.KVRequest request = UnpackKVRequest(rec_msg);
                     response = requestProcessor.ProcessRequest(request, uuid);
                     this.cache.Put(uuid, response);
+                    ReplicateRequest(rec_msg, request);
                 }
 
             } catch (ShutdownCommandException e) {
