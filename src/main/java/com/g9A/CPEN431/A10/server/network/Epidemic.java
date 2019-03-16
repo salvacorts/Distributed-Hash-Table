@@ -7,6 +7,7 @@ import java.net.UnknownHostException;
 import java.util.Random;
 import java.util.zip.CRC32;
 
+import ca.NetSysLab.ProtocolBuffers.InternalRequest;
 import ca.NetSysLab.ProtocolBuffers.InternalRequest.EpidemicRequest;
 import ca.NetSysLab.ProtocolBuffers.InternalRequest.EpidemicRequest.EpidemicType;
 import ca.NetSysLab.ProtocolBuffers.Message;
@@ -15,7 +16,6 @@ import com.g9A.CPEN431.A10.server.HashSpace;
 import com.g9A.CPEN431.A10.server.Server;
 import com.g9A.CPEN431.A10.server.ServerNode;
 import com.g9A.CPEN431.A10.server.Worker;
-import com.g9A.CPEN431.A10.server.exceptions.InvalidHashRangeException;
 import com.g9A.CPEN431.A10.server.metrics.MetricsServer;
 import com.g9A.CPEN431.A10.utils.ByteOrder;
 import com.g9A.CPEN431.A10.utils.StringUtils;
@@ -70,7 +70,7 @@ public class Epidemic implements Runnable {
 		return ByteString.copyFrom(buffUuid);
 	}
 
-	private static Message.Msg PackInternalMessage(ByteString payload, DatagramSocket socket) {
+	public static Message.Msg PackInternalMessage(ByteString payload, DatagramSocket socket) {
 		CRC32 crc32 = new CRC32();
 		ByteString uuid = Worker.GetUUID(socket);
 
@@ -112,21 +112,28 @@ public class Epidemic implements Runnable {
     }
     
     public void run() {
+		InternalRequest.ServerNode node;
     	
     	switch (request.getType()) {
 			case DEAD:	// Remove the node that is down
-                Server.RemoveNode(request.getNodeId());
+				node = request.getServerNode();
+                Server.RemoveNode(node.getNodeId());
 				metrics.deadMessagesReceieved.inc();
 				break;
 			case ALIVE:	// Re-add the node that was down
 				try {
-					Server.RejoinNode(request.getNodeId(), request.getServer(), request.getPort(), request.getHashesList());
-				} catch (InvalidHashRangeException e1) {
-					e1.printStackTrace();
+					node = request.getServerNode();
+					Server.RejoinNode(node.getNodeId(), node.getServer(), node.getPort(), node.getHashesList());
+					
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
 				metrics.aliveMessagesReceieved.inc();
+				break;
+			case STATE: // Transfer the system state to restarted node
+				Server.ReceiveState(request.getState());
+				STOP_FLAG = true;
+				iterations = 0;
 				break;
 	    }
 
@@ -145,7 +152,7 @@ public class Epidemic implements Runnable {
     	socket.close();
     }
 
-    public void start() throws InvalidHashRangeException, IOException {
+    public void start() throws IOException {
     	
     	if (this.epId == null) {
     		System.err.println("Missing epidemic ID!");

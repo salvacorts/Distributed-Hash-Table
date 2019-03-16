@@ -15,7 +15,6 @@ import java.util.concurrent.Executors;
 import ca.NetSysLab.ProtocolBuffers.KeyValueRequest;
 
 import com.g9A.CPEN431.A10.client.Client;
-import com.g9A.CPEN431.A10.server.exceptions.InvalidHashRangeException;
 import com.g9A.CPEN431.A10.server.kvMap.KVMapKey;
 import com.g9A.CPEN431.A10.server.kvMap.KVMapValue;
 import com.g9A.CPEN431.A10.server.kvMap.RequestProcessor;
@@ -30,6 +29,7 @@ import com.google.protobuf.ByteString;
 import ca.NetSysLab.ProtocolBuffers.InternalRequest;
 import ca.NetSysLab.ProtocolBuffers.Message;
 import ca.NetSysLab.ProtocolBuffers.InternalRequest.KVTransfer;
+import ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState;
 import ca.NetSysLab.ProtocolBuffers.InternalRequest.EpidemicRequest.EpidemicType;
 import sun.misc.Signal;
 import sun.misc.SignalHandler;
@@ -107,6 +107,8 @@ public class Server {
             public void handle(Signal signal) {
                 try {
                     PAUSED = false;
+                    EpidemicServer.clear();
+                    FailureCheck.restart();
                     AlertOtherNodes();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -135,25 +137,30 @@ public class Server {
      * @throws IOException 
      * @throws InvalidHashRangeException 
      */
-    public static void AlertOtherNodes() throws InvalidHashRangeException, IOException {
+    public static void AlertOtherNodes() throws IOException {
     	EpidemicServer.clear();
     	
     	long timestamp = System.currentTimeMillis() / 1000L;
     	
 		ByteString id = Epidemic.generateID(selfNode.getAddress(), selfNode.getEpiPort(), EpidemicType.ALIVE);
-    	InternalRequest.EpidemicRequest.Builder builder = InternalRequest.EpidemicRequest.newBuilder();
-		builder.setServer(selfNode.getAddress().getHostAddress())
-			.setPort(selfNode.getPort())
-			.setEpId(id)
-			.setTimestamp(timestamp)
-			.setNodeId(selfNode.getId())
-			.setType(EpidemicType.ALIVE);
-		
+    	InternalRequest.ServerNode.Builder builder = InternalRequest.ServerNode.newBuilder();
+    	builder.setNodeId(selfNode.getId())
+    			.setServer(selfNode.getAddress().getHostAddress())
+    			.setPort(selfNode.getPort());
+
     	for(int hash: selfNode.getHashValues()) {
     		builder.addHashes(hash);
     	}
     	
-    	InternalRequest.EpidemicRequest epiRequest = builder.build();
+    	InternalRequest.ServerNode serverNode = builder.build();
+		
+    	
+    	InternalRequest.EpidemicRequest epiRequest = InternalRequest.EpidemicRequest.newBuilder()
+    			.setServerNode(serverNode)
+    			.setEpId(id)
+    			.setTimestamp(timestamp)
+    			.setType(EpidemicType.ALIVE)
+    			.build();
     	
     	metrics.aliveEpidemics.inc();
 		Epidemic epi = new Epidemic(epiRequest);
@@ -201,12 +208,51 @@ public class Server {
     	return false;
     }
     
+    public static void TransferState(String addr, int port, int nodeId) throws IOException {
+    	InternalRequest.SystemState.Builder builder = InternalRequest.SystemState.newBuilder();
+    	for(ServerNode node: Server.ServerNodes) {
+    		InternalRequest.ServerNode n = InternalRequest.ServerNode.newBuilder()
+    				.setServer(node.getAddress().getHostAddress())
+    				.setPort(node.getPort())
+    				.setNodeId(node.getId())
+    				.build();
+    		builder.addServers(n);
+    	}
+    	builder.setNodeId(Server.selfNode.getId());
+    	
+		ByteString id = Epidemic.generateID(selfNode.getAddress(), selfNode.getEpiPort(), EpidemicType.ALIVE);
+    	long timestamp = System.currentTimeMillis() / 1000L;
+    	
+    	InternalRequest.EpidemicRequest epiRequest = InternalRequest.EpidemicRequest.newBuilder()
+    			.setState(builder.build())
+    			.setEpId(id)
+    			.setTimestamp(timestamp)
+    			.setType(EpidemicType.STATE)
+    			.build();
+    	
+    	ByteString payload = epiRequest.toByteString();
+    	
+    	DatagramSocket socket = new DatagramSocket();
+    	
+		Message.Msg msg = Epidemic.PackInternalMessage(payload, socket);
+		ServerNode node = null; 
+		for(ServerNode n: Server.ServerNodes) {
+			if(n.getId() == nodeId){
+				node = n;
+				break;
+			}
+		}
+
+    	Worker.Send(socket, msg, node.getAddress(), node.getEpiPort());
+		socket.close();
+    }
+    
     /**
      * Re-adds a node into the ServerNodes list. New hash space already defined
      * @throws InvalidHashRangeException
      * @throws IOException 
      */
-    public static void RejoinNode(int id, String addr, int port, List<Integer> hashValues) throws InvalidHashRangeException, IOException {
+    public static void RejoinNode(int id, String addr, int port, List<Integer> hashValues) throws IOException {
         int[] hashArray = new int[hashValues.size()];
     	for(int i = 0; i < hashArray.length; i++) {
         	hashArray[i] = hashValues.get(i);
@@ -243,6 +289,10 @@ public class Server {
     		
     		//TODO: Transfer keys?
     	}
+    	
+    	// Send server state to reactivated node
+    	TransferState(addr, port, id);
+    	
     	// Transfer hash space
     	/*for (ServerNode n : ServerNodes) {
     	    // If the node in the over the current hashspace
@@ -305,7 +355,7 @@ public class Server {
         threadPool.execute(new Worker(packet, priority));
     }
 
-    public void StartServing() throws InvalidHashRangeException, IOException  {
+    public void StartServing() throws IOException  {
         System.out.println("Listening on: " + this.listeningSocket.getLocalPort());
         System.out.println("CPUs: " + this.availableCores);
         System.out.println("PID: " + Integer.parseInt(ManagementFactory.getRuntimeMXBean().getName().split("@")[0]));
@@ -339,6 +389,26 @@ public class Server {
         EpidemicServer.stop();
         FailureCheck.stop();
     }
+    
+    /**
+     * Update state of dead/alive nodes
+     * @param state Protobuf object with list of alive nodes
+     */
+	public static void ReceiveState(SystemState state) {
+		
+		for(InternalRequest.ServerNode node : state.getServersList()) {
+			int id = node.getNodeId();
+			for(ServerNode deadNode : DeadNodes) {
+				if(deadNode.getId() == id) {
+					ServerNodes.add(deadNode);
+					metrics.deadNodes.dec();
+					break;
+				}
+			}
+			DeadNodes.removeIf(x -> x.getId() == id);
+			
+		}
+	}
 }
 
 

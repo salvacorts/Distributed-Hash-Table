@@ -12,7 +12,6 @@ import com.g9A.CPEN431.A10.client.Client;
 import com.g9A.CPEN431.A10.server.Server;
 import com.g9A.CPEN431.A10.server.ServerNode;
 import com.g9A.CPEN431.A10.server.Worker;
-import com.g9A.CPEN431.A10.server.exceptions.InvalidHashRangeException;
 import com.g9A.CPEN431.A10.server.metrics.MetricsServer;
 import com.google.protobuf.ByteString;
 
@@ -38,7 +37,7 @@ public class FailureCheck implements Runnable {
 	 * @throws InvalidHashRangeException 
 	 * @throws IOException 
 	 */
-	private void checkRandom() throws InvalidHashRangeException, IOException {
+	private void checkRandom() throws IOException {
 		// If there is only one node (this one), return, there is nothing to check
     	if (Server.ServerNodes.size() < 2) return;
 
@@ -80,18 +79,22 @@ public class FailureCheck implements Runnable {
 	 * @throws IOException 
 	 * @throws InvalidHashRangeException 
 	 */
-    public void removeNode(ServerNode node) throws InvalidHashRangeException, IOException {
+    public void removeNode(ServerNode node) throws IOException {
 		Server.RemoveNode(node.getId());
 
 		ByteString id = Epidemic.generateID(node.getAddress(), node.getEpiPort(), EpidemicType.DEAD);
 		
 		long timestamp = System.currentTimeMillis()/1000L;
-		InternalRequest.EpidemicRequest epiRequest = InternalRequest.EpidemicRequest.newBuilder()
+		
+		InternalRequest.ServerNode serverNode = InternalRequest.ServerNode.newBuilder()
 				.setServer(node.getAddress().getHostAddress())
 				.setPort(node.getPort())
+				.setNodeId(node.getId())
+				.build();
+		InternalRequest.EpidemicRequest epiRequest = InternalRequest.EpidemicRequest.newBuilder()
+				.setServerNode(serverNode)
 				.setEpId(id)
 				.setTimestamp(timestamp)
-				.setNodeId(node.getId())
 				.setType(EpidemicType.DEAD)
 				.build();
 		
@@ -124,6 +127,14 @@ public class FailureCheck implements Runnable {
 				e.printStackTrace();
 			}
 		}
+    }
+    
+    public void restart() {
+    	stop();
+    	FIRST_TIME_FLAG = true;
+    	t.stop();
+    	t = null;
+    	start();
     }
 
     public void start() {

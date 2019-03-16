@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.g9A.CPEN431.A10.server.exceptions.InvalidHashRangeException;
-
 public class ServerNode {
     private InetAddress address;
     private int id;
@@ -15,7 +13,7 @@ public class ServerNode {
     private int epiPort;
     private int[] hashValues;
 
-    public ServerNode(String host, int port, int epiPort, int id, int [] hashes) throws InvalidHashRangeException, UnknownHostException {
+    public ServerNode(String host, int port, int epiPort, int id, int [] hashes) throws UnknownHostException {
         hashValues = hashes;
 
         this.address = InetAddress.getByName(host);

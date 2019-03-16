@@ -6,16 +6,27 @@ message EpidemicRequest {
 	enum EpidemicType {
 		DEAD = 0;
 		ALIVE = 1;
+		STATE = 2;
 	}
 
 	required bytes epId = 1;
 	required EpidemicType type = 2;
 	required int64 timestamp = 3;
 
-    optional string server = 4;
-	optional int32 port = 5;
-	optional int32 nodeId = 6;
-	repeated int32 hashes = 7;
+	optional ServerNode serverNode = 4;
+	optional SystemState state = 5;
+}
+
+message SystemState{
+	repeated ServerNode servers = 1;
+	required int32 nodeId = 2;
+}
+
+message ServerNode {
+	required string server = 1;
+	required int32 port = 2;
+	optional int32 nodeId = 3;
+	repeated int32 hashes = 4;
 }
 
 message KVTransfer {

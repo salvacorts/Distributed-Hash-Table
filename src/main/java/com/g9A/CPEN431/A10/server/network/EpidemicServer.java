@@ -14,7 +14,6 @@ import com.g9A.CPEN431.A10.client.Client;
 import com.g9A.CPEN431.A10.server.HashSpace;
 import com.g9A.CPEN431.A10.server.Server;
 import com.g9A.CPEN431.A10.server.Worker;
-import com.g9A.CPEN431.A10.server.exceptions.InvalidHashRangeException;
 import com.g9A.CPEN431.A10.server.metrics.MetricsServer;
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -40,7 +39,7 @@ public class EpidemicServer implements Runnable {
 		return InternalRequest.EpidemicRequest.newBuilder().mergeFrom(msg.getPayload()).build();
 	}
 	
-	public static void add(Epidemic epi) throws InvalidHashRangeException, IOException {
+	public static void add(Epidemic epi) throws IOException {
 		if (Cache.check(epi.getID())) return;
 
 		Cache.put(epi.getID());
