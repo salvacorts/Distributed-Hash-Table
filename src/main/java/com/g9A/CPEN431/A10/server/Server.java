@@ -30,7 +30,6 @@ import com.google.protobuf.ByteString;
 import ca.NetSysLab.ProtocolBuffers.InternalRequest;
 import ca.NetSysLab.ProtocolBuffers.Message;
 import ca.NetSysLab.ProtocolBuffers.InternalRequest.KVTransfer;
-import ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState;
 import ca.NetSysLab.ProtocolBuffers.InternalRequest.EpidemicRequest.EpidemicType;
 import ca.NetSysLab.ProtocolBuffers.KeyValueResponse.KVResponse;
 import sun.misc.Signal;
