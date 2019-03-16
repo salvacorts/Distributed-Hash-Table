@@ -12,7 +12,7 @@ planetlab02.cs.washington.edu:10145
 planetlab2.pop-mg.rnp.br:10145:4321:178
 planetlab3.comp.nus.edu.sg:10145
 pl1.sos.info.hiroshima-cu.ac.jp:10145
-planetlab3.cesnet.cz:10145
+planetlab2.dtc.umn.edu:10145
 planetlab1.dtc.umn.edu:10145
 pl1.rcc.uottawa.ca:10145
 node1.planetlab.mathcs.emory.edu:10145

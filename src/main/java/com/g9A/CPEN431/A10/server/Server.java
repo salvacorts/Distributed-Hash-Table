@@ -138,7 +138,6 @@ public class Server {
      * @throws InvalidHashRangeException 
      */
     public static void AlertOtherNodes() throws IOException {
-    	EpidemicServer.clear();
     	
     	long timestamp = System.currentTimeMillis() / 1000L;
     	
@@ -216,7 +215,15 @@ public class Server {
     				.setPort(node.getPort())
     				.setNodeId(node.getId())
     				.build();
-    		builder.addServers(n);
+    		builder.addAliveNodes(n);
+    	}
+    	for(ServerNode deadNode: Server.DeadNodes) {
+    		InternalRequest.ServerNode n = InternalRequest.ServerNode.newBuilder()
+    				.setServer(deadNode.getAddress().getHostAddress())
+    				.setPort(deadNode.getPort())
+    				.setNodeId(deadNode.getId())
+    				.build();
+    		builder.addDeadNodes(n);
     	}
     	builder.setNodeId(Server.selfNode.getId());
     	
@@ -396,7 +403,7 @@ public class Server {
      */
 	public static void ReceiveState(SystemState state) {
 		
-		for(InternalRequest.ServerNode node : state.getServersList()) {
+		for(InternalRequest.ServerNode node : state.getAliveNodesList()) {
 			int id = node.getNodeId();
 			for(ServerNode deadNode : DeadNodes) {
 				if(deadNode.getId() == id) {
@@ -406,7 +413,18 @@ public class Server {
 				}
 			}
 			DeadNodes.removeIf(x -> x.getId() == id);
-			
+		}
+		
+		for(InternalRequest.ServerNode node : state.getDeadNodesList()) {
+			int id = node.getNodeId();
+			for(ServerNode aliveNode : ServerNodes) {
+				if(aliveNode.getId() == id) {
+					DeadNodes.add(aliveNode);
+					metrics.deadNodes.inc();
+					break;
+				}
+			}
+			ServerNodes.removeIf(x -> x.getId() == id);
 		}
 	}
 }

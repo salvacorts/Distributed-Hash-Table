@@ -18,8 +18,9 @@ message EpidemicRequest {
 }
 
 message SystemState{
-	repeated ServerNode servers = 1;
-	required int32 nodeId = 2;
+	repeated ServerNode aliveNodes = 1;
+	repeated ServerNode deadNodes = 2;
+	required int32 nodeId = 3;
 }
 
 message ServerNode {

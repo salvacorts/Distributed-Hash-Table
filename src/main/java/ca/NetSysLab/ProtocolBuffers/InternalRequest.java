@@ -1095,35 +1095,59 @@ public final class InternalRequest {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>repeated .ServerNode servers = 1;</code>
+     * <code>repeated .ServerNode aliveNodes = 1;</code>
      */
     java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> 
-        getServersList();
+        getAliveNodesList();
     /**
-     * <code>repeated .ServerNode servers = 1;</code>
+     * <code>repeated .ServerNode aliveNodes = 1;</code>
      */
-    ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode getServers(int index);
+    ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode getAliveNodes(int index);
     /**
-     * <code>repeated .ServerNode servers = 1;</code>
+     * <code>repeated .ServerNode aliveNodes = 1;</code>
      */
-    int getServersCount();
+    int getAliveNodesCount();
     /**
-     * <code>repeated .ServerNode servers = 1;</code>
+     * <code>repeated .ServerNode aliveNodes = 1;</code>
      */
     java.util.List<? extends ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder> 
-        getServersOrBuilderList();
+        getAliveNodesOrBuilderList();
     /**
-     * <code>repeated .ServerNode servers = 1;</code>
+     * <code>repeated .ServerNode aliveNodes = 1;</code>
      */
-    ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder getServersOrBuilder(
+    ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder getAliveNodesOrBuilder(
         int index);
 
     /**
-     * <code>required int32 nodeId = 2;</code>
+     * <code>repeated .ServerNode deadNodes = 2;</code>
+     */
+    java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> 
+        getDeadNodesList();
+    /**
+     * <code>repeated .ServerNode deadNodes = 2;</code>
+     */
+    ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode getDeadNodes(int index);
+    /**
+     * <code>repeated .ServerNode deadNodes = 2;</code>
+     */
+    int getDeadNodesCount();
+    /**
+     * <code>repeated .ServerNode deadNodes = 2;</code>
+     */
+    java.util.List<? extends ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder> 
+        getDeadNodesOrBuilderList();
+    /**
+     * <code>repeated .ServerNode deadNodes = 2;</code>
+     */
+    ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder getDeadNodesOrBuilder(
+        int index);
+
+    /**
+     * <code>required int32 nodeId = 3;</code>
      */
     boolean hasNodeId();
     /**
-     * <code>required int32 nodeId = 2;</code>
+     * <code>required int32 nodeId = 3;</code>
      */
     int getNodeId();
   }
@@ -1181,13 +1205,21 @@ public final class InternalRequest {
             }
             case 10: {
               if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                servers_ = new java.util.ArrayList<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode>();
+                aliveNodes_ = new java.util.ArrayList<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode>();
                 mutable_bitField0_ |= 0x00000001;
               }
-              servers_.add(input.readMessage(ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.PARSER, extensionRegistry));
+              aliveNodes_.add(input.readMessage(ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.PARSER, extensionRegistry));
               break;
             }
-            case 16: {
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                deadNodes_ = new java.util.ArrayList<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode>();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              deadNodes_.add(input.readMessage(ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.PARSER, extensionRegistry));
+              break;
+            }
+            case 24: {
               bitField0_ |= 0x00000001;
               nodeId_ = input.readInt32();
               break;
@@ -1201,7 +1233,10 @@ public final class InternalRequest {
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
         if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-          servers_ = java.util.Collections.unmodifiableList(servers_);
+          aliveNodes_ = java.util.Collections.unmodifiableList(aliveNodes_);
+        }
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+          deadNodes_ = java.util.Collections.unmodifiableList(deadNodes_);
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -1235,58 +1270,94 @@ public final class InternalRequest {
     }
 
     private int bitField0_;
-    public static final int SERVERS_FIELD_NUMBER = 1;
-    private java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> servers_;
+    public static final int ALIVENODES_FIELD_NUMBER = 1;
+    private java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> aliveNodes_;
     /**
-     * <code>repeated .ServerNode servers = 1;</code>
+     * <code>repeated .ServerNode aliveNodes = 1;</code>
      */
-    public java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> getServersList() {
-      return servers_;
+    public java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> getAliveNodesList() {
+      return aliveNodes_;
     }
     /**
-     * <code>repeated .ServerNode servers = 1;</code>
+     * <code>repeated .ServerNode aliveNodes = 1;</code>
      */
     public java.util.List<? extends ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder> 
-        getServersOrBuilderList() {
-      return servers_;
+        getAliveNodesOrBuilderList() {
+      return aliveNodes_;
     }
     /**
-     * <code>repeated .ServerNode servers = 1;</code>
+     * <code>repeated .ServerNode aliveNodes = 1;</code>
      */
-    public int getServersCount() {
-      return servers_.size();
+    public int getAliveNodesCount() {
+      return aliveNodes_.size();
     }
     /**
-     * <code>repeated .ServerNode servers = 1;</code>
+     * <code>repeated .ServerNode aliveNodes = 1;</code>
      */
-    public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode getServers(int index) {
-      return servers_.get(index);
+    public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode getAliveNodes(int index) {
+      return aliveNodes_.get(index);
     }
     /**
-     * <code>repeated .ServerNode servers = 1;</code>
+     * <code>repeated .ServerNode aliveNodes = 1;</code>
      */
-    public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder getServersOrBuilder(
+    public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder getAliveNodesOrBuilder(
         int index) {
-      return servers_.get(index);
+      return aliveNodes_.get(index);
     }
 
-    public static final int NODEID_FIELD_NUMBER = 2;
+    public static final int DEADNODES_FIELD_NUMBER = 2;
+    private java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> deadNodes_;
+    /**
+     * <code>repeated .ServerNode deadNodes = 2;</code>
+     */
+    public java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> getDeadNodesList() {
+      return deadNodes_;
+    }
+    /**
+     * <code>repeated .ServerNode deadNodes = 2;</code>
+     */
+    public java.util.List<? extends ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder> 
+        getDeadNodesOrBuilderList() {
+      return deadNodes_;
+    }
+    /**
+     * <code>repeated .ServerNode deadNodes = 2;</code>
+     */
+    public int getDeadNodesCount() {
+      return deadNodes_.size();
+    }
+    /**
+     * <code>repeated .ServerNode deadNodes = 2;</code>
+     */
+    public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode getDeadNodes(int index) {
+      return deadNodes_.get(index);
+    }
+    /**
+     * <code>repeated .ServerNode deadNodes = 2;</code>
+     */
+    public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder getDeadNodesOrBuilder(
+        int index) {
+      return deadNodes_.get(index);
+    }
+
+    public static final int NODEID_FIELD_NUMBER = 3;
     private int nodeId_;
     /**
-     * <code>required int32 nodeId = 2;</code>
+     * <code>required int32 nodeId = 3;</code>
      */
     public boolean hasNodeId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required int32 nodeId = 2;</code>
+     * <code>required int32 nodeId = 3;</code>
      */
     public int getNodeId() {
       return nodeId_;
     }
 
     private void initFields() {
-      servers_ = java.util.Collections.emptyList();
+      aliveNodes_ = java.util.Collections.emptyList();
+      deadNodes_ = java.util.Collections.emptyList();
       nodeId_ = 0;
     }
     private byte memoizedIsInitialized = -1;
@@ -1299,8 +1370,14 @@ public final class InternalRequest {
         memoizedIsInitialized = 0;
         return false;
       }
-      for (int i = 0; i < getServersCount(); i++) {
-        if (!getServers(i).isInitialized()) {
+      for (int i = 0; i < getAliveNodesCount(); i++) {
+        if (!getAliveNodes(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      for (int i = 0; i < getDeadNodesCount(); i++) {
+        if (!getDeadNodes(i).isInitialized()) {
           memoizedIsInitialized = 0;
           return false;
         }
@@ -1312,11 +1389,14 @@ public final class InternalRequest {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
-      for (int i = 0; i < servers_.size(); i++) {
-        output.writeMessage(1, servers_.get(i));
+      for (int i = 0; i < aliveNodes_.size(); i++) {
+        output.writeMessage(1, aliveNodes_.get(i));
+      }
+      for (int i = 0; i < deadNodes_.size(); i++) {
+        output.writeMessage(2, deadNodes_.get(i));
       }
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeInt32(2, nodeId_);
+        output.writeInt32(3, nodeId_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -1327,13 +1407,17 @@ public final class InternalRequest {
       if (size != -1) return size;
 
       size = 0;
-      for (int i = 0; i < servers_.size(); i++) {
+      for (int i = 0; i < aliveNodes_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, servers_.get(i));
+          .computeMessageSize(1, aliveNodes_.get(i));
+      }
+      for (int i = 0; i < deadNodes_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, deadNodes_.get(i));
       }
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(2, nodeId_);
+          .computeInt32Size(3, nodeId_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1444,7 +1528,8 @@ public final class InternalRequest {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-          getServersFieldBuilder();
+          getAliveNodesFieldBuilder();
+          getDeadNodesFieldBuilder();
         }
       }
       private static Builder create() {
@@ -1453,14 +1538,20 @@ public final class InternalRequest {
 
       public Builder clear() {
         super.clear();
-        if (serversBuilder_ == null) {
-          servers_ = java.util.Collections.emptyList();
+        if (aliveNodesBuilder_ == null) {
+          aliveNodes_ = java.util.Collections.emptyList();
           bitField0_ = (bitField0_ & ~0x00000001);
         } else {
-          serversBuilder_.clear();
+          aliveNodesBuilder_.clear();
+        }
+        if (deadNodesBuilder_ == null) {
+          deadNodes_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+        } else {
+          deadNodesBuilder_.clear();
         }
         nodeId_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -1489,16 +1580,25 @@ public final class InternalRequest {
         ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState result = new ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
-        if (serversBuilder_ == null) {
+        if (aliveNodesBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001)) {
-            servers_ = java.util.Collections.unmodifiableList(servers_);
+            aliveNodes_ = java.util.Collections.unmodifiableList(aliveNodes_);
             bitField0_ = (bitField0_ & ~0x00000001);
           }
-          result.servers_ = servers_;
+          result.aliveNodes_ = aliveNodes_;
         } else {
-          result.servers_ = serversBuilder_.build();
+          result.aliveNodes_ = aliveNodesBuilder_.build();
         }
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+        if (deadNodesBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002)) {
+            deadNodes_ = java.util.Collections.unmodifiableList(deadNodes_);
+            bitField0_ = (bitField0_ & ~0x00000002);
+          }
+          result.deadNodes_ = deadNodes_;
+        } else {
+          result.deadNodes_ = deadNodesBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000001;
         }
         result.nodeId_ = nodeId_;
@@ -1518,29 +1618,55 @@ public final class InternalRequest {
 
       public Builder mergeFrom(ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState other) {
         if (other == ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState.getDefaultInstance()) return this;
-        if (serversBuilder_ == null) {
-          if (!other.servers_.isEmpty()) {
-            if (servers_.isEmpty()) {
-              servers_ = other.servers_;
+        if (aliveNodesBuilder_ == null) {
+          if (!other.aliveNodes_.isEmpty()) {
+            if (aliveNodes_.isEmpty()) {
+              aliveNodes_ = other.aliveNodes_;
               bitField0_ = (bitField0_ & ~0x00000001);
             } else {
-              ensureServersIsMutable();
-              servers_.addAll(other.servers_);
+              ensureAliveNodesIsMutable();
+              aliveNodes_.addAll(other.aliveNodes_);
             }
             onChanged();
           }
         } else {
-          if (!other.servers_.isEmpty()) {
-            if (serversBuilder_.isEmpty()) {
-              serversBuilder_.dispose();
-              serversBuilder_ = null;
-              servers_ = other.servers_;
+          if (!other.aliveNodes_.isEmpty()) {
+            if (aliveNodesBuilder_.isEmpty()) {
+              aliveNodesBuilder_.dispose();
+              aliveNodesBuilder_ = null;
+              aliveNodes_ = other.aliveNodes_;
               bitField0_ = (bitField0_ & ~0x00000001);
-              serversBuilder_ = 
+              aliveNodesBuilder_ = 
                 com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
-                   getServersFieldBuilder() : null;
+                   getAliveNodesFieldBuilder() : null;
             } else {
-              serversBuilder_.addAllMessages(other.servers_);
+              aliveNodesBuilder_.addAllMessages(other.aliveNodes_);
+            }
+          }
+        }
+        if (deadNodesBuilder_ == null) {
+          if (!other.deadNodes_.isEmpty()) {
+            if (deadNodes_.isEmpty()) {
+              deadNodes_ = other.deadNodes_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+            } else {
+              ensureDeadNodesIsMutable();
+              deadNodes_.addAll(other.deadNodes_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.deadNodes_.isEmpty()) {
+            if (deadNodesBuilder_.isEmpty()) {
+              deadNodesBuilder_.dispose();
+              deadNodesBuilder_ = null;
+              deadNodes_ = other.deadNodes_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+              deadNodesBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getDeadNodesFieldBuilder() : null;
+            } else {
+              deadNodesBuilder_.addAllMessages(other.deadNodes_);
             }
           }
         }
@@ -1556,8 +1682,14 @@ public final class InternalRequest {
           
           return false;
         }
-        for (int i = 0; i < getServersCount(); i++) {
-          if (!getServers(i).isInitialized()) {
+        for (int i = 0; i < getAliveNodesCount(); i++) {
+          if (!getAliveNodes(i).isInitialized()) {
+            
+            return false;
+          }
+        }
+        for (int i = 0; i < getDeadNodesCount(); i++) {
+          if (!getDeadNodes(i).isInitialized()) {
             
             return false;
           }
@@ -1584,273 +1716,513 @@ public final class InternalRequest {
       }
       private int bitField0_;
 
-      private java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> servers_ =
+      private java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> aliveNodes_ =
         java.util.Collections.emptyList();
-      private void ensureServersIsMutable() {
+      private void ensureAliveNodesIsMutable() {
         if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-          servers_ = new java.util.ArrayList<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode>(servers_);
+          aliveNodes_ = new java.util.ArrayList<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode>(aliveNodes_);
           bitField0_ |= 0x00000001;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilder<
-          ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder> serversBuilder_;
+          ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder> aliveNodesBuilder_;
 
       /**
-       * <code>repeated .ServerNode servers = 1;</code>
+       * <code>repeated .ServerNode aliveNodes = 1;</code>
        */
-      public java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> getServersList() {
-        if (serversBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(servers_);
+      public java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> getAliveNodesList() {
+        if (aliveNodesBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(aliveNodes_);
         } else {
-          return serversBuilder_.getMessageList();
+          return aliveNodesBuilder_.getMessageList();
         }
       }
       /**
-       * <code>repeated .ServerNode servers = 1;</code>
+       * <code>repeated .ServerNode aliveNodes = 1;</code>
        */
-      public int getServersCount() {
-        if (serversBuilder_ == null) {
-          return servers_.size();
+      public int getAliveNodesCount() {
+        if (aliveNodesBuilder_ == null) {
+          return aliveNodes_.size();
         } else {
-          return serversBuilder_.getCount();
+          return aliveNodesBuilder_.getCount();
         }
       }
       /**
-       * <code>repeated .ServerNode servers = 1;</code>
+       * <code>repeated .ServerNode aliveNodes = 1;</code>
        */
-      public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode getServers(int index) {
-        if (serversBuilder_ == null) {
-          return servers_.get(index);
+      public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode getAliveNodes(int index) {
+        if (aliveNodesBuilder_ == null) {
+          return aliveNodes_.get(index);
         } else {
-          return serversBuilder_.getMessage(index);
+          return aliveNodesBuilder_.getMessage(index);
         }
       }
       /**
-       * <code>repeated .ServerNode servers = 1;</code>
+       * <code>repeated .ServerNode aliveNodes = 1;</code>
        */
-      public Builder setServers(
+      public Builder setAliveNodes(
           int index, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode value) {
-        if (serversBuilder_ == null) {
+        if (aliveNodesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureServersIsMutable();
-          servers_.set(index, value);
+          ensureAliveNodesIsMutable();
+          aliveNodes_.set(index, value);
           onChanged();
         } else {
-          serversBuilder_.setMessage(index, value);
+          aliveNodesBuilder_.setMessage(index, value);
         }
         return this;
       }
       /**
-       * <code>repeated .ServerNode servers = 1;</code>
+       * <code>repeated .ServerNode aliveNodes = 1;</code>
        */
-      public Builder setServers(
+      public Builder setAliveNodes(
           int index, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder builderForValue) {
-        if (serversBuilder_ == null) {
-          ensureServersIsMutable();
-          servers_.set(index, builderForValue.build());
+        if (aliveNodesBuilder_ == null) {
+          ensureAliveNodesIsMutable();
+          aliveNodes_.set(index, builderForValue.build());
           onChanged();
         } else {
-          serversBuilder_.setMessage(index, builderForValue.build());
+          aliveNodesBuilder_.setMessage(index, builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .ServerNode servers = 1;</code>
+       * <code>repeated .ServerNode aliveNodes = 1;</code>
        */
-      public Builder addServers(ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode value) {
-        if (serversBuilder_ == null) {
+      public Builder addAliveNodes(ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode value) {
+        if (aliveNodesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureServersIsMutable();
-          servers_.add(value);
+          ensureAliveNodesIsMutable();
+          aliveNodes_.add(value);
           onChanged();
         } else {
-          serversBuilder_.addMessage(value);
+          aliveNodesBuilder_.addMessage(value);
         }
         return this;
       }
       /**
-       * <code>repeated .ServerNode servers = 1;</code>
+       * <code>repeated .ServerNode aliveNodes = 1;</code>
        */
-      public Builder addServers(
+      public Builder addAliveNodes(
           int index, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode value) {
-        if (serversBuilder_ == null) {
+        if (aliveNodesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureServersIsMutable();
-          servers_.add(index, value);
+          ensureAliveNodesIsMutable();
+          aliveNodes_.add(index, value);
           onChanged();
         } else {
-          serversBuilder_.addMessage(index, value);
+          aliveNodesBuilder_.addMessage(index, value);
         }
         return this;
       }
       /**
-       * <code>repeated .ServerNode servers = 1;</code>
+       * <code>repeated .ServerNode aliveNodes = 1;</code>
        */
-      public Builder addServers(
+      public Builder addAliveNodes(
           ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder builderForValue) {
-        if (serversBuilder_ == null) {
-          ensureServersIsMutable();
-          servers_.add(builderForValue.build());
+        if (aliveNodesBuilder_ == null) {
+          ensureAliveNodesIsMutable();
+          aliveNodes_.add(builderForValue.build());
           onChanged();
         } else {
-          serversBuilder_.addMessage(builderForValue.build());
+          aliveNodesBuilder_.addMessage(builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .ServerNode servers = 1;</code>
+       * <code>repeated .ServerNode aliveNodes = 1;</code>
        */
-      public Builder addServers(
+      public Builder addAliveNodes(
           int index, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder builderForValue) {
-        if (serversBuilder_ == null) {
-          ensureServersIsMutable();
-          servers_.add(index, builderForValue.build());
+        if (aliveNodesBuilder_ == null) {
+          ensureAliveNodesIsMutable();
+          aliveNodes_.add(index, builderForValue.build());
           onChanged();
         } else {
-          serversBuilder_.addMessage(index, builderForValue.build());
+          aliveNodesBuilder_.addMessage(index, builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .ServerNode servers = 1;</code>
+       * <code>repeated .ServerNode aliveNodes = 1;</code>
        */
-      public Builder addAllServers(
+      public Builder addAllAliveNodes(
           java.lang.Iterable<? extends ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> values) {
-        if (serversBuilder_ == null) {
-          ensureServersIsMutable();
+        if (aliveNodesBuilder_ == null) {
+          ensureAliveNodesIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, servers_);
+              values, aliveNodes_);
           onChanged();
         } else {
-          serversBuilder_.addAllMessages(values);
+          aliveNodesBuilder_.addAllMessages(values);
         }
         return this;
       }
       /**
-       * <code>repeated .ServerNode servers = 1;</code>
+       * <code>repeated .ServerNode aliveNodes = 1;</code>
        */
-      public Builder clearServers() {
-        if (serversBuilder_ == null) {
-          servers_ = java.util.Collections.emptyList();
+      public Builder clearAliveNodes() {
+        if (aliveNodesBuilder_ == null) {
+          aliveNodes_ = java.util.Collections.emptyList();
           bitField0_ = (bitField0_ & ~0x00000001);
           onChanged();
         } else {
-          serversBuilder_.clear();
+          aliveNodesBuilder_.clear();
         }
         return this;
       }
       /**
-       * <code>repeated .ServerNode servers = 1;</code>
+       * <code>repeated .ServerNode aliveNodes = 1;</code>
        */
-      public Builder removeServers(int index) {
-        if (serversBuilder_ == null) {
-          ensureServersIsMutable();
-          servers_.remove(index);
+      public Builder removeAliveNodes(int index) {
+        if (aliveNodesBuilder_ == null) {
+          ensureAliveNodesIsMutable();
+          aliveNodes_.remove(index);
           onChanged();
         } else {
-          serversBuilder_.remove(index);
+          aliveNodesBuilder_.remove(index);
         }
         return this;
       }
       /**
-       * <code>repeated .ServerNode servers = 1;</code>
+       * <code>repeated .ServerNode aliveNodes = 1;</code>
        */
-      public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder getServersBuilder(
+      public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder getAliveNodesBuilder(
           int index) {
-        return getServersFieldBuilder().getBuilder(index);
+        return getAliveNodesFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .ServerNode servers = 1;</code>
+       * <code>repeated .ServerNode aliveNodes = 1;</code>
        */
-      public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder getServersOrBuilder(
+      public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder getAliveNodesOrBuilder(
           int index) {
-        if (serversBuilder_ == null) {
-          return servers_.get(index);  } else {
-          return serversBuilder_.getMessageOrBuilder(index);
+        if (aliveNodesBuilder_ == null) {
+          return aliveNodes_.get(index);  } else {
+          return aliveNodesBuilder_.getMessageOrBuilder(index);
         }
       }
       /**
-       * <code>repeated .ServerNode servers = 1;</code>
+       * <code>repeated .ServerNode aliveNodes = 1;</code>
        */
       public java.util.List<? extends ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder> 
-           getServersOrBuilderList() {
-        if (serversBuilder_ != null) {
-          return serversBuilder_.getMessageOrBuilderList();
+           getAliveNodesOrBuilderList() {
+        if (aliveNodesBuilder_ != null) {
+          return aliveNodesBuilder_.getMessageOrBuilderList();
         } else {
-          return java.util.Collections.unmodifiableList(servers_);
+          return java.util.Collections.unmodifiableList(aliveNodes_);
         }
       }
       /**
-       * <code>repeated .ServerNode servers = 1;</code>
+       * <code>repeated .ServerNode aliveNodes = 1;</code>
        */
-      public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder addServersBuilder() {
-        return getServersFieldBuilder().addBuilder(
+      public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder addAliveNodesBuilder() {
+        return getAliveNodesFieldBuilder().addBuilder(
             ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.getDefaultInstance());
       }
       /**
-       * <code>repeated .ServerNode servers = 1;</code>
+       * <code>repeated .ServerNode aliveNodes = 1;</code>
        */
-      public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder addServersBuilder(
+      public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder addAliveNodesBuilder(
           int index) {
-        return getServersFieldBuilder().addBuilder(
+        return getAliveNodesFieldBuilder().addBuilder(
             index, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.getDefaultInstance());
       }
       /**
-       * <code>repeated .ServerNode servers = 1;</code>
+       * <code>repeated .ServerNode aliveNodes = 1;</code>
        */
       public java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder> 
-           getServersBuilderList() {
-        return getServersFieldBuilder().getBuilderList();
+           getAliveNodesBuilderList() {
+        return getAliveNodesFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilder<
           ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder> 
-          getServersFieldBuilder() {
-        if (serversBuilder_ == null) {
-          serversBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+          getAliveNodesFieldBuilder() {
+        if (aliveNodesBuilder_ == null) {
+          aliveNodesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
               ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder>(
-                  servers_,
+                  aliveNodes_,
                   ((bitField0_ & 0x00000001) == 0x00000001),
                   getParentForChildren(),
                   isClean());
-          servers_ = null;
+          aliveNodes_ = null;
         }
-        return serversBuilder_;
+        return aliveNodesBuilder_;
+      }
+
+      private java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> deadNodes_ =
+        java.util.Collections.emptyList();
+      private void ensureDeadNodesIsMutable() {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+          deadNodes_ = new java.util.ArrayList<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode>(deadNodes_);
+          bitField0_ |= 0x00000002;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilder<
+          ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder> deadNodesBuilder_;
+
+      /**
+       * <code>repeated .ServerNode deadNodes = 2;</code>
+       */
+      public java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> getDeadNodesList() {
+        if (deadNodesBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(deadNodes_);
+        } else {
+          return deadNodesBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .ServerNode deadNodes = 2;</code>
+       */
+      public int getDeadNodesCount() {
+        if (deadNodesBuilder_ == null) {
+          return deadNodes_.size();
+        } else {
+          return deadNodesBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .ServerNode deadNodes = 2;</code>
+       */
+      public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode getDeadNodes(int index) {
+        if (deadNodesBuilder_ == null) {
+          return deadNodes_.get(index);
+        } else {
+          return deadNodesBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .ServerNode deadNodes = 2;</code>
+       */
+      public Builder setDeadNodes(
+          int index, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode value) {
+        if (deadNodesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDeadNodesIsMutable();
+          deadNodes_.set(index, value);
+          onChanged();
+        } else {
+          deadNodesBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ServerNode deadNodes = 2;</code>
+       */
+      public Builder setDeadNodes(
+          int index, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder builderForValue) {
+        if (deadNodesBuilder_ == null) {
+          ensureDeadNodesIsMutable();
+          deadNodes_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          deadNodesBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ServerNode deadNodes = 2;</code>
+       */
+      public Builder addDeadNodes(ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode value) {
+        if (deadNodesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDeadNodesIsMutable();
+          deadNodes_.add(value);
+          onChanged();
+        } else {
+          deadNodesBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ServerNode deadNodes = 2;</code>
+       */
+      public Builder addDeadNodes(
+          int index, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode value) {
+        if (deadNodesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDeadNodesIsMutable();
+          deadNodes_.add(index, value);
+          onChanged();
+        } else {
+          deadNodesBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ServerNode deadNodes = 2;</code>
+       */
+      public Builder addDeadNodes(
+          ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder builderForValue) {
+        if (deadNodesBuilder_ == null) {
+          ensureDeadNodesIsMutable();
+          deadNodes_.add(builderForValue.build());
+          onChanged();
+        } else {
+          deadNodesBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ServerNode deadNodes = 2;</code>
+       */
+      public Builder addDeadNodes(
+          int index, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder builderForValue) {
+        if (deadNodesBuilder_ == null) {
+          ensureDeadNodesIsMutable();
+          deadNodes_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          deadNodesBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ServerNode deadNodes = 2;</code>
+       */
+      public Builder addAllDeadNodes(
+          java.lang.Iterable<? extends ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> values) {
+        if (deadNodesBuilder_ == null) {
+          ensureDeadNodesIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, deadNodes_);
+          onChanged();
+        } else {
+          deadNodesBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ServerNode deadNodes = 2;</code>
+       */
+      public Builder clearDeadNodes() {
+        if (deadNodesBuilder_ == null) {
+          deadNodes_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+          onChanged();
+        } else {
+          deadNodesBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ServerNode deadNodes = 2;</code>
+       */
+      public Builder removeDeadNodes(int index) {
+        if (deadNodesBuilder_ == null) {
+          ensureDeadNodesIsMutable();
+          deadNodes_.remove(index);
+          onChanged();
+        } else {
+          deadNodesBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ServerNode deadNodes = 2;</code>
+       */
+      public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder getDeadNodesBuilder(
+          int index) {
+        return getDeadNodesFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .ServerNode deadNodes = 2;</code>
+       */
+      public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder getDeadNodesOrBuilder(
+          int index) {
+        if (deadNodesBuilder_ == null) {
+          return deadNodes_.get(index);  } else {
+          return deadNodesBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .ServerNode deadNodes = 2;</code>
+       */
+      public java.util.List<? extends ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder> 
+           getDeadNodesOrBuilderList() {
+        if (deadNodesBuilder_ != null) {
+          return deadNodesBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(deadNodes_);
+        }
+      }
+      /**
+       * <code>repeated .ServerNode deadNodes = 2;</code>
+       */
+      public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder addDeadNodesBuilder() {
+        return getDeadNodesFieldBuilder().addBuilder(
+            ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .ServerNode deadNodes = 2;</code>
+       */
+      public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder addDeadNodesBuilder(
+          int index) {
+        return getDeadNodesFieldBuilder().addBuilder(
+            index, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .ServerNode deadNodes = 2;</code>
+       */
+      public java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder> 
+           getDeadNodesBuilderList() {
+        return getDeadNodesFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder> 
+          getDeadNodesFieldBuilder() {
+        if (deadNodesBuilder_ == null) {
+          deadNodesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder>(
+                  deadNodes_,
+                  ((bitField0_ & 0x00000002) == 0x00000002),
+                  getParentForChildren(),
+                  isClean());
+          deadNodes_ = null;
+        }
+        return deadNodesBuilder_;
       }
 
       private int nodeId_ ;
       /**
-       * <code>required int32 nodeId = 2;</code>
+       * <code>required int32 nodeId = 3;</code>
        */
       public boolean hasNodeId() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
+        return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>required int32 nodeId = 2;</code>
+       * <code>required int32 nodeId = 3;</code>
        */
       public int getNodeId() {
         return nodeId_;
       }
       /**
-       * <code>required int32 nodeId = 2;</code>
+       * <code>required int32 nodeId = 3;</code>
        */
       public Builder setNodeId(int value) {
-        bitField0_ |= 0x00000002;
+        bitField0_ |= 0x00000004;
         nodeId_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>required int32 nodeId = 2;</code>
+       * <code>required int32 nodeId = 3;</code>
        */
       public Builder clearNodeId() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = (bitField0_ & ~0x00000004);
         nodeId_ = 0;
         onChanged();
         return this;
@@ -3980,14 +4352,15 @@ public final class InternalRequest {
       "icRequest.EpidemicType\022\021\n\ttimestamp\030\003 \002(" +
       "\003\022\037\n\nserverNode\030\004 \001(\0132\013.ServerNode\022\033\n\005st" +
       "ate\030\005 \001(\0132\014.SystemState\".\n\014EpidemicType\022" +
-      "\010\n\004DEAD\020\000\022\t\n\005ALIVE\020\001\022\t\n\005STATE\020\002\";\n\013Syste" +
-      "mState\022\034\n\007servers\030\001 \003(\0132\013.ServerNode\022\016\n\006" +
-      "nodeId\030\002 \002(\005\"J\n\nServerNode\022\016\n\006server\030\001 \002" +
-      "(\t\022\014\n\004port\030\002 \002(\005\022\016\n\006nodeId\030\003 \001(\005\022\016\n\006hash" +
-      "es\030\004 \003(\005\"%\n\nKVTransfer\022\027\n\006kvlist\030\001 \003(\0132\007",
-      ".KVPair\"5\n\006KVPair\022\013\n\003key\030\001 \002(\014\022\r\n\005value\030" +
-      "\002 \002(\014\022\017\n\007version\030\003 \002(\005B/\n\034ca.NetSysLab.P" +
-      "rotocolBuffersB\017InternalRequest"
+      "\010\n\004DEAD\020\000\022\t\n\005ALIVE\020\001\022\t\n\005STATE\020\002\"^\n\013Syste" +
+      "mState\022\037\n\naliveNodes\030\001 \003(\0132\013.ServerNode\022" +
+      "\036\n\tdeadNodes\030\002 \003(\0132\013.ServerNode\022\016\n\006nodeI" +
+      "d\030\003 \002(\005\"J\n\nServerNode\022\016\n\006server\030\001 \002(\t\022\014\n" +
+      "\004port\030\002 \002(\005\022\016\n\006nodeId\030\003 \001(\005\022\016\n\006hashes\030\004 ",
+      "\003(\005\"%\n\nKVTransfer\022\027\n\006kvlist\030\001 \003(\0132\007.KVPa" +
+      "ir\"5\n\006KVPair\022\013\n\003key\030\001 \002(\014\022\r\n\005value\030\002 \002(\014" +
+      "\022\017\n\007version\030\003 \002(\005B/\n\034ca.NetSysLab.Protoc" +
+      "olBuffersB\017InternalRequest"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -4012,7 +4385,7 @@ public final class InternalRequest {
     internal_static_SystemState_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_SystemState_descriptor,
-        new java.lang.String[] { "Servers", "NodeId", });
+        new java.lang.String[] { "AliveNodes", "DeadNodes", "NodeId", });
     internal_static_ServerNode_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_ServerNode_fieldAccessorTable = new

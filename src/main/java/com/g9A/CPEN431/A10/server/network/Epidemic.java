@@ -42,6 +42,7 @@ public class Epidemic implements Runnable {
     	this.payload = request.toByteString();
 
     	//if (iterations < 100) iterations += 5;
+    	if(iterations < 20) iterations += 10;
     	iterations *= 2;
     }
 
