@@ -51,19 +51,6 @@ public final class InternalRequest {
      * <code>optional .ServerNode serverNode = 4;</code>
      */
     ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder getServerNodeOrBuilder();
-
-    /**
-     * <code>optional .SystemState state = 5;</code>
-     */
-    boolean hasState();
-    /**
-     * <code>optional .SystemState state = 5;</code>
-     */
-    ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState getState();
-    /**
-     * <code>optional .SystemState state = 5;</code>
-     */
-    ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemStateOrBuilder getStateOrBuilder();
   }
   /**
    * Protobuf type {@code EpidemicRequest}
@@ -151,19 +138,6 @@ public final class InternalRequest {
               bitField0_ |= 0x00000008;
               break;
             }
-            case 42: {
-              ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000010) == 0x00000010)) {
-                subBuilder = state_.toBuilder();
-              }
-              state_ = input.readMessage(ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState.PARSER, extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(state_);
-                state_ = subBuilder.buildPartial();
-              }
-              bitField0_ |= 0x00000010;
-              break;
-            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -216,10 +190,6 @@ public final class InternalRequest {
        * <code>ALIVE = 1;</code>
        */
       ALIVE(1, 1),
-      /**
-       * <code>STATE = 2;</code>
-       */
-      STATE(2, 2),
       ;
 
       /**
@@ -230,10 +200,6 @@ public final class InternalRequest {
        * <code>ALIVE = 1;</code>
        */
       public static final int ALIVE_VALUE = 1;
-      /**
-       * <code>STATE = 2;</code>
-       */
-      public static final int STATE_VALUE = 2;
 
 
       public final int getNumber() { return value; }
@@ -242,7 +208,6 @@ public final class InternalRequest {
         switch (value) {
           case 0: return DEAD;
           case 1: return ALIVE;
-          case 2: return STATE;
           default: return null;
         }
       }
@@ -361,33 +326,11 @@ public final class InternalRequest {
       return serverNode_;
     }
 
-    public static final int STATE_FIELD_NUMBER = 5;
-    private ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState state_;
-    /**
-     * <code>optional .SystemState state = 5;</code>
-     */
-    public boolean hasState() {
-      return ((bitField0_ & 0x00000010) == 0x00000010);
-    }
-    /**
-     * <code>optional .SystemState state = 5;</code>
-     */
-    public ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState getState() {
-      return state_;
-    }
-    /**
-     * <code>optional .SystemState state = 5;</code>
-     */
-    public ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemStateOrBuilder getStateOrBuilder() {
-      return state_;
-    }
-
     private void initFields() {
       epId_ = com.google.protobuf.ByteString.EMPTY;
       type_ = ca.NetSysLab.ProtocolBuffers.InternalRequest.EpidemicRequest.EpidemicType.DEAD;
       timestamp_ = 0L;
       serverNode_ = ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.getDefaultInstance();
-      state_ = ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -413,12 +356,6 @@ public final class InternalRequest {
           return false;
         }
       }
-      if (hasState()) {
-        if (!getState().isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -437,9 +374,6 @@ public final class InternalRequest {
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeMessage(4, serverNode_);
-      }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        output.writeMessage(5, state_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -465,10 +399,6 @@ public final class InternalRequest {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(4, serverNode_);
-      }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(5, state_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -580,7 +510,6 @@ public final class InternalRequest {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getServerNodeFieldBuilder();
-          getStateFieldBuilder();
         }
       }
       private static Builder create() {
@@ -601,12 +530,6 @@ public final class InternalRequest {
           serverNodeBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000008);
-        if (stateBuilder_ == null) {
-          state_ = ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState.getDefaultInstance();
-        } else {
-          stateBuilder_.clear();
-        }
-        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -655,14 +578,6 @@ public final class InternalRequest {
         } else {
           result.serverNode_ = serverNodeBuilder_.build();
         }
-        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
-          to_bitField0_ |= 0x00000010;
-        }
-        if (stateBuilder_ == null) {
-          result.state_ = state_;
-        } else {
-          result.state_ = stateBuilder_.build();
-        }
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -691,9 +606,6 @@ public final class InternalRequest {
         if (other.hasServerNode()) {
           mergeServerNode(other.getServerNode());
         }
-        if (other.hasState()) {
-          mergeState(other.getState());
-        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -713,12 +625,6 @@ public final class InternalRequest {
         }
         if (hasServerNode()) {
           if (!getServerNode().isInitialized()) {
-            
-            return false;
-          }
-        }
-        if (hasState()) {
-          if (!getState().isInitialized()) {
             
             return false;
           }
@@ -963,122 +869,6 @@ public final class InternalRequest {
         return serverNodeBuilder_;
       }
 
-      private ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState state_ = ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState.getDefaultInstance();
-      private com.google.protobuf.SingleFieldBuilder<
-          ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState, ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState.Builder, ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemStateOrBuilder> stateBuilder_;
-      /**
-       * <code>optional .SystemState state = 5;</code>
-       */
-      public boolean hasState() {
-        return ((bitField0_ & 0x00000010) == 0x00000010);
-      }
-      /**
-       * <code>optional .SystemState state = 5;</code>
-       */
-      public ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState getState() {
-        if (stateBuilder_ == null) {
-          return state_;
-        } else {
-          return stateBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>optional .SystemState state = 5;</code>
-       */
-      public Builder setState(ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState value) {
-        if (stateBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          state_ = value;
-          onChanged();
-        } else {
-          stateBuilder_.setMessage(value);
-        }
-        bitField0_ |= 0x00000010;
-        return this;
-      }
-      /**
-       * <code>optional .SystemState state = 5;</code>
-       */
-      public Builder setState(
-          ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState.Builder builderForValue) {
-        if (stateBuilder_ == null) {
-          state_ = builderForValue.build();
-          onChanged();
-        } else {
-          stateBuilder_.setMessage(builderForValue.build());
-        }
-        bitField0_ |= 0x00000010;
-        return this;
-      }
-      /**
-       * <code>optional .SystemState state = 5;</code>
-       */
-      public Builder mergeState(ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState value) {
-        if (stateBuilder_ == null) {
-          if (((bitField0_ & 0x00000010) == 0x00000010) &&
-              state_ != ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState.getDefaultInstance()) {
-            state_ =
-              ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState.newBuilder(state_).mergeFrom(value).buildPartial();
-          } else {
-            state_ = value;
-          }
-          onChanged();
-        } else {
-          stateBuilder_.mergeFrom(value);
-        }
-        bitField0_ |= 0x00000010;
-        return this;
-      }
-      /**
-       * <code>optional .SystemState state = 5;</code>
-       */
-      public Builder clearState() {
-        if (stateBuilder_ == null) {
-          state_ = ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState.getDefaultInstance();
-          onChanged();
-        } else {
-          stateBuilder_.clear();
-        }
-        bitField0_ = (bitField0_ & ~0x00000010);
-        return this;
-      }
-      /**
-       * <code>optional .SystemState state = 5;</code>
-       */
-      public ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState.Builder getStateBuilder() {
-        bitField0_ |= 0x00000010;
-        onChanged();
-        return getStateFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .SystemState state = 5;</code>
-       */
-      public ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemStateOrBuilder getStateOrBuilder() {
-        if (stateBuilder_ != null) {
-          return stateBuilder_.getMessageOrBuilder();
-        } else {
-          return state_;
-        }
-      }
-      /**
-       * <code>optional .SystemState state = 5;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState, ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState.Builder, ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemStateOrBuilder> 
-          getStateFieldBuilder() {
-        if (stateBuilder_ == null) {
-          stateBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState, ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState.Builder, ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemStateOrBuilder>(
-                  getState(),
-                  getParentForChildren(),
-                  isClean());
-          state_ = null;
-        }
-        return stateBuilder_;
-      }
-
       // @@protoc_insertion_point(builder_scope:EpidemicRequest)
     }
 
@@ -1088,1155 +878,6 @@ public final class InternalRequest {
     }
 
     // @@protoc_insertion_point(class_scope:EpidemicRequest)
-  }
-
-  public interface SystemStateOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:SystemState)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>repeated .ServerNode aliveNodes = 1;</code>
-     */
-    java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> 
-        getAliveNodesList();
-    /**
-     * <code>repeated .ServerNode aliveNodes = 1;</code>
-     */
-    ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode getAliveNodes(int index);
-    /**
-     * <code>repeated .ServerNode aliveNodes = 1;</code>
-     */
-    int getAliveNodesCount();
-    /**
-     * <code>repeated .ServerNode aliveNodes = 1;</code>
-     */
-    java.util.List<? extends ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder> 
-        getAliveNodesOrBuilderList();
-    /**
-     * <code>repeated .ServerNode aliveNodes = 1;</code>
-     */
-    ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder getAliveNodesOrBuilder(
-        int index);
-
-    /**
-     * <code>repeated .ServerNode deadNodes = 2;</code>
-     */
-    java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> 
-        getDeadNodesList();
-    /**
-     * <code>repeated .ServerNode deadNodes = 2;</code>
-     */
-    ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode getDeadNodes(int index);
-    /**
-     * <code>repeated .ServerNode deadNodes = 2;</code>
-     */
-    int getDeadNodesCount();
-    /**
-     * <code>repeated .ServerNode deadNodes = 2;</code>
-     */
-    java.util.List<? extends ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder> 
-        getDeadNodesOrBuilderList();
-    /**
-     * <code>repeated .ServerNode deadNodes = 2;</code>
-     */
-    ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder getDeadNodesOrBuilder(
-        int index);
-
-    /**
-     * <code>required int32 nodeId = 3;</code>
-     */
-    boolean hasNodeId();
-    /**
-     * <code>required int32 nodeId = 3;</code>
-     */
-    int getNodeId();
-  }
-  /**
-   * Protobuf type {@code SystemState}
-   */
-  public static final class SystemState extends
-      com.google.protobuf.GeneratedMessage implements
-      // @@protoc_insertion_point(message_implements:SystemState)
-      SystemStateOrBuilder {
-    // Use SystemState.newBuilder() to construct.
-    private SystemState(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-      this.unknownFields = builder.getUnknownFields();
-    }
-    private SystemState(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
-
-    private static final SystemState defaultInstance;
-    public static SystemState getDefaultInstance() {
-      return defaultInstance;
-    }
-
-    public SystemState getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-
-    private final com.google.protobuf.UnknownFieldSet unknownFields;
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
-      return this.unknownFields;
-    }
-    private SystemState(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      initFields();
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                aliveNodes_ = new java.util.ArrayList<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode>();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              aliveNodes_.add(input.readMessage(ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.PARSER, extensionRegistry));
-              break;
-            }
-            case 18: {
-              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                deadNodes_ = new java.util.ArrayList<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode>();
-                mutable_bitField0_ |= 0x00000002;
-              }
-              deadNodes_.add(input.readMessage(ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.PARSER, extensionRegistry));
-              break;
-            }
-            case 24: {
-              bitField0_ |= 0x00000001;
-              nodeId_ = input.readInt32();
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e.getMessage()).setUnfinishedMessage(this);
-      } finally {
-        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-          aliveNodes_ = java.util.Collections.unmodifiableList(aliveNodes_);
-        }
-        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-          deadNodes_ = java.util.Collections.unmodifiableList(deadNodes_);
-        }
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return ca.NetSysLab.ProtocolBuffers.InternalRequest.internal_static_SystemState_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return ca.NetSysLab.ProtocolBuffers.InternalRequest.internal_static_SystemState_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState.class, ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState.Builder.class);
-    }
-
-    public static com.google.protobuf.Parser<SystemState> PARSER =
-        new com.google.protobuf.AbstractParser<SystemState>() {
-      public SystemState parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new SystemState(input, extensionRegistry);
-      }
-    };
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<SystemState> getParserForType() {
-      return PARSER;
-    }
-
-    private int bitField0_;
-    public static final int ALIVENODES_FIELD_NUMBER = 1;
-    private java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> aliveNodes_;
-    /**
-     * <code>repeated .ServerNode aliveNodes = 1;</code>
-     */
-    public java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> getAliveNodesList() {
-      return aliveNodes_;
-    }
-    /**
-     * <code>repeated .ServerNode aliveNodes = 1;</code>
-     */
-    public java.util.List<? extends ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder> 
-        getAliveNodesOrBuilderList() {
-      return aliveNodes_;
-    }
-    /**
-     * <code>repeated .ServerNode aliveNodes = 1;</code>
-     */
-    public int getAliveNodesCount() {
-      return aliveNodes_.size();
-    }
-    /**
-     * <code>repeated .ServerNode aliveNodes = 1;</code>
-     */
-    public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode getAliveNodes(int index) {
-      return aliveNodes_.get(index);
-    }
-    /**
-     * <code>repeated .ServerNode aliveNodes = 1;</code>
-     */
-    public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder getAliveNodesOrBuilder(
-        int index) {
-      return aliveNodes_.get(index);
-    }
-
-    public static final int DEADNODES_FIELD_NUMBER = 2;
-    private java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> deadNodes_;
-    /**
-     * <code>repeated .ServerNode deadNodes = 2;</code>
-     */
-    public java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> getDeadNodesList() {
-      return deadNodes_;
-    }
-    /**
-     * <code>repeated .ServerNode deadNodes = 2;</code>
-     */
-    public java.util.List<? extends ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder> 
-        getDeadNodesOrBuilderList() {
-      return deadNodes_;
-    }
-    /**
-     * <code>repeated .ServerNode deadNodes = 2;</code>
-     */
-    public int getDeadNodesCount() {
-      return deadNodes_.size();
-    }
-    /**
-     * <code>repeated .ServerNode deadNodes = 2;</code>
-     */
-    public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode getDeadNodes(int index) {
-      return deadNodes_.get(index);
-    }
-    /**
-     * <code>repeated .ServerNode deadNodes = 2;</code>
-     */
-    public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder getDeadNodesOrBuilder(
-        int index) {
-      return deadNodes_.get(index);
-    }
-
-    public static final int NODEID_FIELD_NUMBER = 3;
-    private int nodeId_;
-    /**
-     * <code>required int32 nodeId = 3;</code>
-     */
-    public boolean hasNodeId() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    /**
-     * <code>required int32 nodeId = 3;</code>
-     */
-    public int getNodeId() {
-      return nodeId_;
-    }
-
-    private void initFields() {
-      aliveNodes_ = java.util.Collections.emptyList();
-      deadNodes_ = java.util.Collections.emptyList();
-      nodeId_ = 0;
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      if (!hasNodeId()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      for (int i = 0; i < getAliveNodesCount(); i++) {
-        if (!getAliveNodes(i).isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
-      }
-      for (int i = 0; i < getDeadNodesCount(); i++) {
-        if (!getDeadNodes(i).isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
-      }
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      for (int i = 0; i < aliveNodes_.size(); i++) {
-        output.writeMessage(1, aliveNodes_.get(i));
-      }
-      for (int i = 0; i < deadNodes_.size(); i++) {
-        output.writeMessage(2, deadNodes_.get(i));
-      }
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeInt32(3, nodeId_);
-      }
-      getUnknownFields().writeTo(output);
-    }
-
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      for (int i = 0; i < aliveNodes_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, aliveNodes_.get(i));
-      }
-      for (int i = 0; i < deadNodes_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, deadNodes_.get(i));
-      }
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(3, nodeId_);
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-
-    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code SystemState}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:SystemState)
-        ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemStateOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return ca.NetSysLab.ProtocolBuffers.InternalRequest.internal_static_SystemState_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return ca.NetSysLab.ProtocolBuffers.InternalRequest.internal_static_SystemState_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState.class, ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState.Builder.class);
-      }
-
-      // Construct using ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-          getAliveNodesFieldBuilder();
-          getDeadNodesFieldBuilder();
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-
-      public Builder clear() {
-        super.clear();
-        if (aliveNodesBuilder_ == null) {
-          aliveNodes_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-        } else {
-          aliveNodesBuilder_.clear();
-        }
-        if (deadNodesBuilder_ == null) {
-          deadNodes_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
-        } else {
-          deadNodesBuilder_.clear();
-        }
-        nodeId_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000004);
-        return this;
-      }
-
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return ca.NetSysLab.ProtocolBuffers.InternalRequest.internal_static_SystemState_descriptor;
-      }
-
-      public ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState getDefaultInstanceForType() {
-        return ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState.getDefaultInstance();
-      }
-
-      public ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState build() {
-        ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState buildPartial() {
-        ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState result = new ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (aliveNodesBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) == 0x00000001)) {
-            aliveNodes_ = java.util.Collections.unmodifiableList(aliveNodes_);
-            bitField0_ = (bitField0_ & ~0x00000001);
-          }
-          result.aliveNodes_ = aliveNodes_;
-        } else {
-          result.aliveNodes_ = aliveNodesBuilder_.build();
-        }
-        if (deadNodesBuilder_ == null) {
-          if (((bitField0_ & 0x00000002) == 0x00000002)) {
-            deadNodes_ = java.util.Collections.unmodifiableList(deadNodes_);
-            bitField0_ = (bitField0_ & ~0x00000002);
-          }
-          result.deadNodes_ = deadNodes_;
-        } else {
-          result.deadNodes_ = deadNodesBuilder_.build();
-        }
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.nodeId_ = nodeId_;
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState) {
-          return mergeFrom((ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState other) {
-        if (other == ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState.getDefaultInstance()) return this;
-        if (aliveNodesBuilder_ == null) {
-          if (!other.aliveNodes_.isEmpty()) {
-            if (aliveNodes_.isEmpty()) {
-              aliveNodes_ = other.aliveNodes_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-            } else {
-              ensureAliveNodesIsMutable();
-              aliveNodes_.addAll(other.aliveNodes_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.aliveNodes_.isEmpty()) {
-            if (aliveNodesBuilder_.isEmpty()) {
-              aliveNodesBuilder_.dispose();
-              aliveNodesBuilder_ = null;
-              aliveNodes_ = other.aliveNodes_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-              aliveNodesBuilder_ = 
-                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
-                   getAliveNodesFieldBuilder() : null;
-            } else {
-              aliveNodesBuilder_.addAllMessages(other.aliveNodes_);
-            }
-          }
-        }
-        if (deadNodesBuilder_ == null) {
-          if (!other.deadNodes_.isEmpty()) {
-            if (deadNodes_.isEmpty()) {
-              deadNodes_ = other.deadNodes_;
-              bitField0_ = (bitField0_ & ~0x00000002);
-            } else {
-              ensureDeadNodesIsMutable();
-              deadNodes_.addAll(other.deadNodes_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.deadNodes_.isEmpty()) {
-            if (deadNodesBuilder_.isEmpty()) {
-              deadNodesBuilder_.dispose();
-              deadNodesBuilder_ = null;
-              deadNodes_ = other.deadNodes_;
-              bitField0_ = (bitField0_ & ~0x00000002);
-              deadNodesBuilder_ = 
-                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
-                   getDeadNodesFieldBuilder() : null;
-            } else {
-              deadNodesBuilder_.addAllMessages(other.deadNodes_);
-            }
-          }
-        }
-        if (other.hasNodeId()) {
-          setNodeId(other.getNodeId());
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        if (!hasNodeId()) {
-          
-          return false;
-        }
-        for (int i = 0; i < getAliveNodesCount(); i++) {
-          if (!getAliveNodes(i).isInitialized()) {
-            
-            return false;
-          }
-        }
-        for (int i = 0; i < getDeadNodesCount(); i++) {
-          if (!getDeadNodes(i).isInitialized()) {
-            
-            return false;
-          }
-        }
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      private java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> aliveNodes_ =
-        java.util.Collections.emptyList();
-      private void ensureAliveNodesIsMutable() {
-        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-          aliveNodes_ = new java.util.ArrayList<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode>(aliveNodes_);
-          bitField0_ |= 0x00000001;
-         }
-      }
-
-      private com.google.protobuf.RepeatedFieldBuilder<
-          ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder> aliveNodesBuilder_;
-
-      /**
-       * <code>repeated .ServerNode aliveNodes = 1;</code>
-       */
-      public java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> getAliveNodesList() {
-        if (aliveNodesBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(aliveNodes_);
-        } else {
-          return aliveNodesBuilder_.getMessageList();
-        }
-      }
-      /**
-       * <code>repeated .ServerNode aliveNodes = 1;</code>
-       */
-      public int getAliveNodesCount() {
-        if (aliveNodesBuilder_ == null) {
-          return aliveNodes_.size();
-        } else {
-          return aliveNodesBuilder_.getCount();
-        }
-      }
-      /**
-       * <code>repeated .ServerNode aliveNodes = 1;</code>
-       */
-      public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode getAliveNodes(int index) {
-        if (aliveNodesBuilder_ == null) {
-          return aliveNodes_.get(index);
-        } else {
-          return aliveNodesBuilder_.getMessage(index);
-        }
-      }
-      /**
-       * <code>repeated .ServerNode aliveNodes = 1;</code>
-       */
-      public Builder setAliveNodes(
-          int index, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode value) {
-        if (aliveNodesBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureAliveNodesIsMutable();
-          aliveNodes_.set(index, value);
-          onChanged();
-        } else {
-          aliveNodesBuilder_.setMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .ServerNode aliveNodes = 1;</code>
-       */
-      public Builder setAliveNodes(
-          int index, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder builderForValue) {
-        if (aliveNodesBuilder_ == null) {
-          ensureAliveNodesIsMutable();
-          aliveNodes_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          aliveNodesBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .ServerNode aliveNodes = 1;</code>
-       */
-      public Builder addAliveNodes(ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode value) {
-        if (aliveNodesBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureAliveNodesIsMutable();
-          aliveNodes_.add(value);
-          onChanged();
-        } else {
-          aliveNodesBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .ServerNode aliveNodes = 1;</code>
-       */
-      public Builder addAliveNodes(
-          int index, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode value) {
-        if (aliveNodesBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureAliveNodesIsMutable();
-          aliveNodes_.add(index, value);
-          onChanged();
-        } else {
-          aliveNodesBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .ServerNode aliveNodes = 1;</code>
-       */
-      public Builder addAliveNodes(
-          ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder builderForValue) {
-        if (aliveNodesBuilder_ == null) {
-          ensureAliveNodesIsMutable();
-          aliveNodes_.add(builderForValue.build());
-          onChanged();
-        } else {
-          aliveNodesBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .ServerNode aliveNodes = 1;</code>
-       */
-      public Builder addAliveNodes(
-          int index, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder builderForValue) {
-        if (aliveNodesBuilder_ == null) {
-          ensureAliveNodesIsMutable();
-          aliveNodes_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          aliveNodesBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .ServerNode aliveNodes = 1;</code>
-       */
-      public Builder addAllAliveNodes(
-          java.lang.Iterable<? extends ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> values) {
-        if (aliveNodesBuilder_ == null) {
-          ensureAliveNodesIsMutable();
-          com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, aliveNodes_);
-          onChanged();
-        } else {
-          aliveNodesBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .ServerNode aliveNodes = 1;</code>
-       */
-      public Builder clearAliveNodes() {
-        if (aliveNodesBuilder_ == null) {
-          aliveNodes_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-          onChanged();
-        } else {
-          aliveNodesBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .ServerNode aliveNodes = 1;</code>
-       */
-      public Builder removeAliveNodes(int index) {
-        if (aliveNodesBuilder_ == null) {
-          ensureAliveNodesIsMutable();
-          aliveNodes_.remove(index);
-          onChanged();
-        } else {
-          aliveNodesBuilder_.remove(index);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .ServerNode aliveNodes = 1;</code>
-       */
-      public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder getAliveNodesBuilder(
-          int index) {
-        return getAliveNodesFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <code>repeated .ServerNode aliveNodes = 1;</code>
-       */
-      public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder getAliveNodesOrBuilder(
-          int index) {
-        if (aliveNodesBuilder_ == null) {
-          return aliveNodes_.get(index);  } else {
-          return aliveNodesBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      /**
-       * <code>repeated .ServerNode aliveNodes = 1;</code>
-       */
-      public java.util.List<? extends ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder> 
-           getAliveNodesOrBuilderList() {
-        if (aliveNodesBuilder_ != null) {
-          return aliveNodesBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(aliveNodes_);
-        }
-      }
-      /**
-       * <code>repeated .ServerNode aliveNodes = 1;</code>
-       */
-      public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder addAliveNodesBuilder() {
-        return getAliveNodesFieldBuilder().addBuilder(
-            ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .ServerNode aliveNodes = 1;</code>
-       */
-      public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder addAliveNodesBuilder(
-          int index) {
-        return getAliveNodesFieldBuilder().addBuilder(
-            index, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .ServerNode aliveNodes = 1;</code>
-       */
-      public java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder> 
-           getAliveNodesBuilderList() {
-        return getAliveNodesFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilder<
-          ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder> 
-          getAliveNodesFieldBuilder() {
-        if (aliveNodesBuilder_ == null) {
-          aliveNodesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder>(
-                  aliveNodes_,
-                  ((bitField0_ & 0x00000001) == 0x00000001),
-                  getParentForChildren(),
-                  isClean());
-          aliveNodes_ = null;
-        }
-        return aliveNodesBuilder_;
-      }
-
-      private java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> deadNodes_ =
-        java.util.Collections.emptyList();
-      private void ensureDeadNodesIsMutable() {
-        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-          deadNodes_ = new java.util.ArrayList<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode>(deadNodes_);
-          bitField0_ |= 0x00000002;
-         }
-      }
-
-      private com.google.protobuf.RepeatedFieldBuilder<
-          ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder> deadNodesBuilder_;
-
-      /**
-       * <code>repeated .ServerNode deadNodes = 2;</code>
-       */
-      public java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> getDeadNodesList() {
-        if (deadNodesBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(deadNodes_);
-        } else {
-          return deadNodesBuilder_.getMessageList();
-        }
-      }
-      /**
-       * <code>repeated .ServerNode deadNodes = 2;</code>
-       */
-      public int getDeadNodesCount() {
-        if (deadNodesBuilder_ == null) {
-          return deadNodes_.size();
-        } else {
-          return deadNodesBuilder_.getCount();
-        }
-      }
-      /**
-       * <code>repeated .ServerNode deadNodes = 2;</code>
-       */
-      public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode getDeadNodes(int index) {
-        if (deadNodesBuilder_ == null) {
-          return deadNodes_.get(index);
-        } else {
-          return deadNodesBuilder_.getMessage(index);
-        }
-      }
-      /**
-       * <code>repeated .ServerNode deadNodes = 2;</code>
-       */
-      public Builder setDeadNodes(
-          int index, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode value) {
-        if (deadNodesBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureDeadNodesIsMutable();
-          deadNodes_.set(index, value);
-          onChanged();
-        } else {
-          deadNodesBuilder_.setMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .ServerNode deadNodes = 2;</code>
-       */
-      public Builder setDeadNodes(
-          int index, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder builderForValue) {
-        if (deadNodesBuilder_ == null) {
-          ensureDeadNodesIsMutable();
-          deadNodes_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          deadNodesBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .ServerNode deadNodes = 2;</code>
-       */
-      public Builder addDeadNodes(ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode value) {
-        if (deadNodesBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureDeadNodesIsMutable();
-          deadNodes_.add(value);
-          onChanged();
-        } else {
-          deadNodesBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .ServerNode deadNodes = 2;</code>
-       */
-      public Builder addDeadNodes(
-          int index, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode value) {
-        if (deadNodesBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureDeadNodesIsMutable();
-          deadNodes_.add(index, value);
-          onChanged();
-        } else {
-          deadNodesBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .ServerNode deadNodes = 2;</code>
-       */
-      public Builder addDeadNodes(
-          ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder builderForValue) {
-        if (deadNodesBuilder_ == null) {
-          ensureDeadNodesIsMutable();
-          deadNodes_.add(builderForValue.build());
-          onChanged();
-        } else {
-          deadNodesBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .ServerNode deadNodes = 2;</code>
-       */
-      public Builder addDeadNodes(
-          int index, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder builderForValue) {
-        if (deadNodesBuilder_ == null) {
-          ensureDeadNodesIsMutable();
-          deadNodes_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          deadNodesBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .ServerNode deadNodes = 2;</code>
-       */
-      public Builder addAllDeadNodes(
-          java.lang.Iterable<? extends ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode> values) {
-        if (deadNodesBuilder_ == null) {
-          ensureDeadNodesIsMutable();
-          com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, deadNodes_);
-          onChanged();
-        } else {
-          deadNodesBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .ServerNode deadNodes = 2;</code>
-       */
-      public Builder clearDeadNodes() {
-        if (deadNodesBuilder_ == null) {
-          deadNodes_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
-          onChanged();
-        } else {
-          deadNodesBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .ServerNode deadNodes = 2;</code>
-       */
-      public Builder removeDeadNodes(int index) {
-        if (deadNodesBuilder_ == null) {
-          ensureDeadNodesIsMutable();
-          deadNodes_.remove(index);
-          onChanged();
-        } else {
-          deadNodesBuilder_.remove(index);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .ServerNode deadNodes = 2;</code>
-       */
-      public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder getDeadNodesBuilder(
-          int index) {
-        return getDeadNodesFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <code>repeated .ServerNode deadNodes = 2;</code>
-       */
-      public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder getDeadNodesOrBuilder(
-          int index) {
-        if (deadNodesBuilder_ == null) {
-          return deadNodes_.get(index);  } else {
-          return deadNodesBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      /**
-       * <code>repeated .ServerNode deadNodes = 2;</code>
-       */
-      public java.util.List<? extends ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder> 
-           getDeadNodesOrBuilderList() {
-        if (deadNodesBuilder_ != null) {
-          return deadNodesBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(deadNodes_);
-        }
-      }
-      /**
-       * <code>repeated .ServerNode deadNodes = 2;</code>
-       */
-      public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder addDeadNodesBuilder() {
-        return getDeadNodesFieldBuilder().addBuilder(
-            ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .ServerNode deadNodes = 2;</code>
-       */
-      public ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder addDeadNodesBuilder(
-          int index) {
-        return getDeadNodesFieldBuilder().addBuilder(
-            index, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .ServerNode deadNodes = 2;</code>
-       */
-      public java.util.List<ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder> 
-           getDeadNodesBuilderList() {
-        return getDeadNodesFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilder<
-          ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder> 
-          getDeadNodesFieldBuilder() {
-        if (deadNodesBuilder_ == null) {
-          deadNodesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNode.Builder, ca.NetSysLab.ProtocolBuffers.InternalRequest.ServerNodeOrBuilder>(
-                  deadNodes_,
-                  ((bitField0_ & 0x00000002) == 0x00000002),
-                  getParentForChildren(),
-                  isClean());
-          deadNodes_ = null;
-        }
-        return deadNodesBuilder_;
-      }
-
-      private int nodeId_ ;
-      /**
-       * <code>required int32 nodeId = 3;</code>
-       */
-      public boolean hasNodeId() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
-      }
-      /**
-       * <code>required int32 nodeId = 3;</code>
-       */
-      public int getNodeId() {
-        return nodeId_;
-      }
-      /**
-       * <code>required int32 nodeId = 3;</code>
-       */
-      public Builder setNodeId(int value) {
-        bitField0_ |= 0x00000004;
-        nodeId_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required int32 nodeId = 3;</code>
-       */
-      public Builder clearNodeId() {
-        bitField0_ = (bitField0_ & ~0x00000004);
-        nodeId_ = 0;
-        onChanged();
-        return this;
-      }
-
-      // @@protoc_insertion_point(builder_scope:SystemState)
-    }
-
-    static {
-      defaultInstance = new SystemState(true);
-      defaultInstance.initFields();
-    }
-
-    // @@protoc_insertion_point(class_scope:SystemState)
   }
 
   public interface ServerNodeOrBuilder extends
@@ -4319,11 +2960,6 @@ public final class InternalRequest {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_EpidemicRequest_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_SystemState_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_SystemState_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_ServerNode_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -4347,20 +2983,17 @@ public final class InternalRequest {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\025InternalRequest.proto\"\315\001\n\017EpidemicRequ" +
+      "\n\025InternalRequest.proto\"\245\001\n\017EpidemicRequ" +
       "est\022\014\n\004epId\030\001 \002(\014\022+\n\004type\030\002 \002(\0162\035.Epidem" +
       "icRequest.EpidemicType\022\021\n\ttimestamp\030\003 \002(" +
-      "\003\022\037\n\nserverNode\030\004 \001(\0132\013.ServerNode\022\033\n\005st" +
-      "ate\030\005 \001(\0132\014.SystemState\".\n\014EpidemicType\022" +
-      "\010\n\004DEAD\020\000\022\t\n\005ALIVE\020\001\022\t\n\005STATE\020\002\"^\n\013Syste" +
-      "mState\022\037\n\naliveNodes\030\001 \003(\0132\013.ServerNode\022" +
-      "\036\n\tdeadNodes\030\002 \003(\0132\013.ServerNode\022\016\n\006nodeI" +
-      "d\030\003 \002(\005\"J\n\nServerNode\022\016\n\006server\030\001 \002(\t\022\014\n" +
-      "\004port\030\002 \002(\005\022\016\n\006nodeId\030\003 \001(\005\022\016\n\006hashes\030\004 ",
-      "\003(\005\"%\n\nKVTransfer\022\027\n\006kvlist\030\001 \003(\0132\007.KVPa" +
-      "ir\"5\n\006KVPair\022\013\n\003key\030\001 \002(\014\022\r\n\005value\030\002 \002(\014" +
-      "\022\017\n\007version\030\003 \002(\005B/\n\034ca.NetSysLab.Protoc" +
-      "olBuffersB\017InternalRequest"
+      "\003\022\037\n\nserverNode\030\004 \001(\0132\013.ServerNode\"#\n\014Ep" +
+      "idemicType\022\010\n\004DEAD\020\000\022\t\n\005ALIVE\020\001\"J\n\nServe" +
+      "rNode\022\016\n\006server\030\001 \002(\t\022\014\n\004port\030\002 \002(\005\022\016\n\006n" +
+      "odeId\030\003 \001(\005\022\016\n\006hashes\030\004 \003(\005\"%\n\nKVTransfe" +
+      "r\022\027\n\006kvlist\030\001 \003(\0132\007.KVPair\"5\n\006KVPair\022\013\n\003" +
+      "key\030\001 \002(\014\022\r\n\005value\030\002 \002(\014\022\017\n\007version\030\003 \002(" +
+      "\005B/\n\034ca.NetSysLab.ProtocolBuffersB\017Inter",
+      "nalRequest"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -4379,27 +3012,21 @@ public final class InternalRequest {
     internal_static_EpidemicRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_EpidemicRequest_descriptor,
-        new java.lang.String[] { "EpId", "Type", "Timestamp", "ServerNode", "State", });
-    internal_static_SystemState_descriptor =
-      getDescriptor().getMessageTypes().get(1);
-    internal_static_SystemState_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_SystemState_descriptor,
-        new java.lang.String[] { "AliveNodes", "DeadNodes", "NodeId", });
+        new java.lang.String[] { "EpId", "Type", "Timestamp", "ServerNode", });
     internal_static_ServerNode_descriptor =
-      getDescriptor().getMessageTypes().get(2);
+      getDescriptor().getMessageTypes().get(1);
     internal_static_ServerNode_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_ServerNode_descriptor,
         new java.lang.String[] { "Server", "Port", "NodeId", "Hashes", });
     internal_static_KVTransfer_descriptor =
-      getDescriptor().getMessageTypes().get(3);
+      getDescriptor().getMessageTypes().get(2);
     internal_static_KVTransfer_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_KVTransfer_descriptor,
         new java.lang.String[] { "Kvlist", });
     internal_static_KVPair_descriptor =
-      getDescriptor().getMessageTypes().get(4);
+      getDescriptor().getMessageTypes().get(3);
     internal_static_KVPair_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_KVPair_descriptor,

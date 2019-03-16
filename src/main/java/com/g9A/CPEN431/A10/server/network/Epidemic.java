@@ -131,11 +131,6 @@ public class Epidemic implements Runnable {
 				}
 				metrics.aliveMessagesReceieved.inc();
 				break;
-			case STATE: // Transfer the system state to restarted node
-				Server.ReceiveState(request.getState());
-				STOP_FLAG = true;
-				iterations = 0;
-				break;
 	    }
 
     	while (!STOP_FLAG && iterations > 0) {

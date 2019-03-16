@@ -6,7 +6,6 @@ message EpidemicRequest {
 	enum EpidemicType {
 		DEAD = 0;
 		ALIVE = 1;
-		STATE = 2;
 	}
 
 	required bytes epId = 1;
@@ -14,13 +13,6 @@ message EpidemicRequest {
 	required int64 timestamp = 3;
 
 	optional ServerNode serverNode = 4;
-	optional SystemState state = 5;
-}
-
-message SystemState{
-	repeated ServerNode aliveNodes = 1;
-	repeated ServerNode deadNodes = 2;
-	required int32 nodeId = 3;
 }
 
 message ServerNode {

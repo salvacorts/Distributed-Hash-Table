@@ -1,4 +1,4 @@
-# CPEN 431 Assignment 9
+# CPEN 431 Assignment 10
 
 ## Group ID
 
@@ -14,7 +14,7 @@ Salvador Corts - 91291682
 
 ## Verification code
 
-E0DA2E2352DF4293346E659E57444AF4
+10953614938F08F77A4A03FD0D934B4E
 
 ## Usage
 
@@ -25,12 +25,15 @@ Note that nodes-list.txt is in a different format than servers.txt
 
 ## Description
 
-We reworked our key distribution method for this assignment by assigning each Node a hash value (or several)
-and giving it control of each key below than or equal to its hash value, and greater than the last Node's
-hash value in the circle.
+To implement data replication, we added an optional reps (repititions) field to the KeyValueRequest protobuf object.
+Upon receiving a PUT or DELETE request, a node will set the reps field to 2 and then forward it to the 
+next node in the hash circle. This results in 3 nodes having a copy of the key-value.
 
-Upon a node leaving, its hash values are removed from the circle and thus every key that it would've received
-is taken care of by the next node in the circle. Upon rejoining, its hash values are readded to the circle.
+Because GET requests are automatically routed to subsequent nodes in the hash circle, this results in successful 
+data retrieval when some nodes are down.
+
+We also added another rejoin protocol - each reactivated node will individually test every node to see if it is
+alive, without starting epidemics or relying on others.
 
 ## Servers
 

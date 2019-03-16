@@ -22,6 +22,7 @@ import com.g9A.CPEN431.A10.server.metrics.MetricsServer;
 import com.g9A.CPEN431.A10.server.network.Epidemic;
 import com.g9A.CPEN431.A10.server.network.EpidemicServer;
 import com.g9A.CPEN431.A10.server.network.FailureCheck;
+import com.g9A.CPEN431.A10.server.network.Ping;
 import com.g9A.CPEN431.A10.server.pools.SocketFactory;
 import com.g9A.CPEN431.A10.server.pools.SocketPool;
 import com.google.protobuf.ByteString;
@@ -31,6 +32,7 @@ import ca.NetSysLab.ProtocolBuffers.Message;
 import ca.NetSysLab.ProtocolBuffers.InternalRequest.KVTransfer;
 import ca.NetSysLab.ProtocolBuffers.InternalRequest.SystemState;
 import ca.NetSysLab.ProtocolBuffers.InternalRequest.EpidemicRequest.EpidemicType;
+import ca.NetSysLab.ProtocolBuffers.KeyValueResponse.KVResponse;
 import sun.misc.Signal;
 import sun.misc.SignalHandler;
 
@@ -110,6 +112,7 @@ public class Server {
                     EpidemicServer.clear();
                     FailureCheck.restart();
                     AlertOtherNodes();
+                    TestOtherNodes();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -130,6 +133,25 @@ public class Server {
                 }
             }
         });*/
+    }
+    
+    /**
+     * Pings each node to test if it is alive
+     */
+    private static void TestOtherNodes() {
+    	Thread[] aliveThreads = new Thread[ServerNodes.size()];
+    	Thread[] deadThreads = new Thread[DeadNodes.size()];
+    	ServerNode node;
+    	for(int i = 0; i < aliveThreads.length; i++) {
+    		node = ServerNodes.get(i);
+    		aliveThreads[i] = new Thread(new Ping(node));
+    		aliveThreads[i].start();
+    	}
+    	for(int i = 0; i < deadThreads.length; i++) {
+    		node = DeadNodes.get(i);
+    		deadThreads[i] = new Thread(new Ping(node));
+    		deadThreads[i].start();
+    	}
     }
     
     /**
@@ -207,64 +229,14 @@ public class Server {
     	return false;
     }
     
-    public static void TransferState(String addr, int port, int nodeId) throws IOException {
-    	InternalRequest.SystemState.Builder builder = InternalRequest.SystemState.newBuilder();
-    	for(ServerNode node: Server.ServerNodes) {
-    		InternalRequest.ServerNode n = InternalRequest.ServerNode.newBuilder()
-    				.setServer(node.getAddress().getHostAddress())
-    				.setPort(node.getPort())
-    				.setNodeId(node.getId())
-    				.build();
-    		builder.addAliveNodes(n);
-    	}
-    	for(ServerNode deadNode: Server.DeadNodes) {
-    		InternalRequest.ServerNode n = InternalRequest.ServerNode.newBuilder()
-    				.setServer(deadNode.getAddress().getHostAddress())
-    				.setPort(deadNode.getPort())
-    				.setNodeId(deadNode.getId())
-    				.build();
-    		builder.addDeadNodes(n);
-    	}
-    	builder.setNodeId(Server.selfNode.getId());
-    	
-		ByteString id = Epidemic.generateID(selfNode.getAddress(), selfNode.getEpiPort(), EpidemicType.ALIVE);
-    	long timestamp = System.currentTimeMillis() / 1000L;
-    	
-    	InternalRequest.EpidemicRequest epiRequest = InternalRequest.EpidemicRequest.newBuilder()
-    			.setState(builder.build())
-    			.setEpId(id)
-    			.setTimestamp(timestamp)
-    			.setType(EpidemicType.STATE)
-    			.build();
-    	
-    	ByteString payload = epiRequest.toByteString();
-    	
-    	DatagramSocket socket = new DatagramSocket();
-    	
-		Message.Msg msg = Epidemic.PackInternalMessage(payload, socket);
-		ServerNode node = null; 
-		for(ServerNode n: Server.ServerNodes) {
-			if(n.getId() == nodeId){
-				node = n;
-				break;
-			}
-		}
 
-    	Worker.Send(socket, msg, node.getAddress(), node.getEpiPort());
-		socket.close();
-    }
-    
     /**
      * Re-adds a node into the ServerNodes list. New hash space already defined
      * @throws InvalidHashRangeException
      * @throws IOException 
      */
-    public static void RejoinNode(int id, String addr, int port, List<Integer> hashValues) throws IOException {
-        int[] hashArray = new int[hashValues.size()];
-    	for(int i = 0; i < hashArray.length; i++) {
-        	hashArray[i] = hashValues.get(i);
-        }
-    	
+    public static void RejoinNode(int id, String addr, int port, int[] hashArray) throws IOException {
+
     	// Add the node to the nodes list and remove from dead nodes list
         ServerNode node = new ServerNode(addr, port, 4321, id, hashArray);
        if(!HasDeadNode(id)) return;
@@ -297,8 +269,6 @@ public class Server {
     		//TODO: Transfer keys?
     	}
     	
-    	// Send server state to reactivated node
-    	TransferState(addr, port, id);
     	
     	// Transfer hash space
     	/*for (ServerNode n : ServerNodes) {
@@ -325,6 +295,15 @@ public class Server {
                 System.out.println(hs.toString());
             }
     	}*/
+    }
+    
+    public static void RejoinNode(int id, String addr, int port, List<Integer> hashValues) throws IOException {
+        int[] hashArray = new int[hashValues.size()];
+    	for(int i = 0; i < hashArray.length; i++) {
+        	hashArray[i] = hashValues.get(i);
+        }
+    	RejoinNode(id, addr, port, hashArray);
+    	
     }
     
     private static void TransferKeys(String addr, int port, HashSpace hashSpace) throws UnknownHostException, IOException {
@@ -396,37 +375,6 @@ public class Server {
         EpidemicServer.stop();
         FailureCheck.stop();
     }
-    
-    /**
-     * Update state of dead/alive nodes
-     * @param state Protobuf object with list of alive nodes
-     */
-	public static void ReceiveState(SystemState state) {
-		
-		for(InternalRequest.ServerNode node : state.getAliveNodesList()) {
-			int id = node.getNodeId();
-			for(ServerNode deadNode : DeadNodes) {
-				if(deadNode.getId() == id) {
-					ServerNodes.add(deadNode);
-					metrics.deadNodes.dec();
-					break;
-				}
-			}
-			DeadNodes.removeIf(x -> x.getId() == id);
-		}
-		
-		for(InternalRequest.ServerNode node : state.getDeadNodesList()) {
-			int id = node.getNodeId();
-			for(ServerNode aliveNode : ServerNodes) {
-				if(aliveNode.getId() == id) {
-					DeadNodes.add(aliveNode);
-					metrics.deadNodes.inc();
-					break;
-				}
-			}
-			ServerNodes.removeIf(x -> x.getId() == id);
-		}
-	}
 }
 
 
