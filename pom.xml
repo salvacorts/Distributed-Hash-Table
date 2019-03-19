@@ -8,8 +8,8 @@
     <maven.compiler.target>1.8</maven.compiler.target>
 </properties>
 
-<groupId>com.g9A.CPEN431.A10</groupId>
-<artifactId>CPEN431_A10</artifactId>
+<groupId>com.g9A.CPEN431.A11</groupId>
+<artifactId>CPEN431_A11</artifactId>
 <version>1.0</version>
 
 <dependencies>
@@ -77,7 +77,7 @@
                     <configuration>
                         <archive>
                             <manifest>
-                                <mainClass>com.g9A.CPEN431.A10.client.Main</mainClass>
+                                <mainClass>com.g9A.CPEN431.A11.client.Main</mainClass>
                             </manifest>
                         </archive>
                         <descriptorRefs>
@@ -95,13 +95,13 @@
                     <configuration>
                         <archive>
                             <manifest>
-                                <mainClass>com.g9A.CPEN431.A10.server.Main</mainClass>
+                                <mainClass>com.g9A.CPEN431.A11.server.Main</mainClass>
                             </manifest>
                         </archive>
                         <descriptorRefs>
                             <descriptorRef>jar-with-dependencies</descriptorRef>
                         </descriptorRefs>
-                        <finalName>A10</finalName>
+                        <finalName>A11</finalName>
                         <appendAssemblyId>false</appendAssemblyId>
                     </configuration>
                     <phase>package</phase>

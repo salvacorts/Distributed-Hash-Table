@@ -210,13 +210,15 @@ public class Worker implements Runnable {
     }
 
     public static void Send(DatagramSocket socket, Message.Msg msg, InetAddress address, int port) throws IOException {
-        if (socket == null) socket = new DatagramSocket();
+        boolean newSocket = socket == null;
+    	if (newSocket) socket = new DatagramSocket();
 
         // Serialize message
         DatagramPacket send_packet = new DatagramPacket(msg.toByteArray(), msg.getSerializedSize(), address, port);
 
         // Send packet
         socket.send(send_packet);
+        if(newSocket) socket.close();
     }
 
     public Worker(DatagramPacket packet) {
@@ -343,6 +345,7 @@ public class Worker implements Runnable {
             } catch (WrongNodeException e) {
                 Reroute(rec_msg, packet.getAddress(), packet.getPort(), e.trueNode);
                 processing_messages.remove(uuid);
+                Server.socketPool.returnObject(socket);
                 return;
             } catch (Exception e) {
                 e.printStackTrace();
