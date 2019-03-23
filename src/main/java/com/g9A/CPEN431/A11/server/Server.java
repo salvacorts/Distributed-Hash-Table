@@ -11,6 +11,11 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import ca.NetSysLab.ProtocolBuffers.KeyValueRequest;
 
@@ -29,9 +34,7 @@ import com.google.protobuf.ByteString;
 
 import ca.NetSysLab.ProtocolBuffers.InternalRequest;
 import ca.NetSysLab.ProtocolBuffers.Message;
-import ca.NetSysLab.ProtocolBuffers.InternalRequest.KVTransfer;
 import ca.NetSysLab.ProtocolBuffers.InternalRequest.EpidemicRequest.EpidemicType;
-import ca.NetSysLab.ProtocolBuffers.KeyValueResponse.KVResponse;
 import sun.misc.Signal;
 import sun.misc.SignalHandler;
 
@@ -47,12 +50,14 @@ public class Server {
     public static ServerNode selfNode;
     public static List<ServerNode> ServerNodes;
 	private static List<ServerNode> DeadNodes;
-    public static EpidemicServer EpidemicServer;
-    public static FailureCheck FailureCheck;
+	private static Lock nodesLock = new ReentrantLock();
+    public static EpidemicServer epidemicServer;
+    public static FailureCheck failureCheck;
     
     public static ConcurrentHashMap<Integer, ServerNode> HashCircle;
 
     private static MetricsServer metrics = MetricsServer.getInstance();
+    public final static Logger LOGGER = Logger.getLogger("ServerLog");
     
     private static RequestProcessor requestProcessor = RequestProcessor.getInstance();
     private static boolean PAUSED = false;
@@ -66,6 +71,11 @@ public class Server {
         this.listeningSocket = new DatagramSocket(port);
         this.availableCores = Runtime.getRuntime().availableProcessors();
 
+        FileHandler fh = new FileHandler("./log.txt");
+        LOGGER.addHandler(fh);
+        SimpleFormatter formatter = new SimpleFormatter();  
+        fh.setFormatter(formatter);  
+        
         int poolSize = (this.availableCores > 1) ? this.availableCores - 1 : 1;
 
         // Setup threads pool
@@ -82,8 +92,8 @@ public class Server {
         InetAddress local = InetAddress.getLocalHost();
 
         // Initialize additional services
-        EpidemicServer = new EpidemicServer(epiPort);
-        FailureCheck = new FailureCheck();
+        epidemicServer = new EpidemicServer(epiPort);
+        failureCheck = new FailureCheck();
         
         HashCircle = new ConcurrentHashMap<Integer, ServerNode>();
         for (ServerNode node : ServerNodes) {
@@ -108,8 +118,7 @@ public class Server {
             public void handle(Signal signal) {
                 try {
                     PAUSED = false;
-                    EpidemicServer.clear();
-                    FailureCheck.restart();
+                    failureCheck.restart();
                     AlertOtherNodes();
                     TestOtherNodes();
                 } catch (Exception e) {
@@ -184,7 +193,7 @@ public class Server {
     	
     	metrics.aliveEpidemics.inc();
 		Epidemic epi = new Epidemic(epiRequest);
-		Server.EpidemicServer.add(epi);
+		epidemicServer.add(epi);
     }
 
     public static void RemoveNode(int id) {
@@ -235,65 +244,31 @@ public class Server {
      * @throws IOException 
      */
     public static void RejoinNode(int id, String addr, int port, int[] hashArray) throws IOException {
-
-    	// Add the node to the nodes list and remove from dead nodes list
-        ServerNode node = new ServerNode(addr, port, 4321, id, hashArray);
-       if(!HasDeadNode(id)) return;
-/*
-        for (Iterator<ServerNode> iter = DeadNodes.iterator(); iter.hasNext();) {
-			ServerNode n = iter.next();
-
-			if (n.getId() == id) {
-				iter.remove();
-				node = n;
-				break;
-			}
-		}*/
-
-		//Node was never in deadnodes in the first place
-		//if (node == null) return;
-        
-        if(ServerNodes.contains(node)) {
-        	return;
-        }
-		
-        ServerNodes.add(node);
-        DeadNodes.remove(node);
-        metrics.deadNodes.dec();
-    	
-    	// Reactivate hash values
-    	for(int i: node.getHashValues()) {
-    		HashCircle.put(i, node);
-    		
-    		//TODO: Transfer keys?
+    	try {
+	    	nodesLock.lock();
+	    	
+	    	// Add the node to the nodes list and remove from dead nodes list
+	        ServerNode node = new ServerNode(addr, port, 4321, id, hashArray);
+	        if(!HasDeadNode(id)) return;
+	        
+	        if(ServerNodes.contains(node)) {
+	        	return;
+	        }
+	        
+	        LOGGER.info("Rejoining node " + node.getAddress().getHostName() + ":" + node.getPort() + ", ID: " + node.getId());
+			
+	        ServerNodes.add(node);
+	        DeadNodes.remove(node);
+	        metrics.deadNodes.dec();
+	    	
+	    	// Reactivate hash values
+	    	for(int i: node.getHashValues()) {
+	    		HashCircle.put(i, node);
+	    	}
     	}
-    	
-    	
-    	// Transfer hash space
-    	/*for (ServerNode n : ServerNodes) {
-    	    // If the node in the over the current hashspace
-    		if (n.hasHashSpace(hashSpace)) {
-
-    		    // Update its hashSpace
-    			n.removeHashSpace(hashSpace);
-        		
-            	// If new node is taking over this node's hashspace, transfer keys
-            	if (n.equals(selfNode)) {
-            	    System.out.println("[Server] Transfering keys to " + addr + ":" + port);
-            	    TransferKeys(addr, port, hashSpace);
-            	    break;
-                }
-        	}
+    	finally {
+    		nodesLock.unlock();
     	}
-    	
-    	/*for (int i = 0; i < ServerNodes.size(); i++) {
-
-    		node = ServerNodes.get(i);
-    		System.out.println("[In Rejoin]" + node.getAddress().getHostName() + ":" + node.getPort() + ", Range: " + node.getHashSpaces().get(0).toString());
-    		for (HashSpace hs : node.getHashSpaces()) {
-                System.out.println(hs.toString());
-            }
-    	}*/
     }
     
     public static void RejoinNode(int id, String addr, int port, List<Integer> hashValues) throws IOException {
@@ -346,10 +321,10 @@ public class Server {
         System.out.println("PID: " + Integer.parseInt(ManagementFactory.getRuntimeMXBean().getName().split("@")[0]));
 
         // Launch the epidemic service to update nodes state across the ring
-        EpidemicServer.start();
+        epidemicServer.start();
 
         // Launch the FailureCheck thread
-        FailureCheck.start();
+        failureCheck.start();
 
         while (KEEP_RECEIVING) {
             byte[] receiveData = new byte[20000];
@@ -371,8 +346,8 @@ public class Server {
         this.listeningSocket.close();
         threadPool.shutdown();
         socketPool.close();
-        EpidemicServer.stop();
-        FailureCheck.stop();
+        epidemicServer.stop();
+        failureCheck.stop();
     }
 }
 

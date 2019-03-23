@@ -345,10 +345,10 @@ public class Worker implements Runnable {
             } catch (WrongNodeException e) {
                 Reroute(rec_msg, packet.getAddress(), packet.getPort(), e.trueNode);
                 processing_messages.remove(uuid);
-                Server.socketPool.returnObject(socket);
                 return;
             } catch (Exception e) {
                 e.printStackTrace();
+                Server.LOGGER.info(e.getMessage());
                 response = KeyValueResponse.KVResponse.newBuilder()
                         .setErrCode(4)
                         .build();

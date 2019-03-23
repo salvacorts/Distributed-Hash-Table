@@ -5,6 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ca.NetSysLab.ProtocolBuffers.KeyValueRequest;
@@ -32,7 +33,7 @@ public class EpidemicServer implements Runnable {
 
 	public EpidemicServer(int port) throws SocketException {
         this.listeningSocket = new DatagramSocket(port);
-        epidemics = new ArrayList<Epidemic>();
+        epidemics = Collections.synchronizedList(new ArrayList<Epidemic>());
 	}
 
 	public static InternalRequest.EpidemicRequest UnpackEpidemicRequest(Message.Msg msg) throws InvalidProtocolBufferException{

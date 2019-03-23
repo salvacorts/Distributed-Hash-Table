@@ -60,7 +60,7 @@ public class FailureCheck implements Runnable {
 			DatagramPacket send_packet = new DatagramPacket(msg.toByteArray(), msg.getSerializedSize(), node.getAddress(), node.getEpiPort());
 
 			// Send packet
-			KVResponse kvr = Worker.SendAndReceive(socket, send_packet, uuid, 3);
+			KVResponse kvr = Worker.SendAndReceive(socket, send_packet, uuid, 4);
 
 			// if sth went wrong
 			if (kvr.getErrCode() != 0) {
@@ -104,7 +104,7 @@ public class FailureCheck implements Runnable {
 		Epidemic epi = new Epidemic(epiRequest);
 
 		//  Spread the epidemic across nodes
-		Server.EpidemicServer.add(epi);
+		Server.epidemicServer.add(epi);
     }
 
     public void run() {
@@ -122,7 +122,7 @@ public class FailureCheck implements Runnable {
 		while (!STOP_FLAG) {
 			try {
 				checkRandom();
-				Thread.sleep(1000);
+				Thread.sleep(5000);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -141,7 +141,6 @@ public class FailureCheck implements Runnable {
         if (t != null) return;
 
         t = new Thread(this);
-		t.setPriority(Thread.MAX_PRIORITY);
 		t.start();
     }
 

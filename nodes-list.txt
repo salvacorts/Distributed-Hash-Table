@@ -4,7 +4,7 @@ planetlab2.cs.unc.edu:10145:4321:153
 planetlab-5.eecs.cwru.edu:10145:4321:63
 planetlab2.pop-pa.rnp.br:10145:4321:12
 plink.cs.uwaterloo.ca:10145:4321:216
-node1.planetlab.albany.edu:10145:4321:242
+planetlab04.cs.washington.edu:10145:4321:242
 planetlab1.temple.edu:10145:4321:25
 salt.planetlab.cs.umd.edu:10145:4321:140
 planetlab3.cs.uoregon.edu:10145:4321:191

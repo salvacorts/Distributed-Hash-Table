@@ -66,7 +66,7 @@ public class Epidemic implements Runnable {
 			break;
 		}
 		//ByteOrder.short2leb(rnd, buffUuid, 6);
-		ByteOrder.long2leb(timestamp, buffUuid, 8);
+		//ByteOrder.long2leb(timestamp, buffUuid, 8);
 
 		return ByteString.copyFrom(buffUuid);
 	}
