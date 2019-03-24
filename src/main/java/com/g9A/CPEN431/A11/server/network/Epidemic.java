@@ -122,13 +122,10 @@ public class Epidemic implements Runnable {
 				metrics.deadMessagesReceieved.inc();
 				break;
 			case ALIVE:	// Re-add the node that was down
-				try {
-					node = request.getServerNode();
-					Server.RejoinNode(node.getNodeId(), node.getServer(), node.getPort(), node.getHashesList());
-					
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				node = request.getServerNode();
+				//Server.RejoinNode(node.getNodeId(), node.getServer(), node.getPort(), node.getHashesList());
+				Server.TestOtherNodes();
+				
 				metrics.aliveMessagesReceieved.inc();
 				break;
 	    }

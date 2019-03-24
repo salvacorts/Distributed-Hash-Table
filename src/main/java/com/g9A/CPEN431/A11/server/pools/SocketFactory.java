@@ -17,4 +17,11 @@ public class SocketFactory extends BasePooledObjectFactory<DatagramSocket> {
     public PooledObject<DatagramSocket> wrap(DatagramSocket socket) {
         return new DefaultPooledObject<DatagramSocket>(socket);
     }
+    
+    @Override
+    public void destroyObject(PooledObject<DatagramSocket> obj) throws Exception {
+    	DatagramSocket socket = obj.getObject();
+    	socket.close();
+    	super.destroyObject(obj);
+    }
 }

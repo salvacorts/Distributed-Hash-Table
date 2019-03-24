@@ -143,10 +143,16 @@ public class Server {
         });*/
     }
     
+    private static long lastNodeTest = System.currentTimeMillis()/1000L;
     /**
      * Pings each node to test if it is alive
      */
-    private static void TestOtherNodes() {
+    public static void TestOtherNodes() {
+		long timestamp = System.currentTimeMillis()/1000L;
+		if(timestamp - lastNodeTest <= 60) {
+			return;
+		}
+    	
     	Thread[] aliveThreads = new Thread[ServerNodes.size()];
     	Thread[] deadThreads = new Thread[DeadNodes.size()];
     	ServerNode node;
@@ -210,16 +216,8 @@ public class Server {
                 }
                 iter.remove();
                 metrics.deadNodes.inc();
+                LOGGER.info("Detected dead node node " + node.getAddress().getHostName() + ":" + node.getPort() + ", ID: " + node.getId());
 
-    	    	/*for (ServerNode n : ServerNodes) {
-
-    	    		System.out.println(n.getAddress().getHostName() + ":" + n.getPort() + ", Range: " + n.getHashSpaces().get(0).toString());
-
-    	    		for (HashSpace hs : n.getHashSpaces()) {
-    	    			System.out.println("& " + hs.toString());
-    	    		}
-    	    	}*/
-    	        
     	        return;
     	    }
     	}
