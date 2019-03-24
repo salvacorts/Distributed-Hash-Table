@@ -32,7 +32,7 @@ only used for failures.
 
 EC2: 
 
-ec2-54-188-206-157.us-west-2.compute.amazonaws.com:10145
+54.213.99.225:10145
 
 Planetlab: 
 
