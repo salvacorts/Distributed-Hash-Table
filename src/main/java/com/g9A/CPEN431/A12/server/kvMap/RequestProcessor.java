@@ -131,16 +131,17 @@ public class RequestProcessor {
         if (!request.hasKey()) throw new MissingParameterException();
 
         if (request.getKey().size() > 32) throw new KeyTooLargeException();
-
-
-        if(!request.hasReps()) {
-            ServerNode correctNode = CorrectNode(request);
-        	if(!correctNode.equals(Server.selfNode)) throw new WrongNodeException(correctNode);
+        
+        ServerNode correctNode = CorrectNode(request);
+        if(!correctNode.equals(Server.selfNode)) {
+        	throw new WrongNodeException(correctNode);
         }
 
         KVMapKey key = new KVMapKey(request.getKey().toByteArray());
 
-        if (!kvMap.containsKey(key)) throw new UnexistingKey();
+        if (!kvMap.containsKey(key)) {
+            throw new UnexistingKey();
+        }
         
         KVMapValue value = kvMap.get(key);
         
@@ -179,7 +180,7 @@ public class RequestProcessor {
 
         metrics.keysStored.dec();
 
-        //System.out.println("DELETE with key " + request.getKey().hashCode());
+        System.out.println("DELETE with key " + request.getKey().hashCode());
 
         return KeyValueResponse.KVResponse.newBuilder()
                 .setErrCode(0)
@@ -230,7 +231,7 @@ public class RequestProcessor {
 
     /**
      * Process a GetMembershipCount request
-     * @return 1 (just for now)
+     * @return number of active nodes
      */
     private KeyValueResponse.KVResponse DoGetMembershipCount() {
         int count = Server.ServerNodes.size();
@@ -240,13 +241,29 @@ public class RequestProcessor {
                 .setMembershipCount(count)
                 .build();
     }
+    
+    /**
+     * Process a GetMembershipList request
+     * @return KVResponse with string of active servers
+     */
+    private KeyValueResponse.KVResponse DoGetMembershipList(){
+    	String list = "";
+    	for(ServerNode node: Server.ServerNodes) {
+    		list += node.getAddress().getHostName() + ':' + node.getPort() + '\n';
+    	}
+    	ByteString value = ByteString.copyFromUtf8(list);
+    	return KeyValueResponse.KVResponse.newBuilder()
+                .setErrCode(0)
+                .setValue(value)
+                .build();
+    }
 
     public static RequestProcessor getInstance() {
         return ourInstance;
     }
 
     public KeyValueResponse.KVResponse ProcessRequest(KeyValueRequest.KVRequest request, ByteString messageId)
-    		throws ShutdownCommandException, IOException, WrongNodeException {
+    		throws ShutdownCommandException, IOException, WrongNodeException, UnexistingKey {
         KeyValueResponse.KVResponse response;
 
         try {
@@ -283,6 +300,9 @@ public class RequestProcessor {
                     // System.out.println("GetMembershipCount received");
                     response = DoGetMembershipCount();
                     break;
+                case 22:
+                	response = DoGetMembershipList();
+                	break;
                 default:
                     // System.err.println("Unrecognized command received");
                     response = KeyValueResponse.KVResponse.newBuilder().setErrCode(5).build();
@@ -304,7 +324,7 @@ public class RequestProcessor {
             return KeyValueResponse.KVResponse.newBuilder().setErrCode(21).build();
         } catch (UnexistingKey e) {
             e.printStackTrace();
-
+            
             return KeyValueResponse.KVResponse.newBuilder().setErrCode(1).build();
         } catch (OutOfSpaceException e) {
             e.printStackTrace();

@@ -111,6 +111,9 @@ public class Client {
                 // System.out.println("Sending GetMembershipCount request");
                 request.setCommand(8);
                 break;
+            case 22:
+            	request.setCommand(22);
+            	break;
             default:
                 // System.err.println("Command not supported");
                 throw new UnsupportedCommandException();

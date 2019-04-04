@@ -1,4 +1,4 @@
-# CPEN 431 Assignment 11
+# CPEN 431 Assignment 12
 
 ## Group ID
 
@@ -14,7 +14,7 @@ Salvador Corts - 91291682
 
 ## Verification code
 
-7719BCD44A462C7310F048FEFDAD389B
+5B26AB99E6327F479CED364A07F1DD66
 
 ## Usage
 
@@ -25,14 +25,16 @@ Note that nodes-list.txt is in a different format than servers.txt
 
 ## Description
 
-Sequential consistency is ensured by WRITES and READS always targeting the same node, with replication
-only used for failures.
+To correct for routing failure when RESUMING nodes, we changed our replication protocol.
+Instead of chain replication, a node receiving a request multicasts it to all 3 replicated nodes,
+so the key copies can be recovered after a node resumption. 
+
 
 ## Servers
 
 EC2: 
 
-54.213.99.225:10145
+54.200.80.137:10145
 
 Planetlab: 
 

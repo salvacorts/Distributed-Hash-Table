@@ -152,6 +152,40 @@ public class Worker implements Runnable {
         throw new SocketTimeoutException();
     }
     
+    private KVResponse Multicast(Message.Msg msg, KVRequest request, ByteString uuid,
+    		InetAddress clientAddr, int clientPort, ServerNode[] nodes) throws IOException, ShutdownCommandException, WrongNodeException, UnexistingKey {
+    	
+    	KVResponse response = null;
+    	int command = request.getCommand();  
+    	if(command < 1 || command > 3) {
+			response = requestProcessor.ProcessRequest(request, uuid);
+    	}
+    	
+    	ByteString addr = ByteString.copyFrom(clientAddr.getAddress());
+  
+    	Message.ClientInfo client = Message.ClientInfo.newBuilder()
+    			.setAddress(addr)
+    			.setPort(clientPort)
+    			.build();
+
+    	Message.Msg newRequest = Message.Msg.newBuilder()
+    			.setMessageID(msg.getMessageID())
+    			.setPayload(msg.getPayload())
+    			.setCheckSum(msg.getCheckSum())
+    			.setClient(client)
+    			.build();
+    	
+    	for(ServerNode node: nodes) {
+    		if(node == Server.selfNode) {
+    			response = requestProcessor.ProcessRequest(request, uuid);
+    		}
+    		else {
+    			Send(socket, newRequest, node.getAddress(), node.getPort());
+    		}
+    	}
+    	return response;
+    }
+    
     /**
      * Routes a request to the correct node
      * @param request the request to reroute
@@ -238,6 +272,81 @@ public class Worker implements Runnable {
         this.requestProcessor = RequestProcessor.getInstance();
     }
     
+    public static KeyValueResponse.KVResponse TryReplicants(Message.Msg msg, KeyValueRequest.KVRequest request) throws IOException {
+    	int command = request.getCommand();
+    	if(command != 2) {
+    		return KeyValueResponse.KVResponse.newBuilder().setErrCode(1).build();
+    	}
+    	
+    	int reps;
+    	if(request.hasReps()) {
+    		reps = request.getReps() - 1;
+    		if(reps < 1){
+    			return KeyValueResponse.KVResponse.newBuilder().setErrCode(1).build();
+    		}
+    	}
+    	else {
+    		reps = 1;
+    	}
+    	
+    	int hash = Server.selfNode.getHashValues()[0];
+		int original = hash;
+		hash = (hash+1)%256;
+
+		ServerNode server;
+		while(hash != original){
+			//Restrict replication to three nodes only - does not replicate thrice if one or more successor nodes are down
+			final int hash0 = hash;
+			if(Server.DeadNodes.stream().anyMatch(node -> {
+				for(int j = 0; j < node.getHashValues().length; j++) {
+					if(node.getHashValues()[0] == hash0) {
+						return true;
+					}
+				}
+				return false;
+			})) {
+				reps--;
+				if(reps < 1) {
+					return KeyValueResponse.KVResponse.newBuilder().setErrCode(1).build();
+				}
+			}
+			
+			server = Server.HashCircle.get(hash);
+			if(server != null && !server.equals(Server.selfNode)) {
+
+		    	KVRequest newRequest = request.toBuilder()
+		    			.setReps(reps)
+		    			.build();
+		    	
+		    	CRC32 crc32 = new CRC32();
+		    	byte[] concat = ByteOrder.concatArray(msg.getMessageID().toByteArray(), newRequest.toByteArray());
+		        crc32.update(concat);
+		        long checksum = crc32.getValue();
+		    	
+		    	Message.Msg newMessage = msg.toBuilder()
+		    			.setPayload(newRequest.toByteString())
+		    			.setCheckSum(checksum)
+		    			.build();
+		    	
+	            byte[] buffSend = newMessage.toByteArray();
+		    	
+	    		DatagramSocket socket = new DatagramSocket();
+				ByteString uuid = Worker.GetUUID(socket);
+	            DatagramPacket packet = new DatagramPacket(buffSend, buffSend.length, server.getAddress(), server.getPort());
+	            
+	            try {
+					KVResponse kvr = Worker.SendAndReceive(socket, packet, uuid, 0);
+		            return kvr;
+	            }
+	            catch(SocketTimeoutException e){
+	        		return KeyValueResponse.KVResponse.newBuilder().setErrCode(1).build();
+	            }
+			}
+			hash = (hash+1)%256;
+		}
+		return KeyValueResponse.KVResponse.newBuilder().setErrCode(1).build();
+    }
+    
     private void ReplicateRequest(Message.Msg msg, KeyValueRequest.KVRequest request) throws IOException {
     	int reps;
     	if(request.hasReps()) {
@@ -251,32 +360,50 @@ public class Worker implements Runnable {
     	}
     	int command = request.getCommand();
     	
-    	KVRequest newRequest = request.toBuilder()
-    			.setReps(reps)
-    			.build();
-    	
-    	CRC32 crc32 = new CRC32();
-    	byte[] concat = ByteOrder.concatArray(msg.getMessageID().toByteArray(), newRequest.toByteArray());
-        crc32.update(concat);
-        long checksum = crc32.getValue();
-    	
-    	Message.Msg newMessage = msg.toBuilder()
-    			.setPayload(newRequest.toByteString())
-    			.setCheckSum(checksum)
-    			.build();
-    	
     	switch(command) {
     	case 3:
     	case 1:
     		int hash = Server.selfNode.getHashValues()[0];
     		int original = hash;
     		hash = (hash+1)%256;
-            byte[] buffSend = newMessage.toByteArray();
 
 			ServerNode server;
 			while(hash != original){
+				//Restrict replication to three nodes only - does not replicate thrice if one or more successor nodes are down
+				final int hash0 = hash;
+				if(Server.DeadNodes.stream().anyMatch(node -> {
+					for(int j = 0; j < node.getHashValues().length; j++) {
+						if(node.getHashValues()[0] == hash0) {
+							return true;
+						}
+					}
+					return false;
+				})) {
+					reps--;
+					if(reps < 1) {
+						return;
+					}
+				}
+				
     			server = Server.HashCircle.get(hash);
     			if(server != null && !server.equals(Server.selfNode)) {
+
+    		    	KVRequest newRequest = request.toBuilder()
+    		    			.setReps(reps)
+    		    			.build();
+    		    	
+    		    	CRC32 crc32 = new CRC32();
+    		    	byte[] concat = ByteOrder.concatArray(msg.getMessageID().toByteArray(), newRequest.toByteArray());
+    		        crc32.update(concat);
+    		        long checksum = crc32.getValue();
+    		    	
+    		    	Message.Msg newMessage = msg.toBuilder()
+    		    			.setPayload(newRequest.toByteString())
+    		    			.setCheckSum(checksum)
+    		    			.build();
+    		    	
+    	            byte[] buffSend = newMessage.toByteArray();
+    		    	
     	    		DatagramSocket socket = new DatagramSocket();
     	            DatagramPacket packet = new DatagramPacket(buffSend, buffSend.length, server.getAddress(), server.getPort());
     	            socket.send(packet);
@@ -289,6 +416,37 @@ public class Worker implements Runnable {
     	default:
     		return;
     	}
+    }
+    
+    private static ServerNode[] CorrectNodes(KeyValueRequest.KVRequest request) throws MissingParameterException {
+
+    	if (!request.hasKey()) throw new MissingParameterException();
+    	
+    	int hash = RequestProcessor.getHash(request.getKey());
+    	
+    	if(Server.ServerNodes.size() < 3) {
+    		return new ServerNode[]{
+    			Server.selfNode
+    		};
+    	}
+
+    	ServerNode[] nodes = new ServerNode[3];
+    	
+    	int original = hash;
+    	hash = (hash+1)%256;
+    	int count = 0;
+    	while(hash != original) {
+    		ServerNode node = Server.HashCircle.get(hash);
+    		if(node != null) {
+    			nodes[count] = node;
+    			count++;
+    		}
+        	hash = (hash+1)%256;
+        	if(count > 2) {
+        		break;
+        	}
+    	}
+    	return nodes;
     }
 
     public void run() {
@@ -314,6 +472,8 @@ public class Worker implements Runnable {
 
             // Get the uuid for this message. It may be a forwarded message
             ByteString uuid = rec_msg.getMessageID();
+            
+            KeyValueRequest.KVRequest request = null;
 
             try {
                 // If uuid is in processing map, return and let the other thread to finish this work
@@ -324,10 +484,21 @@ public class Worker implements Runnable {
 
                 // Check if request is cached. If it is not process the request
                 if ((response = this.cache.Get(uuid))  == null) {
-                    KeyValueRequest.KVRequest request = UnpackKVRequest(rec_msg);
-                    response = requestProcessor.ProcessRequest(request, uuid);
+                    request = UnpackKVRequest(rec_msg);
+                    int command = request.getCommand();
+                    
+                    if(command < 1 || command > 3 || rec_msg.hasClient()) {
+                        response = requestProcessor.ProcessRequest(request, uuid);
+                    }
+                    else {
+                    	response = Multicast(rec_msg, request, uuid, packet.getAddress(), packet.getPort(), CorrectNodes(request));
+                    	if(response == null) {
+                            processing_messages.remove(uuid);
+                            return;
+                    	}
+                    }
                     this.cache.Put(uuid, response);
-                    ReplicateRequest(rec_msg, request);
+                    //ReplicateRequest(rec_msg, request);
                 }
 
             } catch (ShutdownCommandException e) {

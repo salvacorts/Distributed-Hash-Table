@@ -16,7 +16,8 @@ public class Main {
         
         try {
             // System.out.println("Sending ID: " + args[2]);
-            KVResponse response = client.DoRequest(Integer.parseInt(args[2]), args[3], args[4], Integer.parseInt(args[5]));
+        	int command = Integer.parseInt(args[2]);
+            KVResponse response = client.DoRequest(command, args[3], args[4], Integer.parseInt(args[5]));
             System.out.println(response.getErrCode());
             System.out.println(response.getValue().toStringUtf8());
             

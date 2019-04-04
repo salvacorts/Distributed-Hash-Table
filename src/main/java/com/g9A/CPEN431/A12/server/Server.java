@@ -49,7 +49,7 @@ public class Server {
     public static SocketPool socketPool = new SocketPool(new SocketFactory());
     public static ServerNode selfNode;
     public static List<ServerNode> ServerNodes;
-	private static List<ServerNode> DeadNodes;
+	public static List<ServerNode> DeadNodes;
 	private static Lock nodesLock = new ReentrantLock();
     public static EpidemicServer epidemicServer;
     public static FailureCheck failureCheck;
