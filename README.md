@@ -1,20 +1,10 @@
-# CPEN 431 Assignment 12
+# CPEN 431. Distributed Hash Table
 
-## Group ID
+Implementation of a Distributed Hash Table to store a map of key value pairs on a peer-to-peer system.
 
-9A
+## Authors
 
-## Group Members
-
-Michael Moore - 30400345
-
-Matthew Chernoff - 11530145
-
-Salvador Corts - 91291682
-
-## Verification code
-
-5B26AB99E6327F479CED364A07F1DD66
+Michael Moore, Salvador Corts, Matthew Chernoff
 
 ## Usage
 
@@ -27,15 +17,4 @@ Note that nodes-list.txt is in a different format than servers.txt
 
 To correct for routing failure when RESUMING nodes, we changed our replication protocol.
 Instead of chain replication, a node receiving a request multicasts it to all 3 replicated nodes,
-so the key copies can be recovered after a node resumption. 
-
-
-## Servers
-
-EC2: 
-
-54.200.80.137:10145
-
-Planetlab: 
-
-See servers.txt
+so the key copies can be recovered after a node resumption.
